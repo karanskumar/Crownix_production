@@ -113,16 +113,9 @@ export function HomePage() {
           <div className="max-w-3xl mx-auto text-center">
             <Users className="w-12 h-12 mx-auto mb-6 text-primary" />
             <h2 className="text-foreground mb-6">Led by Industry Experts</h2>
-            <p className="text-muted-foreground text-lg mb-8">
+            <p className="text-muted-foreground text-lg">
               Our leadership team brings decades of proven track record in construction and development across Australia. Their expertise drives our commitment to excellence and innovation.
             </p>
-            <Link
-              to="/about"
-              className="inline-flex items-center gap-2 text-primary hover:gap-3 transition-all font-medium"
-            >
-              <span>Meet Our Team</span>
-              <ArrowRight className="w-5 h-5" />
-            </Link>
           </div>
         </div>
       </section>
