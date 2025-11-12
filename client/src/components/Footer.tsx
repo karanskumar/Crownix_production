@@ -10,7 +10,7 @@ export function Footer() {
           {/* Company Info */}
           <div>
             <div className="mb-4">
-              <img src={crownixLogo} alt="Crownix" className="h-10 brightness-0 invert" />
+              <img src={crownixLogo} alt="Crownix" className="h-12 brightness-0 invert" />
             </div>
             <p className="text-gray-400 mb-4">
               Delivering premium residential and commercial construction across Australia.

@@ -23,7 +23,7 @@ export function Header() {
         <div className="flex items-center justify-between h-20">
           {/* Logo */}
           <Link to="/" className="flex items-center">
-            <img src={crownixLogo} alt="Crownix" className="h-12" />
+            <img src={crownixLogo} alt="Crownix" className="h-14" />
           </Link>
 
           {/* Desktop Navigation */}
