@@ -15,7 +15,7 @@ export function ArticleCard({ id, title, excerpt, date, category, image }: Artic
   return (
     <Link
       to={`/insights/${id}`}
-      className="group block bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-lg transition-shadow"
+      className="group block bg-card rounded-lg overflow-hidden border border-card-border hover:shadow-lg transition-shadow"
     >
       <div className="aspect-[16/9] overflow-hidden">
         <ImageWithFallback
@@ -25,16 +25,16 @@ export function ArticleCard({ id, title, excerpt, date, category, image }: Artic
         />
       </div>
       <div className="p-6">
-        <div className="flex items-center gap-4 text-gray-600 mb-3">
-          <span className="px-3 py-1 bg-gray-100 rounded-full">{category}</span>
-          <div className="flex items-center gap-1">
+        <div className="flex items-center gap-4 text-muted-foreground mb-3">
+          <span className="px-3 py-1 bg-muted rounded-full text-sm">{category}</span>
+          <div className="flex items-center gap-1 text-sm">
             <Calendar className="w-4 h-4" />
             <span>{date}</span>
           </div>
         </div>
-        <h3 className="text-gray-900 mb-2">{title}</h3>
-        <p className="text-gray-600 mb-4">{excerpt}</p>
-        <div className="flex items-center gap-2 text-gray-900 group-hover:gap-3 transition-all">
+        <h3 className="text-card-foreground mb-2 font-medium">{title}</h3>
+        <p className="text-muted-foreground mb-4">{excerpt}</p>
+        <div className="flex items-center gap-2 text-primary group-hover:gap-3 transition-all font-medium">
           <span>Read More</span>
           <ArrowRight className="w-4 h-4" />
         </div>

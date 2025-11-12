@@ -16,7 +16,7 @@ export function Header() {
   const isActive = (path: string) => location.pathname === path;
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-white border-b border-gray-200">
+    <header className="fixed top-0 left-0 right-0 z-50 bg-background border-b border-border">
       <nav className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-20">
           {/* Logo */}
@@ -30,10 +30,10 @@ export function Header() {
               <Link
                 key={item.path}
                 to={item.path}
-                className={`transition-colors ${
+                className={`transition-colors font-medium ${
                   isActive(item.path)
-                    ? 'text-gray-900'
-                    : 'text-gray-600 hover:text-gray-900'
+                    ? 'text-foreground'
+                    : 'text-muted-foreground hover:text-foreground'
                 }`}
               >
                 {item.name}
@@ -48,24 +48,24 @@ export function Header() {
             aria-label="Toggle menu"
           >
             {mobileMenuOpen ? (
-              <X className="w-6 h-6 text-gray-900" />
+              <X className="w-6 h-6 text-foreground" />
             ) : (
-              <Menu className="w-6 h-6 text-gray-900" />
+              <Menu className="w-6 h-6 text-foreground" />
             )}
           </button>
         </div>
 
         {/* Mobile Navigation */}
         {mobileMenuOpen && (
-          <div className="md:hidden py-4 border-t border-gray-200">
+          <div className="md:hidden py-4 border-t border-border">
             {navItems.map((item) => (
               <Link
                 key={item.path}
                 to={item.path}
-                className={`block py-3 transition-colors ${
+                className={`block py-3 transition-colors font-medium ${
                   isActive(item.path)
-                    ? 'text-gray-900'
-                    : 'text-gray-600'
+                    ? 'text-foreground'
+                    : 'text-muted-foreground'
                 }`}
                 onClick={() => setMobileMenuOpen(false)}
               >

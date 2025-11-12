@@ -9,7 +9,7 @@ interface TeamMemberCardProps {
 
 export function TeamMemberCard({ name, role, bio, image }: TeamMemberCardProps) {
   return (
-    <div className="bg-white rounded-lg overflow-hidden">
+    <div className="bg-card rounded-lg overflow-hidden border border-card-border">
       <div className="aspect-square overflow-hidden">
         <ImageWithFallback
           src={image}
@@ -18,9 +18,9 @@ export function TeamMemberCard({ name, role, bio, image }: TeamMemberCardProps) 
         />
       </div>
       <div className="p-6">
-        <h3 className="text-gray-900 mb-1">{name}</h3>
-        <p className="text-gray-600 mb-3">{role}</p>
-        <p className="text-gray-600">{bio}</p>
+        <h3 className="text-card-foreground mb-1 font-medium">{name}</h3>
+        <p className="text-muted-foreground text-sm mb-3">{role}</p>
+        <p className="text-muted-foreground text-sm">{bio}</p>
       </div>
     </div>
   );
