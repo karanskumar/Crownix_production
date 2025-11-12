@@ -44,18 +44,12 @@ export function HomePage() {
             <p className="text-xl text-white/90 mb-8">
               Delivering premium residential and commercial projects across Australia with proven expertise and an unwavering commitment to excellence.
             </p>
-            <div className="flex flex-wrap gap-4">
+            <div>
               <Link
                 to="/contact"
-                className="px-8 py-3 bg-accent text-primary rounded-lg hover:bg-accent/90 transition-colors font-medium"
+                className="px-8 py-3 bg-accent text-primary rounded-lg hover:bg-accent/90 transition-colors font-medium inline-block"
               >
                 Get in Touch
-              </Link>
-              <Link
-                to="/about"
-                className="px-8 py-3 bg-transparent text-white border-2 border-white rounded-lg hover:bg-white/10 transition-colors font-medium"
-              >
-                Learn More
               </Link>
             </div>
           </div>
