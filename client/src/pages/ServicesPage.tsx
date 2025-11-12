@@ -1,5 +1,4 @@
-import { Link } from 'react-router-dom';
-import { Home, Building, MapPin, ClipboardCheck, ArrowRight, CheckCircle } from 'lucide-react';
+import { Home, Building, MapPin, ClipboardCheck, CheckCircle } from 'lucide-react';
 import { ImageWithFallback } from '../components/figma/ImageWithFallback';
 import { ServiceSection } from '../components/ServiceSection';
 
@@ -29,7 +28,7 @@ export function ServicesPage() {
           <div className="max-w-2xl text-white">
             <h1 className="text-4xl font-bold text-white mb-4">Our Services</h1>
             <p className="text-xl text-white/90">
-              Comprehensive construction and development solutions across Australia
+              Comprehensive development and construction solutions across Australia
             </p>
           </div>
         </div>
@@ -47,30 +46,30 @@ export function ServicesPage() {
 
           <div className="space-y-24">
             <ServiceSection
-              title="Residential Development"
-              description="We specialize in creating premium residential spaces that combine modern design with functional living. From luxury apartments to master-planned communities, our residential projects set new standards in quality and livability. Our team works closely with architects, designers, and local authorities to ensure each development meets the highest standards while reflecting the unique character of its location."
+              title="Luxury Developments"
+              description="Crownix specialises in luxury residential developments that redefine modern living. From bespoke knockdown rebuilds to architecturally designed townhouses, each project reflects uncompromising quality, attention to detail, and timeless design. Our team manages every stage — from acquisition and design through to construction and handover — ensuring seamless delivery and enduring value. With Crownix, luxury isn't just built — it's curated."
               image="https://images.unsplash.com/photo-1491357492920-d2979986a84e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxyZXNpZGVudGlhbCUyMGRldmVsb3BtZW50fGVufDF8fHx8MTc2MjM1ODM5NHww&ixlib=rb-4.1.0&q=80&w=1080"
               icon={Home}
             />
 
             <ServiceSection
-              title="Commercial Build"
-              description="Our commercial construction expertise spans office complexes, retail centers, and mixed-use developments. We understand the unique demands of commercial projects, including tight timelines, minimal disruption, and the need for future-proof infrastructure. Our portfolio includes landmark buildings across Australia's major cities, each delivered with precision and attention to detail."
+              title="Commercial Builds"
+              description="Our commercial division delivers high-performance spaces built for business growth and long-term functionality. Whether it's office complexes, industrial parks, retail centres, or mixed-use developments, Crownix combines construction precision with strategic foresight to optimise every square metre. We partner closely with investors, tenants, and stakeholders to ensure each project meets budget, timeline, and performance benchmarks without compromise. Crownix builds with purpose — for productivity, presence, and profit."
               image="https://images.unsplash.com/photo-1681216868987-b7268753b81c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxtb2Rlcm4lMjBidWlsZGluZyUyMGFyY2hpdGVjdHVyZXxlbnwxfHx8fDE3NjIyOTkwMzJ8MA&ixlib=rb-4.1.0&q=80&w=1080"
               icon={Building}
               reverse
             />
 
             <ServiceSection
-              title="Land Subdivision"
-              description="Strategic land development requires careful planning, regulatory expertise, and vision. We manage the entire subdivision process, from initial feasibility studies through to infrastructure development and lot creation. Our experience across diverse Australian markets ensures we can navigate local requirements while maximizing value for stakeholders."
+              title="Land Subdivisions"
+              description="Crownix leads end-to-end land subdivision and house-and-land delivery, transforming raw land into thriving residential communities. We oversee every phase — site acquisition, planning, civil works, construction, and sales — with a strong focus on quality, speed, and financial return. At Crownix, we don't just develop land — we create opportunity."
               image="https://images.unsplash.com/photo-1554878516-1691fd114521?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxhZXJpYWwlMjBjaXR5JTIwc2t5bGluZXxlbnwxfHx8fDE3NjIzMjk0NjF8MA&ixlib=rb-4.1.0&q=80&w=1080"
               icon={MapPin}
             />
 
             <ServiceSection
-              title="Project Management"
-              description="Effective project management is at the heart of successful construction. Our dedicated project managers oversee every aspect of delivery, from procurement and scheduling to quality control and stakeholder communication. We use proven methodologies and digital tools to ensure projects stay on track, on budget, and exceed expectations."
+              title="SMSF Projects"
+              description="For investors seeking stability and long-term growth through their Self-Managed Super Funds, Crownix provides tailored property development and acquisition strategies. We handle the full process — from compliant structuring and project selection to construction and settlement — ensuring transparency and maximised returns within SMSF regulations. With deep expertise across finance, development, and construction, Crownix empowers clients to build wealth through tangible, high-performing assets."
               image="https://images.unsplash.com/photo-1635402009210-9e36c68f0868?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxjb25zdHJ1Y3Rpb24lMjBzaXRlJTIwYXVzdHJhbGlhfGVufDF8fHx8MTc2MjQwODIxNnww&ixlib=rb-4.1.0&q=80&w=1080"
               icon={ClipboardCheck}
               reverse
@@ -116,11 +115,11 @@ export function ServicesPage() {
                 'Nationwide coverage with local expertise',
                 'Proven track record of on-time delivery',
                 'Transparent communication and reporting',
-                'ISO-certified quality management systems',
                 'Experienced leadership team',
                 'Strong safety and sustainability focus',
                 'Comprehensive project management',
                 'End-to-end development capabilities',
+                'Industry leading quality control measures',
               ].map((benefit) => (
                 <div key={benefit} className="flex items-start gap-3">
                   <CheckCircle className="w-6 h-6 text-primary flex-shrink-0 mt-0.5" />
@@ -128,25 +127,6 @@ export function ServicesPage() {
                 </div>
               ))}
             </div>
-          </div>
-        </div>
-      </section>
-
-      {/* CTA */}
-      <section className="py-16 md:py-24 bg-primary text-white">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="max-w-3xl mx-auto text-center">
-            <h2 className="text-white mb-6">Let's Discuss Your Project</h2>
-            <p className="text-white/90 text-lg mb-8">
-              Whether you have a detailed brief or are just exploring possibilities, our team is ready to help bring your vision to life.
-            </p>
-            <Link
-              to="/contact"
-              className="inline-flex items-center gap-2 px-8 py-3 bg-accent text-primary rounded-lg hover:bg-accent/90 transition-colors font-medium"
-            >
-              <span>Request Project Brief</span>
-              <ArrowRight className="w-5 h-5" />
-            </Link>
           </div>
         </div>
       </section>
