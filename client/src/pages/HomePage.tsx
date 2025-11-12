@@ -29,12 +29,12 @@ export function HomePage() {
   return (
     <div>
       {/* Hero Section */}
-      <section className="relative h-[600px] md:h-[700px] flex items-center">
+      <section className="relative h-[600px] md:h-[700px] flex items-center overflow-hidden">
         <div className="absolute inset-0">
           <ImageWithFallback
             src="https://images.unsplash.com/photo-1635402009210-9e36c68f0868?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxjb25zdHJ1Y3Rpb24lMjBzaXRlJTIwYXVzdHJhbGlhfGVufDF8fHx8MTc2MjQwODIxNnww&ixlib=rb-4.1.0&q=80&w=1080"
             alt="Construction site"
-            className="w-full h-full object-cover"
+            className="w-full h-full object-cover animate-[zoomIn_20s_ease-in-out_infinite_alternate]"
           />
           <div className="absolute inset-0 bg-gradient-to-r from-primary/90 to-primary/50" />
         </div>
