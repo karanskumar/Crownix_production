@@ -91,8 +91,8 @@ export function ContactPage() {
             <div>
               <h2 className="text-foreground mb-6">Send Us a Message</h2>
               {submitted ? (
-                <div className="p-6 bg-green-50 border border-green-200 rounded-lg">
-                  <p className="text-green-900">
+                <div className="p-6 bg-accent/10 border border-accent rounded-lg">
+                  <p className="text-primary font-medium">
                     Thank you for your message! We'll get back to you shortly.
                   </p>
                 </div>
