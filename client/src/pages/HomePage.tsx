@@ -1,8 +1,6 @@
 import { Link } from 'react-router-dom';
 import { Building2, Users, Layers, TrendingUp, ArrowRight, Home, Building, MapPin, ClipboardCheck } from 'lucide-react';
 import { ImageWithFallback } from '../components/figma/ImageWithFallback';
-import { ProjectCard } from '../components/ProjectCard';
-import { ArticleCard } from '../components/ArticleCard';
 
 export function HomePage() {
   const services = [
@@ -25,52 +23,6 @@ export function HomePage() {
       icon: ClipboardCheck,
       title: 'Project Management',
       description: 'End-to-end project management ensuring on-time, on-budget delivery.',
-    },
-  ];
-
-  const featuredProjects = [
-    {
-      id: 'riverside-towers',
-      title: 'Riverside Towers',
-      location: 'Brisbane',
-      state: 'QLD',
-      description: 'Luxury waterfront residential development',
-      image: 'https://images.unsplash.com/photo-1611095210561-67f0832b1ca3?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxsdXh1cnklMjBhcGFydG1lbnQlMjBidWlsZGluZ3xlbnwxfHx8fDE3NjIyODY4NjB8MA&ixlib=rb-4.1.0&q=80&w=1080',
-    },
-    {
-      id: 'metro-plaza',
-      title: 'Metro Plaza',
-      location: 'Sydney',
-      state: 'NSW',
-      description: 'Premium commercial office complex',
-      image: 'https://images.unsplash.com/photo-1681216868987-b7268753b81c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxtb2Rlcm4lMjBidWlsZGluZyUyMGFyY2hpdGVjdHVyZXxlbnwxfHx8fDE3NjIyOTkwMzJ8MA&ixlib=rb-4.1.0&q=80&w=1080',
-    },
-    {
-      id: 'coastal-estate',
-      title: 'Coastal Estate',
-      location: 'Perth',
-      state: 'WA',
-      description: 'Master-planned residential community',
-      image: 'https://images.unsplash.com/photo-1491357492920-d2979986a84e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxyZXNpZGVudGlhbCUyMGRldmVsb3BtZW50fGVufDF8fHx8MTc2MjM1ODM5NHww&ixlib=rb-4.1.0&q=80&w=1080',
-    },
-  ];
-
-  const latestInsights = [
-    {
-      id: 'sustainable-construction',
-      title: 'The Future of Sustainable Construction in Australia',
-      excerpt: 'Exploring innovative approaches to eco-friendly building practices and materials.',
-      date: 'Nov 1, 2025',
-      category: 'Sustainability',
-      image: 'https://images.unsplash.com/photo-1635402009210-9e36c68f0868?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxjb25zdHJ1Y3Rpb24lMjBzaXRlJTIwYXVzdHJhbGlhfGVufDF8fHx8MTc2MjQwODIxNnww&ixlib=rb-4.1.0&q=80&w=1080',
-    },
-    {
-      id: 'project-efficiency',
-      title: 'Maximizing Project Efficiency Through Digital Innovation',
-      excerpt: 'How technology is transforming construction project management and delivery.',
-      date: 'Oct 28, 2025',
-      category: 'Technology',
-      image: 'https://images.unsplash.com/photo-1704297275778-8763889fa47d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxjb21tZXJjaWFsJTIwYnVpbGRpbmclMjBjb25zdHJ1Y3Rpb258ZW58MXx8fHwxNzYyMzY3MjY2fDA&ixlib=rb-4.1.0&q=80&w=1080',
     },
   ];
 
@@ -161,32 +113,6 @@ export function HomePage() {
         </div>
       </section>
 
-      {/* Featured Projects */}
-      <section className="py-16 md:py-24 bg-white">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="text-gray-900 mb-4">Featured Projects</h2>
-            <p className="text-gray-600 text-lg max-w-2xl mx-auto">
-              Showcasing our commitment to quality and innovation across Australia
-            </p>
-          </div>
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {featuredProjects.map((project) => (
-              <ProjectCard key={project.id} {...project} />
-            ))}
-          </div>
-          <div className="text-center mt-12">
-            <Link
-              to="/projects"
-              className="inline-flex items-center gap-2 text-gray-900 hover:gap-3 transition-all"
-            >
-              <span>View All Projects</span>
-              <ArrowRight className="w-5 h-5" />
-            </Link>
-          </div>
-        </div>
-      </section>
-
       {/* Leadership Teaser */}
       <section className="py-16 md:py-24 bg-gray-900 text-white">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -207,31 +133,6 @@ export function HomePage() {
         </div>
       </section>
 
-      {/* Latest Insights */}
-      <section className="py-16 md:py-24 bg-white">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="text-gray-900 mb-4">Latest Insights</h2>
-            <p className="text-gray-600 text-lg max-w-2xl mx-auto">
-              Industry news, project updates, and thought leadership
-            </p>
-          </div>
-          <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
-            {latestInsights.map((article) => (
-              <ArticleCard key={article.id} {...article} />
-            ))}
-          </div>
-          <div className="text-center mt-12">
-            <Link
-              to="/insights"
-              className="inline-flex items-center gap-2 text-gray-900 hover:gap-3 transition-all"
-            >
-              <span>View All Insights</span>
-              <ArrowRight className="w-5 h-5" />
-            </Link>
-          </div>
-        </div>
-      </section>
     </div>
   );
 }
