@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
-import { Building2, MapPin, Phone, Mail, Linkedin, Facebook, Instagram } from 'lucide-react';
+import { MapPin, Phone, Mail, Linkedin, Facebook, Instagram } from 'lucide-react';
+import crownixLogo from '@assets/crownix_logo_1762957456049.png';
 
 export function Footer() {
   return (
@@ -8,9 +9,8 @@ export function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
           {/* Company Info */}
           <div>
-            <div className="flex items-center gap-2 mb-4">
-              <Building2 className="w-8 h-8" />
-              <span>BuildAus</span>
+            <div className="mb-4">
+              <img src={crownixLogo} alt="Crownix" className="h-10 brightness-0 invert" />
             </div>
             <p className="text-gray-400 mb-4">
               Delivering premium residential and commercial construction across Australia.
@@ -90,7 +90,7 @@ export function Footer() {
         <div className="pt-8 border-t border-gray-800">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
             <p className="text-gray-400">
-              © {new Date().getFullYear()} BuildAus. All rights reserved.
+              © {new Date().getFullYear()} Crownix. All rights reserved.
             </p>
             <div className="flex gap-6">
               <Link to="#" className="text-gray-400 hover:text-white transition-colors">

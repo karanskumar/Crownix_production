@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Menu, X, Building2 } from 'lucide-react';
+import { Menu, X } from 'lucide-react';
+import crownixLogo from '@assets/crownix_logo_1762957456049.png';
 
 export function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -21,9 +22,8 @@ export function Header() {
       <nav className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-20">
           {/* Logo */}
-          <Link to="/" className="flex items-center gap-2">
-            <Building2 className="w-8 h-8 text-gray-900" />
-            <span className="text-gray-900">BuildAus</span>
+          <Link to="/" className="flex items-center">
+            <img src={crownixLogo} alt="Crownix" className="h-12" />
           </Link>
 
           {/* Desktop Navigation */}
