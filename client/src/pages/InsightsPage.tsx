@@ -67,7 +67,7 @@ export function InsightsPage() {
         </div>
         <div className="relative container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-2xl text-white">
-            <h1 className="text-white mb-4">Insights & News</h1>
+            <h1 className="text-4xl font-bold text-white mb-4">Insights & News</h1>
             <p className="text-xl text-gray-100">
               Industry perspectives, project updates, and thought leadership from our team
             </p>

@@ -76,7 +76,7 @@ export function ContactPage() {
         </div>
         <div className="relative container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-2xl text-white">
-            <h1 className="text-white mb-4">Get in Touch</h1>
+            <h1 className="text-4xl font-bold text-white mb-4">Get in Touch</h1>
             <p className="text-xl text-gray-100">
               Ready to discuss your next project? Our team is here to help.
             </p>

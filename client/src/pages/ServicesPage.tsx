@@ -27,7 +27,7 @@ export function ServicesPage() {
         </div>
         <div className="relative container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-2xl text-white">
-            <h1 className="text-white mb-4">Our Services</h1>
+            <h1 className="text-4xl font-bold text-white mb-4">Our Services</h1>
             <p className="text-xl text-gray-100">
               Comprehensive construction and development solutions across Australia
             </p>
