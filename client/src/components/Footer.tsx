@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { MapPin, Phone, Mail, Linkedin, Facebook, Instagram } from 'lucide-react';
+import { MapPin, Mail } from 'lucide-react';
 import crownixLogo from '@assets/crownix_logo_1762957456049.png';
 
 export function Footer() {
@@ -13,19 +13,8 @@ export function Footer() {
               <img src={crownixLogo} alt="Crownix" style={{ height: '4.5rem' }} />
             </div>
             <p className="text-white/70 mb-4">
-              Delivering premium residential and commercial construction across Australia.
+              Delivering premium residential and commercial projects across Australia.
             </p>
-            <div className="flex gap-4">
-              <a href="#" className="text-white/70 hover:text-white transition-colors">
-                <Linkedin className="w-5 h-5" />
-              </a>
-              <a href="#" className="text-white/70 hover:text-white transition-colors">
-                <Facebook className="w-5 h-5" />
-              </a>
-              <a href="#" className="text-white/70 hover:text-white transition-colors">
-                <Instagram className="w-5 h-5" />
-              </a>
-            </div>
           </div>
 
           {/* Quick Links */}
@@ -57,7 +46,6 @@ export function Footer() {
               <li>Sydney, NSW</li>
               <li>Melbourne, VIC</li>
               <li>Brisbane, QLD</li>
-              <li>Perth, WA</li>
             </ul>
           </div>
 
@@ -67,11 +55,7 @@ export function Footer() {
             <ul className="space-y-3">
               <li className="flex items-start gap-2 text-white/70">
                 <MapPin className="w-5 h-5 flex-shrink-0 mt-0.5" />
-                <span>Level 10, 123 Collins Street<br />Melbourne VIC 3000</span>
-              </li>
-              <li className="flex items-center gap-2 text-white/70">
-                <Phone className="w-5 h-5 flex-shrink-0" />
-                <span>1300 CROWNIX</span>
+                <span>Head Office: Level 35, One International Towers, 100 Barangaroo Avenue, Sydney, NSW, 2000</span>
               </li>
               <li className="flex items-center gap-2 text-white/70">
                 <Mail className="w-5 h-5 flex-shrink-0" />
@@ -85,7 +69,7 @@ export function Footer() {
         <div className="pt-8 border-t border-white/20">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
             <p className="text-white/70">
-              © {new Date().getFullYear()} Crownix. All rights reserved.
+              © 2025 Crownix. All rights reserved.
             </p>
             <div className="flex gap-6">
               <Link to="#" className="text-white/70 hover:text-white transition-colors">
