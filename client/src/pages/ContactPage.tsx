@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { MapPin, Phone, Mail, Send } from 'lucide-react';
+import { MapPin, Mail, Send } from 'lucide-react';
 import { ImageWithFallback } from '../components/figma/ImageWithFallback';
 
 export function ContactPage() {
@@ -29,37 +29,6 @@ export function ContactPage() {
       [e.target.name]: e.target.value,
     });
   };
-
-  const offices = [
-    {
-      city: 'Melbourne (HQ)',
-      state: 'VIC',
-      address: 'Level 10, 123 Collins Street',
-      postcode: 'Melbourne VIC 3000',
-      phone: '(03) 9000 0000',
-    },
-    {
-      city: 'Sydney',
-      state: 'NSW',
-      address: 'Level 15, 100 George Street',
-      postcode: 'Sydney NSW 2000',
-      phone: '(02) 9000 0000',
-    },
-    {
-      city: 'Brisbane',
-      state: 'QLD',
-      address: 'Level 8, 180 Queen Street',
-      postcode: 'Brisbane QLD 4000',
-      phone: '(07) 3000 0000',
-    },
-    {
-      city: 'Perth',
-      state: 'WA',
-      address: 'Level 5, 125 St Georges Terrace',
-      postcode: 'Perth WA 6000',
-      phone: '(08) 9000 0000',
-    },
-  ];
 
   return (
     <div>
@@ -183,22 +152,11 @@ export function ContactPage() {
               <div className="space-y-6 mb-8">
                 <div className="flex items-start gap-4">
                   <div className="flex-shrink-0 w-12 h-12 rounded-lg bg-primary text-primary-foreground flex items-center justify-center">
-                    <Phone className="w-6 h-6" />
-                  </div>
-                  <div>
-                    <p className="text-foreground mb-1 font-medium">Phone</p>
-                    <p className="text-muted-foreground">1300 CROWNIX</p>
-                    <p className="text-muted-foreground">(1300 276 964)</p>
-                  </div>
-                </div>
-                <div className="flex items-start gap-4">
-                  <div className="flex-shrink-0 w-12 h-12 rounded-lg bg-primary text-primary-foreground flex items-center justify-center">
                     <Mail className="w-6 h-6" />
                   </div>
                   <div>
                     <p className="text-foreground mb-1 font-medium">Email</p>
                     <p className="text-muted-foreground">info@crownix.com.au</p>
-                    <p className="text-muted-foreground">projects@crownix.com.au</p>
                   </div>
                 </div>
                 <div className="flex items-start gap-4">
@@ -206,9 +164,8 @@ export function ContactPage() {
                     <MapPin className="w-6 h-6" />
                   </div>
                   <div>
-                    <p className="text-foreground mb-1 font-medium">Head Office</p>
-                    <p className="text-muted-foreground">Level 10, 123 Collins Street</p>
-                    <p className="text-muted-foreground">Melbourne VIC 3000</p>
+                    <p className="text-foreground mb-1 font-medium">Address</p>
+                    <p className="text-muted-foreground">Head Office: Level 35, One International Towers, 100 Barangaroo Avenue, Sydney, NSW, 2000</p>
                   </div>
                 </div>
               </div>
@@ -217,52 +174,11 @@ export function ContactPage() {
                 <h3 className="text-foreground mb-4 font-medium">Business Hours</h3>
                 <div className="space-y-2 text-muted-foreground">
                   <p>Monday - Friday: 8:00 AM - 6:00 PM</p>
-                  <p>Saturday: 9:00 AM - 1:00 PM</p>
+                  <p>Saturday: Closed</p>
                   <p>Sunday: Closed</p>
                 </div>
               </div>
             </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Regional Offices */}
-      <section className="py-16 md:py-24 bg-muted">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="text-foreground mb-4">Our Offices</h2>
-            <p className="text-muted-foreground text-lg">
-              Nationwide presence with local expertise
-            </p>
-          </div>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
-            {offices.map((office) => (
-              <div key={office.city} className="bg-card p-6 rounded-lg border border-card-border">
-                <div className="flex items-start gap-3 mb-4">
-                  <MapPin className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
-                  <div>
-                    <p className="text-card-foreground font-medium mb-1">{office.city}</p>
-                    <p className="text-muted-foreground text-sm">{office.address}</p>
-                    <p className="text-muted-foreground text-sm">{office.postcode}</p>
-                  </div>
-                </div>
-                <div className="flex items-center gap-2 text-muted-foreground">
-                  <Phone className="w-4 h-4" />
-                  <span className="text-sm">{office.phone}</span>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Map Section */}
-      <section className="h-[400px] bg-muted">
-        <div className="w-full h-full flex items-center justify-center text-muted-foreground">
-          <div className="text-center">
-            <MapPin className="w-12 h-12 mx-auto mb-4" />
-            <p>Interactive map would be integrated here</p>
-            <p className="text-sm">(Using Google Maps or similar service)</p>
           </div>
         </div>
       </section>
