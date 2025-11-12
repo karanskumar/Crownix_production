@@ -66,13 +66,13 @@ export function HomePage() {
       <section className="py-16 md:py-24 bg-white">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-3xl mx-auto text-center">
-            <h2 className="text-gray-900 mb-6">About BuildAus</h2>
-            <p className="text-gray-600 text-lg leading-relaxed mb-8">
+            <h2 className="text-foreground mb-6">About Crownix</h2>
+            <p className="text-muted-foreground text-lg leading-relaxed mb-8">
               We are a national construction and development company with operations across Australia. Our team brings decades of combined experience in delivering high-quality residential and commercial projects. From initial concept to final handover, we prioritize transparency, reliability, and operational excellence in everything we do.
             </p>
             <Link
               to="/about"
-              className="inline-flex items-center gap-2 text-gray-900 hover:gap-3 transition-all"
+              className="inline-flex items-center gap-2 text-primary hover:gap-3 transition-all font-medium"
             >
               <span>Learn More About Us</span>
               <ArrowRight className="w-5 h-5" />
@@ -82,29 +82,29 @@ export function HomePage() {
       </section>
 
       {/* Services Section */}
-      <section className="py-16 md:py-24 bg-gray-50">
+      <section className="py-16 md:py-24 bg-muted">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <h2 className="text-gray-900 mb-4">Our Services</h2>
-            <p className="text-gray-600 text-lg max-w-2xl mx-auto">
+            <h2 className="text-foreground mb-4">Our Services</h2>
+            <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
               Comprehensive construction and development solutions tailored to your needs
             </p>
           </div>
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
             {services.map((service) => (
-              <div key={service.title} className="bg-white p-6 rounded-lg shadow-sm">
-                <div className="inline-flex items-center justify-center w-12 h-12 rounded-lg bg-gray-900 text-white mb-4">
+              <div key={service.title} className="bg-card p-6 rounded-lg shadow-sm border border-card-border">
+                <div className="inline-flex items-center justify-center w-12 h-12 rounded-lg bg-primary text-primary-foreground mb-4">
                   <service.icon className="w-6 h-6" />
                 </div>
-                <h3 className="text-gray-900 mb-3">{service.title}</h3>
-                <p className="text-gray-600">{service.description}</p>
+                <h3 className="text-card-foreground mb-3">{service.title}</h3>
+                <p className="text-muted-foreground">{service.description}</p>
               </div>
             ))}
           </div>
           <div className="text-center mt-12">
             <Link
               to="/services"
-              className="inline-flex items-center gap-2 text-gray-900 hover:gap-3 transition-all"
+              className="inline-flex items-center gap-2 text-primary hover:gap-3 transition-all font-medium"
             >
               <span>Explore All Services</span>
               <ArrowRight className="w-5 h-5" />
@@ -117,14 +117,14 @@ export function HomePage() {
       <section className="py-16 md:py-24 bg-white">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-3xl mx-auto text-center">
-            <Users className="w-12 h-12 mx-auto mb-6 text-gray-900" />
-            <h2 className="text-gray-900 mb-6">Led by Industry Experts</h2>
-            <p className="text-gray-600 text-lg mb-8">
+            <Users className="w-12 h-12 mx-auto mb-6 text-primary" />
+            <h2 className="text-foreground mb-6">Led by Industry Experts</h2>
+            <p className="text-muted-foreground text-lg mb-8">
               Our leadership team brings decades of proven track record in construction and development across Australia. Their expertise drives our commitment to excellence and innovation.
             </p>
             <Link
               to="/about"
-              className="inline-flex items-center gap-2 text-gray-900 hover:gap-3 transition-all"
+              className="inline-flex items-center gap-2 text-primary hover:gap-3 transition-all font-medium"
             >
               <span>Meet Our Team</span>
               <ArrowRight className="w-5 h-5" />
