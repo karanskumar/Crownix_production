@@ -15,7 +15,6 @@ export function ContactPage() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // In a real app, this would send the form data to a server
     console.log('Form submitted:', formData);
     setSubmitted(true);
     setTimeout(() => {
@@ -72,12 +71,12 @@ export function ContactPage() {
             alt="Contact us"
             className="w-full h-full object-cover"
           />
-          <div className="absolute inset-0 bg-gradient-to-r from-gray-900/80 to-gray-900/40" />
+          <div className="absolute inset-0 bg-gradient-to-r from-primary/90 to-primary/50" />
         </div>
         <div className="relative container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-2xl text-white">
             <h1 className="text-4xl font-bold text-white mb-4">Get in Touch</h1>
-            <p className="text-xl text-gray-100">
+            <p className="text-xl text-white/90">
               Ready to discuss your next project? Our team is here to help.
             </p>
           </div>
@@ -90,7 +89,7 @@ export function ContactPage() {
           <div className="grid lg:grid-cols-2 gap-12 max-w-6xl mx-auto">
             {/* Contact Form */}
             <div>
-              <h2 className="text-gray-900 mb-6">Send Us a Message</h2>
+              <h2 className="text-foreground mb-6">Send Us a Message</h2>
               {submitted ? (
                 <div className="p-6 bg-green-50 border border-green-200 rounded-lg">
                   <p className="text-green-900">
@@ -100,7 +99,7 @@ export function ContactPage() {
               ) : (
                 <form onSubmit={handleSubmit} className="space-y-6">
                   <div>
-                    <label htmlFor="name" className="block text-gray-700 mb-2">
+                    <label htmlFor="name" className="block text-foreground mb-2 font-medium">
                       Name *
                     </label>
                     <input
@@ -110,11 +109,11 @@ export function ContactPage() {
                       value={formData.name}
                       onChange={handleChange}
                       required
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-900 focus:border-transparent outline-none transition-shadow"
+                      className="w-full px-4 py-3 border border-border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-shadow bg-background text-foreground"
                     />
                   </div>
                   <div>
-                    <label htmlFor="company" className="block text-gray-700 mb-2">
+                    <label htmlFor="company" className="block text-foreground mb-2 font-medium">
                       Company
                     </label>
                     <input
@@ -123,11 +122,11 @@ export function ContactPage() {
                       name="company"
                       value={formData.company}
                       onChange={handleChange}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-900 focus:border-transparent outline-none transition-shadow"
+                      className="w-full px-4 py-3 border border-border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-shadow bg-background text-foreground"
                     />
                   </div>
                   <div>
-                    <label htmlFor="email" className="block text-gray-700 mb-2">
+                    <label htmlFor="email" className="block text-foreground mb-2 font-medium">
                       Email *
                     </label>
                     <input
@@ -137,11 +136,11 @@ export function ContactPage() {
                       value={formData.email}
                       onChange={handleChange}
                       required
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-900 focus:border-transparent outline-none transition-shadow"
+                      className="w-full px-4 py-3 border border-border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-shadow bg-background text-foreground"
                     />
                   </div>
                   <div>
-                    <label htmlFor="phone" className="block text-gray-700 mb-2">
+                    <label htmlFor="phone" className="block text-foreground mb-2 font-medium">
                       Phone
                     </label>
                     <input
@@ -150,11 +149,11 @@ export function ContactPage() {
                       name="phone"
                       value={formData.phone}
                       onChange={handleChange}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-900 focus:border-transparent outline-none transition-shadow"
+                      className="w-full px-4 py-3 border border-border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-shadow bg-background text-foreground"
                     />
                   </div>
                   <div>
-                    <label htmlFor="message" className="block text-gray-700 mb-2">
+                    <label htmlFor="message" className="block text-foreground mb-2 font-medium">
                       Message *
                     </label>
                     <textarea
@@ -164,12 +163,12 @@ export function ContactPage() {
                       onChange={handleChange}
                       required
                       rows={6}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-900 focus:border-transparent outline-none transition-shadow resize-none"
+                      className="w-full px-4 py-3 border border-border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-shadow resize-none bg-background text-foreground"
                     />
                   </div>
                   <button
                     type="submit"
-                    className="w-full flex items-center justify-center gap-2 px-8 py-3 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition-colors"
+                    className="w-full flex items-center justify-center gap-2 px-8 py-3 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors font-medium"
                   >
                     <Send className="w-5 h-5" />
                     <span>Send Message</span>
@@ -180,43 +179,43 @@ export function ContactPage() {
 
             {/* Contact Information */}
             <div>
-              <h2 className="text-gray-900 mb-6">Contact Information</h2>
+              <h2 className="text-foreground mb-6">Contact Information</h2>
               <div className="space-y-6 mb-8">
                 <div className="flex items-start gap-4">
-                  <div className="flex-shrink-0 w-12 h-12 rounded-lg bg-gray-900 text-white flex items-center justify-center">
+                  <div className="flex-shrink-0 w-12 h-12 rounded-lg bg-primary text-primary-foreground flex items-center justify-center">
                     <Phone className="w-6 h-6" />
                   </div>
                   <div>
-                    <p className="text-gray-900 mb-1">Phone</p>
-                    <p className="text-gray-600">1300 BUILD AU</p>
-                    <p className="text-gray-600">(1300 284 532)</p>
+                    <p className="text-foreground mb-1 font-medium">Phone</p>
+                    <p className="text-muted-foreground">1300 CROWNIX</p>
+                    <p className="text-muted-foreground">(1300 276 964)</p>
                   </div>
                 </div>
                 <div className="flex items-start gap-4">
-                  <div className="flex-shrink-0 w-12 h-12 rounded-lg bg-gray-900 text-white flex items-center justify-center">
+                  <div className="flex-shrink-0 w-12 h-12 rounded-lg bg-primary text-primary-foreground flex items-center justify-center">
                     <Mail className="w-6 h-6" />
                   </div>
                   <div>
-                    <p className="text-gray-900 mb-1">Email</p>
-                    <p className="text-gray-600">info@buildaus.com.au</p>
-                    <p className="text-gray-600">projects@buildaus.com.au</p>
+                    <p className="text-foreground mb-1 font-medium">Email</p>
+                    <p className="text-muted-foreground">info@crownix.com.au</p>
+                    <p className="text-muted-foreground">projects@crownix.com.au</p>
                   </div>
                 </div>
                 <div className="flex items-start gap-4">
-                  <div className="flex-shrink-0 w-12 h-12 rounded-lg bg-gray-900 text-white flex items-center justify-center">
+                  <div className="flex-shrink-0 w-12 h-12 rounded-lg bg-primary text-primary-foreground flex items-center justify-center">
                     <MapPin className="w-6 h-6" />
                   </div>
                   <div>
-                    <p className="text-gray-900 mb-1">Head Office</p>
-                    <p className="text-gray-600">Level 10, 123 Collins Street</p>
-                    <p className="text-gray-600">Melbourne VIC 3000</p>
+                    <p className="text-foreground mb-1 font-medium">Head Office</p>
+                    <p className="text-muted-foreground">Level 10, 123 Collins Street</p>
+                    <p className="text-muted-foreground">Melbourne VIC 3000</p>
                   </div>
                 </div>
               </div>
 
-              <div className="p-6 bg-gray-50 rounded-lg">
-                <h3 className="text-gray-900 mb-4">Business Hours</h3>
-                <div className="space-y-2 text-gray-600">
+              <div className="p-6 bg-muted rounded-lg">
+                <h3 className="text-foreground mb-4 font-medium">Business Hours</h3>
+                <div className="space-y-2 text-muted-foreground">
                   <p>Monday - Friday: 8:00 AM - 6:00 PM</p>
                   <p>Saturday: 9:00 AM - 1:00 PM</p>
                   <p>Sunday: Closed</p>
@@ -228,28 +227,28 @@ export function ContactPage() {
       </section>
 
       {/* Regional Offices */}
-      <section className="py-16 md:py-24 bg-gray-50">
+      <section className="py-16 md:py-24 bg-muted">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <h2 className="text-gray-900 mb-4">Our Offices</h2>
-            <p className="text-gray-600 text-lg">
+            <h2 className="text-foreground mb-4">Our Offices</h2>
+            <p className="text-muted-foreground text-lg">
               Nationwide presence with local expertise
             </p>
           </div>
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
             {offices.map((office) => (
-              <div key={office.city} className="bg-white p-6 rounded-lg">
+              <div key={office.city} className="bg-card p-6 rounded-lg border border-card-border">
                 <div className="flex items-start gap-3 mb-4">
-                  <MapPin className="w-5 h-5 text-gray-900 flex-shrink-0 mt-0.5" />
+                  <MapPin className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
                   <div>
-                    <p className="text-gray-900 mb-1">{office.city}</p>
-                    <p className="text-gray-600">{office.address}</p>
-                    <p className="text-gray-600">{office.postcode}</p>
+                    <p className="text-card-foreground font-medium mb-1">{office.city}</p>
+                    <p className="text-muted-foreground text-sm">{office.address}</p>
+                    <p className="text-muted-foreground text-sm">{office.postcode}</p>
                   </div>
                 </div>
-                <div className="flex items-center gap-2 text-gray-600">
+                <div className="flex items-center gap-2 text-muted-foreground">
                   <Phone className="w-4 h-4" />
-                  <span>{office.phone}</span>
+                  <span className="text-sm">{office.phone}</span>
                 </div>
               </div>
             ))}
@@ -258,8 +257,8 @@ export function ContactPage() {
       </section>
 
       {/* Map Section */}
-      <section className="h-[400px] bg-gray-200">
-        <div className="w-full h-full flex items-center justify-center text-gray-600">
+      <section className="h-[400px] bg-muted">
+        <div className="w-full h-full flex items-center justify-center text-muted-foreground">
           <div className="text-center">
             <MapPin className="w-12 h-12 mx-auto mb-4" />
             <p>Interactive map would be integrated here</p>

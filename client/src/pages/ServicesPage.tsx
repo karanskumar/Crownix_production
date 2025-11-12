@@ -23,12 +23,12 @@ export function ServicesPage() {
             alt="Our services"
             className="w-full h-full object-cover"
           />
-          <div className="absolute inset-0 bg-gradient-to-r from-gray-900/80 to-gray-900/40" />
+          <div className="absolute inset-0 bg-gradient-to-r from-primary/90 to-primary/50" />
         </div>
         <div className="relative container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-2xl text-white">
             <h1 className="text-4xl font-bold text-white mb-4">Our Services</h1>
-            <p className="text-xl text-gray-100">
+            <p className="text-xl text-white/90">
               Comprehensive construction and development solutions across Australia
             </p>
           </div>
@@ -39,8 +39,8 @@ export function ServicesPage() {
       <section className="py-16 md:py-24 bg-white">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-3xl mx-auto text-center mb-16">
-            <h2 className="text-gray-900 mb-6">What We Do</h2>
-            <p className="text-gray-600 text-lg leading-relaxed">
+            <h2 className="text-foreground mb-6">What We Do</h2>
+            <p className="text-muted-foreground text-lg leading-relaxed">
               From concept to completion, we deliver exceptional results across residential and commercial developments. Our integrated approach ensures seamless project delivery with transparency at every stage.
             </p>
           </div>
@@ -80,24 +80,24 @@ export function ServicesPage() {
       </section>
 
       {/* Our Approach */}
-      <section className="py-16 md:py-24 bg-gray-50">
+      <section className="py-16 md:py-24 bg-muted">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-3xl mx-auto text-center mb-12">
-            <h2 className="text-gray-900 mb-6">Our Approach</h2>
-            <p className="text-gray-600 text-lg">
+            <h2 className="text-foreground mb-6">Our Approach</h2>
+            <p className="text-muted-foreground text-lg">
               A systematic process ensuring excellence from EOI to handover
             </p>
           </div>
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-5xl mx-auto">
             {processSteps.map((step, index) => (
-              <div key={step.title} className="bg-white p-6 rounded-lg">
+              <div key={step.title} className="bg-card p-6 rounded-lg border border-card-border">
                 <div className="flex items-start gap-4">
-                  <div className="flex-shrink-0 w-8 h-8 rounded-full bg-gray-900 text-white flex items-center justify-center">
+                  <div className="flex-shrink-0 w-8 h-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center font-medium">
                     {index + 1}
                   </div>
                   <div>
-                    <h3 className="text-gray-900 mb-2">{step.title}</h3>
-                    <p className="text-gray-600">{step.description}</p>
+                    <h3 className="text-card-foreground mb-2">{step.title}</h3>
+                    <p className="text-muted-foreground">{step.description}</p>
                   </div>
                 </div>
               </div>
@@ -110,7 +110,7 @@ export function ServicesPage() {
       <section className="py-16 md:py-24 bg-white">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-4xl mx-auto">
-            <h2 className="text-gray-900 mb-8 text-center">Why Choose BuildAus</h2>
+            <h2 className="text-foreground mb-8 text-center">Why Choose Crownix</h2>
             <div className="grid md:grid-cols-2 gap-6">
               {[
                 'Nationwide coverage with local expertise',
@@ -123,8 +123,8 @@ export function ServicesPage() {
                 'End-to-end development capabilities',
               ].map((benefit) => (
                 <div key={benefit} className="flex items-start gap-3">
-                  <CheckCircle className="w-6 h-6 text-gray-900 flex-shrink-0 mt-0.5" />
-                  <span className="text-gray-600">{benefit}</span>
+                  <CheckCircle className="w-6 h-6 text-primary flex-shrink-0 mt-0.5" />
+                  <span className="text-muted-foreground">{benefit}</span>
                 </div>
               ))}
             </div>
@@ -133,16 +133,16 @@ export function ServicesPage() {
       </section>
 
       {/* CTA */}
-      <section className="py-16 md:py-24 bg-gray-900 text-white">
+      <section className="py-16 md:py-24 bg-primary text-white">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-3xl mx-auto text-center">
             <h2 className="text-white mb-6">Let's Discuss Your Project</h2>
-            <p className="text-gray-300 text-lg mb-8">
+            <p className="text-white/90 text-lg mb-8">
               Whether you have a detailed brief or are just exploring possibilities, our team is ready to help bring your vision to life.
             </p>
             <Link
               to="/contact"
-              className="inline-flex items-center gap-2 px-8 py-3 bg-white text-gray-900 rounded-lg hover:bg-gray-100 transition-colors"
+              className="inline-flex items-center gap-2 px-8 py-3 bg-accent text-primary rounded-lg hover:bg-accent/90 transition-colors font-medium"
             >
               <span>Request Project Brief</span>
               <ArrowRight className="w-5 h-5" />

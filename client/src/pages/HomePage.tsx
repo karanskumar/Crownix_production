@@ -36,26 +36,26 @@ export function HomePage() {
             alt="Construction site"
             className="w-full h-full object-cover"
           />
-          <div className="absolute inset-0 bg-gradient-to-r from-gray-900/80 to-gray-900/40" />
+          <div className="absolute inset-0 bg-gradient-to-r from-primary/90 to-primary/50" />
         </div>
         <div className="relative container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-2xl text-white">
             <h1 className="text-5xl font-bold text-white mb-6">Building Australia-Wide Innovation</h1>
-            <p className="text-xl text-gray-100 mb-8">
+            <p className="text-xl text-white/90 mb-8">
               Delivering premium residential and commercial construction across Australia with proven expertise and unwavering commitment to excellence.
             </p>
             <div className="flex flex-wrap gap-4">
               <Link
-                to="/projects"
-                className="px-8 py-3 bg-white text-gray-900 rounded-lg hover:bg-gray-100 transition-colors"
-              >
-                View Our Projects
-              </Link>
-              <Link
                 to="/contact"
-                className="px-8 py-3 bg-transparent text-white border-2 border-white rounded-lg hover:bg-white hover:text-gray-900 transition-colors"
+                className="px-8 py-3 bg-accent text-primary rounded-lg hover:bg-accent/90 transition-colors font-medium"
               >
                 Get in Touch
+              </Link>
+              <Link
+                to="/about"
+                className="px-8 py-3 bg-transparent text-white border-2 border-white rounded-lg hover:bg-white/10 transition-colors font-medium"
+              >
+                Learn More
               </Link>
             </div>
           </div>

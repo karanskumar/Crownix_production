@@ -59,12 +59,12 @@ export function AboutPage() {
             alt="Our team"
             className="w-full h-full object-cover"
           />
-          <div className="absolute inset-0 bg-gradient-to-r from-gray-900/80 to-gray-900/40" />
+          <div className="absolute inset-0 bg-gradient-to-r from-primary/90 to-primary/50" />
         </div>
         <div className="relative container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-2xl text-white">
-            <h1 className="text-4xl font-bold text-white mb-4">About BuildAus</h1>
-            <p className="text-xl text-gray-100">
+            <h1 className="text-4xl font-bold text-white mb-4">About Crownix</h1>
+            <p className="text-xl text-white/90">
               Building Australia's future with expertise, integrity, and innovation
             </p>
           </div>
@@ -75,10 +75,10 @@ export function AboutPage() {
       <section className="py-16 md:py-24 bg-white">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-4xl mx-auto">
-            <h2 className="text-gray-900 mb-6">Our Story</h2>
-            <div className="space-y-6 text-gray-600 leading-relaxed">
+            <h2 className="text-foreground mb-6">Our Story</h2>
+            <div className="space-y-6 text-muted-foreground leading-relaxed">
               <p>
-                Founded with a vision to transform Australia's construction landscape, BuildAus has grown from a single-state operation to a nationally recognized leader in residential and commercial development. Our journey has been defined by an unwavering commitment to quality, transparency, and operational excellence.
+                Founded with a vision to transform Australia's construction landscape, Crownix has grown from a single-state operation to a nationally recognized leader in residential and commercial development. Our journey has been defined by an unwavering commitment to quality, transparency, and operational excellence.
               </p>
               <p>
                 Today, we operate across all major Australian markets, delivering projects that range from boutique residential developments to large-scale commercial complexes. Our success is built on strong relationships with clients, partners, and communities, and a team of dedicated professionals who share our values.
@@ -92,22 +92,22 @@ export function AboutPage() {
       </section>
 
       {/* Mission & Values */}
-      <section className="py-16 md:py-24 bg-gray-50">
+      <section className="py-16 md:py-24 bg-muted">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <h2 className="text-gray-900 mb-4">Our Mission & Values</h2>
-            <p className="text-gray-600 text-lg max-w-2xl mx-auto">
+            <h2 className="text-foreground mb-4">Our Mission & Values</h2>
+            <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
               Guided by principles that drive excellence in every project
             </p>
           </div>
           <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
             {values.map((value) => (
-              <div key={value.title} className="bg-white p-8 rounded-lg text-center">
-                <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gray-900 text-white mb-4">
+              <div key={value.title} className="bg-card p-8 rounded-lg text-center border border-card-border">
+                <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-primary text-primary-foreground mb-4">
                   <value.icon className="w-8 h-8" />
                 </div>
-                <h3 className="text-gray-900 mb-3">{value.title}</h3>
-                <p className="text-gray-600">{value.description}</p>
+                <h3 className="text-card-foreground mb-3">{value.title}</h3>
+                <p className="text-muted-foreground">{value.description}</p>
               </div>
             ))}
           </div>
@@ -118,8 +118,8 @@ export function AboutPage() {
       <section className="py-16 md:py-24 bg-white">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <h2 className="text-gray-900 mb-4">Our Leadership Team</h2>
-            <p className="text-gray-600 text-lg max-w-2xl mx-auto">
+            <h2 className="text-foreground mb-4">Our Leadership Team</h2>
+            <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
               Proven expertise driving innovation and excellence
             </p>
           </div>
@@ -132,25 +132,25 @@ export function AboutPage() {
       </section>
 
       {/* Accreditations */}
-      <section className="py-16 md:py-24 bg-gray-50">
+      <section className="py-16 md:py-24 bg-muted">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-4xl mx-auto text-center">
-            <h2 className="text-gray-900 mb-6">Accreditations & Awards</h2>
-            <p className="text-gray-600 text-lg leading-relaxed mb-8">
-              BuildAus is proud to hold industry-leading certifications and has been recognized with multiple awards for excellence in construction and development. Our commitment to safety, quality, and sustainability is reflected in our ISO certifications and our recognition as a preferred partner by major clients across Australia.
+            <h2 className="text-foreground mb-6">Accreditations & Awards</h2>
+            <p className="text-muted-foreground text-lg leading-relaxed mb-8">
+              Crownix is proud to hold industry-leading certifications and has been recognized with multiple awards for excellence in construction and development. Our commitment to safety, quality, and sustainability is reflected in our ISO certifications and our recognition as a preferred partner by major clients across Australia.
             </p>
             <div className="grid sm:grid-cols-3 gap-6">
-              <div className="bg-white p-6 rounded-lg">
-                <p className="text-gray-900">ISO 9001:2015</p>
-                <p className="text-gray-600">Quality Management</p>
+              <div className="bg-card p-6 rounded-lg border border-card-border">
+                <p className="text-card-foreground font-medium">ISO 9001:2015</p>
+                <p className="text-muted-foreground">Quality Management</p>
               </div>
-              <div className="bg-white p-6 rounded-lg">
-                <p className="text-gray-900">ISO 14001:2015</p>
-                <p className="text-gray-600">Environmental Management</p>
+              <div className="bg-card p-6 rounded-lg border border-card-border">
+                <p className="text-card-foreground font-medium">ISO 14001:2015</p>
+                <p className="text-muted-foreground">Environmental Management</p>
               </div>
-              <div className="bg-white p-6 rounded-lg">
-                <p className="text-gray-900">ISO 45001:2018</p>
-                <p className="text-gray-600">Occupational Health & Safety</p>
+              <div className="bg-card p-6 rounded-lg border border-card-border">
+                <p className="text-card-foreground font-medium">ISO 45001:2018</p>
+                <p className="text-muted-foreground">Occupational Health & Safety</p>
               </div>
             </div>
           </div>
@@ -158,26 +158,26 @@ export function AboutPage() {
       </section>
 
       {/* CTA */}
-      <section className="py-16 md:py-24 bg-gray-900 text-white">
+      <section className="py-16 md:py-24 bg-primary text-white">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-3xl mx-auto text-center">
             <h2 className="text-white mb-6">Ready to Work With Us?</h2>
-            <p className="text-gray-300 text-lg mb-8">
-              Explore our portfolio of completed projects or get in touch to discuss your next development.
+            <p className="text-white/90 text-lg mb-8">
+              Get in touch to discuss your next development.
             </p>
             <div className="flex flex-wrap gap-4 justify-center">
               <Link
-                to="/projects"
-                className="inline-flex items-center gap-2 px-8 py-3 bg-white text-gray-900 rounded-lg hover:bg-gray-100 transition-colors"
+                to="/contact"
+                className="inline-flex items-center gap-2 px-8 py-3 bg-accent text-primary rounded-lg hover:bg-accent/90 transition-colors font-medium"
               >
-                <span>View Our Projects</span>
+                <span>Get in Touch</span>
                 <ArrowRight className="w-5 h-5" />
               </Link>
               <Link
-                to="/contact"
-                className="inline-flex items-center gap-2 px-8 py-3 bg-transparent text-white border-2 border-white rounded-lg hover:bg-white hover:text-gray-900 transition-colors"
+                to="/services"
+                className="inline-flex items-center gap-2 px-8 py-3 bg-transparent text-white border-2 border-white rounded-lg hover:bg-white/10 transition-colors font-medium"
               >
-                <span>Get in Touch</span>
+                <span>Our Services</span>
                 <ArrowRight className="w-5 h-5" />
               </Link>
             </div>
