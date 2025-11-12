@@ -40,9 +40,9 @@ export function HomePage() {
         </div>
         <div className="relative container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-2xl text-white">
-            <h1 className="text-5xl font-bold text-white mb-6">Building Australia-Wide Innovation</h1>
+            <h1 className="text-5xl font-bold text-white mb-6">Crownix — where excellence is the standard</h1>
             <p className="text-xl text-white/90 mb-8">
-              Delivering premium residential and commercial construction across Australia with proven expertise and unwavering commitment to excellence.
+              Delivering premium residential and commercial projects across Australia with proven expertise and an unwavering commitment to excellence.
             </p>
             <div className="flex flex-wrap gap-4">
               <Link
