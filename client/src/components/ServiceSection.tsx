@@ -26,7 +26,7 @@ export function ServiceSection({ title, description, image, icon: Icon, reverse 
           <Icon className="w-6 h-6" />
         </div>
         <h3 className="text-foreground mb-4">{title}</h3>
-        <p className="text-muted-foreground leading-relaxed">{description}</p>
+        <p className="text-muted-foreground leading-relaxed text-justify">{description}</p>
       </div>
     </div>
   );
