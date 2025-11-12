@@ -114,17 +114,17 @@ export function HomePage() {
       </section>
 
       {/* Leadership Teaser */}
-      <section className="py-16 md:py-24 bg-gray-900 text-white">
+      <section className="py-16 md:py-24 bg-white">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-3xl mx-auto text-center">
-            <Users className="w-12 h-12 mx-auto mb-6" />
-            <h2 className="text-white mb-6">Led by Industry Experts</h2>
-            <p className="text-gray-300 text-lg mb-8">
+            <Users className="w-12 h-12 mx-auto mb-6 text-gray-900" />
+            <h2 className="text-gray-900 mb-6">Led by Industry Experts</h2>
+            <p className="text-gray-600 text-lg mb-8">
               Our leadership team brings decades of proven track record in construction and development across Australia. Their expertise drives our commitment to excellence and innovation.
             </p>
             <Link
               to="/about"
-              className="inline-flex items-center gap-2 text-white hover:gap-3 transition-all"
+              className="inline-flex items-center gap-2 text-gray-900 hover:gap-3 transition-all"
             >
               <span>Meet Our Team</span>
               <ArrowRight className="w-5 h-5" />
