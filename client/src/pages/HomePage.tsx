@@ -6,8 +6,8 @@ export function HomePage() {
   const services = [
     {
       icon: Home,
-      title: 'Residential Development',
-      description: 'Premium residential projects from luxury apartments to masterplanned communities.',
+      title: 'Luxury Developments',
+      description: 'Premium knockdown rebuilds and high-end townhouse projects',
     },
     {
       icon: Building,
@@ -16,13 +16,13 @@ export function HomePage() {
     },
     {
       icon: MapPin,
-      title: 'Land Subdivision',
-      description: 'Strategic land development and subdivision services across Australia.',
+      title: 'Land Subdivisions',
+      description: 'Strategic land development and construction for standalone homes',
     },
     {
       icon: ClipboardCheck,
-      title: 'Project Management',
-      description: 'End-to-end project management ensuring on-time, on-budget delivery.',
+      title: 'SMSF Projects',
+      description: 'Delivering tailored projects for SMSF industries and companies',
     },
   ];
 
@@ -68,7 +68,7 @@ export function HomePage() {
           <div className="max-w-3xl mx-auto text-center">
             <h2 className="text-foreground mb-6">About Crownix</h2>
             <p className="text-muted-foreground text-lg leading-relaxed mb-8">
-              We are a national construction and development company with operations across Australia. Our team brings decades of combined experience in delivering high-quality residential and commercial projects. From initial concept to final handover, we prioritize transparency, reliability, and operational excellence in everything we do.
+              We are a national development and construction company with operations across Australia. Our team brings decades of combined experience in delivering high-quality residential and commercial projects. From initial concept to final handover, we prioritize transparency, reliability, and operational excellence in everything we do.
             </p>
             <Link
               to="/about"
@@ -87,7 +87,7 @@ export function HomePage() {
           <div className="text-center mb-12">
             <h2 className="text-foreground mb-4">Our Services</h2>
             <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
-              Comprehensive construction and development solutions tailored to your needs
+              Comprehensive development and construction solutions tailored to your needs
             </p>
           </div>
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
