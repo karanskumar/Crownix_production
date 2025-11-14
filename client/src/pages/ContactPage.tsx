@@ -1,8 +1,10 @@
 import { useState } from 'react';
+import { useGoogleReCaptcha } from 'react-google-recaptcha-v3';
 import { MapPin, Mail, Send } from 'lucide-react';
 import { ImageWithFallback } from '../components/figma/ImageWithFallback';
 
 export function ContactPage() {
+  const { executeRecaptcha } = useGoogleReCaptcha();
   const [formData, setFormData] = useState({
     name: '',
     company: '',
@@ -20,13 +22,24 @@ export function ContactPage() {
     setIsSubmitting(true);
     setError(null);
 
+    if (!executeRecaptcha) {
+      setError('reCAPTCHA not ready. Please try again.');
+      setIsSubmitting(false);
+      return;
+    }
+
     try {
+      const token = await executeRecaptcha('contact_form');
+
       const response = await fetch('/api/contact', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({
+          ...formData,
+          recaptchaToken: token,
+        }),
       });
 
       const data = await response.json();
