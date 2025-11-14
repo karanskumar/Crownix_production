@@ -35,7 +35,7 @@ export function AboutPage() {
         </div>
         <div className="relative container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-2xl text-white">
-            <h1 className="text-4xl font-bold text-white mb-4">About Crownix</h1>
+            <h1 className="text-4xl font-bold text-white mb-4">About Us</h1>
             <p className="text-xl text-white/90">
               Where excellence is the standard
             </p>
