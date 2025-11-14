@@ -17,21 +17,37 @@ async function verifyRecaptcha(token: string): Promise<{ success: boolean; score
   try {
     const secretKey = process.env.RECAPTCHA_SECRET_KEY;
     if (!secretKey) {
-      throw new Error('RECAPTCHA_SECRET_KEY not configured');
+      console.error('RECAPTCHA_SECRET_KEY environment variable not configured');
+      return { success: false, error: 'Server configuration error' };
     }
 
-    const verifyURL = `https://www.google.com/recaptcha/api/siteverify?secret=${secretKey}&response=${token}`;
-    const response = await fetch(verifyURL, { method: 'POST' });
+    const verifyURL = 'https://www.google.com/recaptcha/api/siteverify';
+    const params = new URLSearchParams({
+      secret: secretKey,
+      response: token,
+    });
+
+    const response = await fetch(verifyURL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: params.toString(),
+    });
+
     const data = await response.json();
 
     if (!data.success) {
+      console.error('reCAPTCHA verification failed:', data);
       return { success: false, error: 'reCAPTCHA verification failed' };
     }
 
-    if (data.score < 0.5) {
+    if (typeof data.score === 'number' && data.score < 0.5) {
+      console.warn(`Low reCAPTCHA score: ${data.score}`);
       return { success: false, score: data.score, error: 'Low reCAPTCHA score. Possible bot detected.' };
     }
 
+    console.log(`reCAPTCHA verified successfully with score: ${data.score}`);
     return { success: true, score: data.score };
   } catch (error) {
     console.error('reCAPTCHA verification error:', error);
@@ -46,7 +62,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       const recaptchaResult = await verifyRecaptcha(validatedData.recaptchaToken);
       if (!recaptchaResult.success) {
-        return res.status(400).json({ 
+        const isServerError = recaptchaResult.error === 'Server configuration error' || 
+                              recaptchaResult.error === 'Server error during verification';
+        return res.status(isServerError ? 500 : 400).json({ 
           success: false, 
           message: recaptchaResult.error || "reCAPTCHA verification failed"
         });
