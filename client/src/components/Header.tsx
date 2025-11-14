@@ -16,7 +16,7 @@ export function Header() {
   const isActive = (path: string) => location.pathname === path;
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-background border-b border-border">
+    <header className="fixed top-0 left-0 right-0 z-50 bg-primary border-b border-white/20">
       <nav className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-24">
           {/* Logo */}
@@ -32,8 +32,8 @@ export function Header() {
                 to={item.path}
                 className={`transition-colors font-medium ${
                   isActive(item.path)
-                    ? 'text-foreground'
-                    : 'text-muted-foreground hover:text-foreground'
+                    ? 'text-white'
+                    : 'text-white/70 hover:text-white'
                 }`}
               >
                 {item.name}
@@ -48,24 +48,24 @@ export function Header() {
             aria-label="Toggle menu"
           >
             {mobileMenuOpen ? (
-              <X className="w-6 h-6 text-foreground" />
+              <X className="w-6 h-6 text-white" />
             ) : (
-              <Menu className="w-6 h-6 text-foreground" />
+              <Menu className="w-6 h-6 text-white" />
             )}
           </button>
         </div>
 
         {/* Mobile Navigation */}
         {mobileMenuOpen && (
-          <div className="md:hidden py-4 border-t border-border">
+          <div className="md:hidden py-4 border-t border-white/20">
             {navItems.map((item) => (
               <Link
                 key={item.path}
                 to={item.path}
                 className={`block py-3 transition-colors font-medium ${
                   isActive(item.path)
-                    ? 'text-foreground'
-                    : 'text-muted-foreground'
+                    ? 'text-white'
+                    : 'text-white/70'
                 }`}
                 onClick={() => setMobileMenuOpen(false)}
               >
