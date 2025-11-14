@@ -16,3 +16,13 @@ export const insertUserSchema = createInsertSchema(users).pick({
 
 export type InsertUser = z.infer<typeof insertUserSchema>;
 export type User = typeof users.$inferSelect;
+
+export const contactSubmissionSchema = z.object({
+  name: z.string().min(1, "Name is required"),
+  company: z.string().optional(),
+  email: z.string().email("Valid email is required"),
+  phone: z.string().optional(),
+  message: z.string().min(1, "Message is required"),
+});
+
+export type ContactSubmission = z.infer<typeof contactSubmissionSchema>;
