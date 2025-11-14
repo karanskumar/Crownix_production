@@ -13,10 +13,44 @@ function escapeHtml(unsafe: string): string {
     .replace(/'/g, "&#039;");
 }
 
+async function verifyRecaptcha(token: string): Promise<{ success: boolean; score?: number; error?: string }> {
+  try {
+    const secretKey = process.env.RECAPTCHA_SECRET_KEY;
+    if (!secretKey) {
+      throw new Error('RECAPTCHA_SECRET_KEY not configured');
+    }
+
+    const verifyURL = `https://www.google.com/recaptcha/api/siteverify?secret=${secretKey}&response=${token}`;
+    const response = await fetch(verifyURL, { method: 'POST' });
+    const data = await response.json();
+
+    if (!data.success) {
+      return { success: false, error: 'reCAPTCHA verification failed' };
+    }
+
+    if (data.score < 0.5) {
+      return { success: false, score: data.score, error: 'Low reCAPTCHA score. Possible bot detected.' };
+    }
+
+    return { success: true, score: data.score };
+  } catch (error) {
+    console.error('reCAPTCHA verification error:', error);
+    return { success: false, error: 'Server error during verification' };
+  }
+}
+
 export async function registerRoutes(app: Express): Promise<Server> {
   app.post("/api/contact", async (req, res) => {
     try {
       const validatedData = contactSubmissionSchema.parse(req.body);
+      
+      const recaptchaResult = await verifyRecaptcha(validatedData.recaptchaToken);
+      if (!recaptchaResult.success) {
+        return res.status(400).json({ 
+          success: false, 
+          message: recaptchaResult.error || "reCAPTCHA verification failed"
+        });
+      }
       
       const { client, fromEmail } = await getUncachableResendClient();
       

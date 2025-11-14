@@ -23,6 +23,7 @@ export const contactSubmissionSchema = z.object({
   email: z.string().email("Valid email is required"),
   phone: z.string().optional(),
   message: z.string().min(1, "Message is required"),
+  recaptchaToken: z.string().min(1, "reCAPTCHA token is required"),
 });
 
 export type ContactSubmission = z.infer<typeof contactSubmissionSchema>;
