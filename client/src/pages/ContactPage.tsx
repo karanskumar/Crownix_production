@@ -12,15 +12,39 @@ export function ContactPage() {
   });
 
   const [submitted, setSubmitted] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('Form submitted:', formData);
-    setSubmitted(true);
-    setTimeout(() => {
-      setSubmitted(false);
-      setFormData({ name: '', company: '', email: '', phone: '', message: '' });
-    }, 3000);
+    setIsSubmitting(true);
+    setError(null);
+
+    try {
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || 'Failed to send message');
+      }
+
+      setSubmitted(true);
+      setTimeout(() => {
+        setSubmitted(false);
+        setFormData({ name: '', company: '', email: '', phone: '', message: '' });
+      }, 5000);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to send message');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -59,6 +83,11 @@ export function ContactPage() {
             {/* Contact Form */}
             <div>
               <h2 className="text-foreground mb-6">Send Us a Message</h2>
+              {error && (
+                <div className="p-4 mb-6 bg-destructive/10 border border-destructive rounded-lg">
+                  <p className="text-destructive font-medium">{error}</p>
+                </div>
+              )}
               {submitted ? (
                 <div className="p-6 bg-accent/10 border border-accent rounded-lg">
                   <p className="text-primary font-medium">
@@ -137,10 +166,11 @@ export function ContactPage() {
                   </div>
                   <button
                     type="submit"
-                    className="w-full flex items-center justify-center gap-2 px-8 py-3 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors font-medium"
+                    disabled={isSubmitting}
+                    className="w-full flex items-center justify-center gap-2 px-8 py-3 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     <Send className="w-5 h-5" />
-                    <span>Send Message</span>
+                    <span>{isSubmitting ? 'Sending...' : 'Send Message'}</span>
                   </button>
                 </form>
               )}
