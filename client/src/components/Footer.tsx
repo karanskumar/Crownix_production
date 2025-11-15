@@ -72,7 +72,7 @@ export function Footer() {
               © 2025 Crownix. All rights reserved.
             </p>
             <div className="flex gap-6">
-              <Link to="#" className="text-white/70 hover:text-white transition-colors">
+              <Link to="/privacy" className="text-white/70 hover:text-white transition-colors">
                 Privacy Policy
               </Link>
               <Link to="#" className="text-white/70 hover:text-white transition-colors">
