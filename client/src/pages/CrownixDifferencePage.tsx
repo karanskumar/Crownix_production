@@ -197,7 +197,6 @@ export function CrownixDifferencePage() {
           </div>
         </div>
       </section>
-
       {/* Introduction */}
       <section className="py-16 md:py-20 bg-white">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -214,7 +213,6 @@ export function CrownixDifferencePage() {
           </div>
         </div>
       </section>
-
       {/* 16 Points Grid */}
       <section className="py-16 md:py-20 bg-muted">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -238,7 +236,7 @@ export function CrownixDifferencePage() {
                 </p>
                 <button
                   onClick={() => setSelectedPoint(point)}
-                  className="inline-flex items-center gap-1.5 text-sm font-medium text-accent hover:text-accent/80 transition-colors"
+                  className="inline-flex items-center gap-1.5 text-sm font-medium hover:text-accent/80 transition-colors text-[#2d1d15] bg-[transparent]"
                   data-testid={`button-learn-more-${point.number}`}
                 >
                   <span>Learn More</span>
@@ -249,7 +247,6 @@ export function CrownixDifferencePage() {
           </div>
         </div>
       </section>
-
       {/* CTA */}
       <section className="py-16 md:py-24 bg-primary text-white">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -279,7 +276,6 @@ export function CrownixDifferencePage() {
           </div>
         </div>
       </section>
-
       {/* Modal */}
       {selectedPoint && (
         <div
