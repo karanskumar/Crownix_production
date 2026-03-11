@@ -309,7 +309,7 @@ export function CrownixDifferencePage() {
               </button>
             </div>
             <div className="p-6">
-              <p className="text-accent font-medium italic mb-4">
+              <p className="font-medium italic mb-4 text-[#2d1d15]">
                 {selectedPoint.tagline}
               </p>
               <div className="space-y-4">
