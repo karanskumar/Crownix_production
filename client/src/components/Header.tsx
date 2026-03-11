@@ -9,6 +9,7 @@ export function Header() {
 
   const navItems = [
     { name: 'About', path: '/about' },
+    { name: 'The Crownix Difference', path: '/crownix-difference' },
     { name: 'Services', path: '/services' },
     { name: 'Contact', path: '/contact' },
   ];

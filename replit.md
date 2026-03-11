@@ -6,6 +6,9 @@ The project includes both a main application structure and a separate website su
 
 # Recent Changes
 
+## March 11, 2026
+- **The Crownix Difference Page**: Added new page at `/crownix-difference` showcasing "The Crownix 16" — 16 defined standards. Features hero banner, intro section, 16 numbered cards in responsive grid (4-col desktop, 2-col tablet, 1-col mobile), and modal popups with full descriptions for each point. Added to header navigation and footer quick links.
+
 ## November 15, 2025
 - **Privacy Policy Page**: Added comprehensive Privacy Policy page at `/privacy` route with full legal content covering data collection, usage, security, user rights, and contact information. Page follows consistent design patterns with hero banner and structured content sections.
 - **Terms & Conditions Page**: Added comprehensive Terms & Conditions page at `/terms` route with legal content covering intellectual property, acceptable use, liability, indemnity, applicable law (NSW, Australia), and contact details. Effective date: November 10, 2025.
@@ -22,7 +25,7 @@ Preferred communication style: Simple, everyday language.
 
 **Framework**: React with TypeScript, using Vite as the build tool and development server
 
-**Routing**: React Router (react-router-dom) for client-side navigation with dedicated pages for Home, About, Services, Contact, Privacy Policy, Terms & Conditions, Projects, and Insights
+**Routing**: React Router (react-router-dom) for client-side navigation with dedicated pages for Home, About, The Crownix Difference, Services, Contact, Privacy Policy, Terms & Conditions, Projects, and Insights
 
 **UI Component System**: 
 - Radix UI primitives for accessible, unstyled components
