@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { ChevronDown, ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { ImageWithFallback } from '../components/figma/ImageWithFallback';
@@ -173,6 +173,17 @@ const differencePoints: DifferencePoint[] = [
 
 function AccordionItem({ point }: { point: DifferencePoint }) {
   const [isOpen, setIsOpen] = useState(false);
+  const contentRef = useRef<HTMLDivElement>(null);
+  const [maxHeight, setMaxHeight] = useState('0px');
+  const contentId = `accordion-content-${point.number}`;
+
+  useEffect(() => {
+    if (isOpen && contentRef.current) {
+      setMaxHeight(`${contentRef.current.scrollHeight}px`);
+    } else {
+      setMaxHeight('0px');
+    }
+  }, [isOpen]);
 
   return (
     <div
@@ -183,6 +194,8 @@ function AccordionItem({ point }: { point: DifferencePoint }) {
         onClick={() => setIsOpen(!isOpen)}
         className="w-full flex items-center gap-4 p-5 text-left transition-colors hover:bg-muted/50"
         data-testid={`button-toggle-${point.number}`}
+        aria-expanded={isOpen}
+        aria-controls={contentId}
       >
         <div className="w-10 h-10 rounded-full bg-primary flex items-center justify-center flex-shrink-0">
           <span className="text-sm font-bold text-accent">
@@ -198,43 +211,50 @@ function AccordionItem({ point }: { point: DifferencePoint }) {
           }`}
         />
       </button>
-      {isOpen && (
+      <div
+        id={contentId}
+        ref={contentRef}
+        role="region"
+        aria-labelledby={`button-toggle-${point.number}`}
+        className="overflow-hidden transition-all duration-300 ease-in-out"
+        style={{ maxHeight, opacity: isOpen ? 1 : 0 }}
+      >
         <div className="px-5 pb-5 pt-4 ml-14 border-t border-card-border">
           <p className="text-accent font-medium italic mb-4">
             {point.tagline}
           </p>
           <div className="space-y-3">
-              {point.description.map((paragraph, idx) => (
-                <div key={idx}>
-                  {paragraph.includes('\n') ? (
-                    <div className="space-y-1">
-                      {paragraph.split('\n').map((line, lineIdx) => (
-                        <p
-                          key={lineIdx}
-                          className={`text-card-foreground/80 leading-relaxed text-sm ${
-                            line.startsWith('\u2022') ? 'pl-4' : ''
-                          } ${
-                            line.startsWith('Why this matters:') ? 'font-semibold text-card-foreground mt-3' : ''
-                          }`}
-                        >
-                          {line}
-                        </p>
-                      ))}
-                    </div>
-                  ) : (
-                    <p
-                      className={`text-card-foreground/80 leading-relaxed text-sm ${
-                        paragraph.startsWith('Why this matters:') ? 'font-semibold text-card-foreground' : ''
-                      }`}
-                    >
-                      {paragraph}
-                    </p>
-                  )}
-                </div>
-              ))}
+            {point.description.map((paragraph, idx) => (
+              <div key={idx}>
+                {paragraph.includes('\n') ? (
+                  <div className="space-y-1">
+                    {paragraph.split('\n').map((line, lineIdx) => (
+                      <p
+                        key={lineIdx}
+                        className={`text-card-foreground/80 leading-relaxed text-sm ${
+                          line.startsWith('\u2022') ? 'pl-4' : ''
+                        } ${
+                          line.startsWith('Why this matters:') ? 'font-semibold text-card-foreground mt-3' : ''
+                        }`}
+                      >
+                        {line}
+                      </p>
+                    ))}
+                  </div>
+                ) : (
+                  <p
+                    className={`text-card-foreground/80 leading-relaxed text-sm ${
+                      paragraph.startsWith('Why this matters:') ? 'font-semibold text-card-foreground' : ''
+                    }`}
+                  >
+                    {paragraph}
+                  </p>
+                )}
+              </div>
+            ))}
           </div>
         </div>
-      )}
+      </div>
     </div>
   );
 }
