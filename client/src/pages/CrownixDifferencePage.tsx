@@ -221,7 +221,7 @@ function AccordionItem({ point }: { point: DifferencePoint }) {
         style={{ maxHeight, opacity: isOpen ? 1 : 0 }}
       >
         <div className="px-5 pb-5 pt-4 ml-14 border-t border-card-border">
-          <p className="text-accent font-medium italic mb-4">
+          <p className="font-medium italic mb-4 text-[#2d1d15]">
             {point.tagline}
           </p>
           <div className="space-y-3">
