@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { X, ArrowRight } from 'lucide-react';
+import { ChevronDown, ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { ImageWithFallback } from '../components/figma/ImageWithFallback';
 
@@ -171,9 +171,75 @@ const differencePoints: DifferencePoint[] = [
   },
 ];
 
-export function CrownixDifferencePage() {
-  const [selectedPoint, setSelectedPoint] = useState<DifferencePoint | null>(null);
+function AccordionItem({ point }: { point: DifferencePoint }) {
+  const [isOpen, setIsOpen] = useState(false);
 
+  return (
+    <div
+      className="border border-card-border rounded-md bg-card overflow-hidden"
+      data-testid={`accordion-item-${point.number}`}
+    >
+      <button
+        onClick={() => setIsOpen(!isOpen)}
+        className="w-full flex items-center gap-4 p-5 text-left transition-colors hover:bg-muted/50"
+        data-testid={`button-toggle-${point.number}`}
+      >
+        <div className="w-10 h-10 rounded-full bg-primary flex items-center justify-center flex-shrink-0">
+          <span className="text-sm font-bold text-accent">
+            {String(point.number).padStart(2, '0')}
+          </span>
+        </div>
+        <span className="flex-1 font-semibold text-card-foreground text-base">
+          {point.title}
+        </span>
+        <ChevronDown
+          className={`w-5 h-5 text-muted-foreground flex-shrink-0 transition-transform duration-300 ${
+            isOpen ? 'rotate-180' : ''
+          }`}
+        />
+      </button>
+      {isOpen && (
+        <div className="px-5 pb-5 pt-4 ml-14 border-t border-card-border">
+          <p className="text-accent font-medium italic mb-4">
+            {point.tagline}
+          </p>
+          <div className="space-y-3">
+              {point.description.map((paragraph, idx) => (
+                <div key={idx}>
+                  {paragraph.includes('\n') ? (
+                    <div className="space-y-1">
+                      {paragraph.split('\n').map((line, lineIdx) => (
+                        <p
+                          key={lineIdx}
+                          className={`text-card-foreground/80 leading-relaxed text-sm ${
+                            line.startsWith('\u2022') ? 'pl-4' : ''
+                          } ${
+                            line.startsWith('Why this matters:') ? 'font-semibold text-card-foreground mt-3' : ''
+                          }`}
+                        >
+                          {line}
+                        </p>
+                      ))}
+                    </div>
+                  ) : (
+                    <p
+                      className={`text-card-foreground/80 leading-relaxed text-sm ${
+                        paragraph.startsWith('Why this matters:') ? 'font-semibold text-card-foreground' : ''
+                      }`}
+                    >
+                      {paragraph}
+                    </p>
+                  )}
+                </div>
+              ))}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+export function CrownixDifferencePage() {
   return (
     <div>
       {/* Hero Banner */}
@@ -197,6 +263,7 @@ export function CrownixDifferencePage() {
           </div>
         </div>
       </section>
+
       {/* Introduction */}
       <section className="py-16 md:py-20 bg-white">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -213,40 +280,18 @@ export function CrownixDifferencePage() {
           </div>
         </div>
       </section>
-      {/* 16 Points Grid */}
+
+      {/* 16 Points Accordion */}
       <section className="py-16 md:py-20 bg-muted">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="max-w-4xl mx-auto space-y-3">
             {differencePoints.map((point) => (
-              <div
-                key={point.number}
-                className="bg-card rounded-md border border-card-border p-6 flex flex-col items-center text-center"
-                data-testid={`card-difference-${point.number}`}
-              >
-                <div className="w-16 h-16 rounded-full bg-primary flex items-center justify-center mb-4">
-                  <span className="text-2xl font-bold text-accent">
-                    {String(point.number).padStart(2, '0')}
-                  </span>
-                </div>
-                <h3 className="text-card-foreground font-semibold text-base mb-3 min-h-[3rem] flex items-center">
-                  {point.title}
-                </h3>
-                <p className="text-muted-foreground text-sm mb-5 line-clamp-2 flex-1">
-                  {point.tagline}
-                </p>
-                <button
-                  onClick={() => setSelectedPoint(point)}
-                  className="inline-flex items-center gap-1.5 text-sm font-medium hover:text-accent/80 transition-colors text-[#2d1d15] bg-[transparent]"
-                  data-testid={`button-learn-more-${point.number}`}
-                >
-                  <span>Learn More</span>
-                  <ArrowRight className="w-4 h-4" />
-                </button>
-              </div>
+              <AccordionItem key={point.number} point={point} />
             ))}
           </div>
         </div>
       </section>
+
       {/* CTA */}
       <section className="py-16 md:py-24 bg-primary text-white">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -276,76 +321,6 @@ export function CrownixDifferencePage() {
           </div>
         </div>
       </section>
-      {/* Modal */}
-      {selectedPoint && (
-        <div
-          className="fixed inset-0 z-[100] flex items-center justify-center p-4"
-          onClick={() => setSelectedPoint(null)}
-          data-testid="modal-overlay"
-        >
-          <div className="absolute inset-0 bg-black/60" />
-          <div
-            className="relative bg-card rounded-md border border-card-border shadow-lg w-full max-w-2xl max-h-[80vh] overflow-y-auto"
-            onClick={(e) => e.stopPropagation()}
-            data-testid={`modal-content-${selectedPoint.number}`}
-          >
-            <div className="sticky top-0 bg-primary p-6 rounded-t-md flex items-start justify-between gap-4">
-              <div className="flex items-center gap-4">
-                <div className="w-12 h-12 rounded-full bg-accent/20 border-2 border-accent flex items-center justify-center flex-shrink-0">
-                  <span className="text-lg font-bold text-accent">
-                    {String(selectedPoint.number).padStart(2, '0')}
-                  </span>
-                </div>
-                <h3 className="text-white font-bold text-lg">
-                  {selectedPoint.title}
-                </h3>
-              </div>
-              <button
-                onClick={() => setSelectedPoint(null)}
-                className="text-white/70 hover:text-white transition-colors flex-shrink-0 mt-1"
-                data-testid="button-close-modal"
-              >
-                <X className="w-6 h-6" />
-              </button>
-            </div>
-            <div className="p-6">
-              <p className="font-medium italic mb-4 text-[#2d1d15]">
-                {selectedPoint.tagline}
-              </p>
-              <div className="space-y-4">
-                {selectedPoint.description.map((paragraph, idx) => (
-                  <div key={idx}>
-                    {paragraph.includes('\n') ? (
-                      <div className="space-y-1">
-                        {paragraph.split('\n').map((line, lineIdx) => (
-                          <p
-                            key={lineIdx}
-                            className={`text-card-foreground/80 leading-relaxed ${
-                              line.startsWith('\u2022') ? 'pl-4' : ''
-                            } ${
-                              line.startsWith('Why this matters:') ? 'font-semibold text-card-foreground mt-3' : ''
-                            }`}
-                          >
-                            {line}
-                          </p>
-                        ))}
-                      </div>
-                    ) : (
-                      <p
-                        className={`text-card-foreground/80 leading-relaxed ${
-                          paragraph.startsWith('Why this matters:') ? 'font-semibold text-card-foreground' : ''
-                        }`}
-                      >
-                        {paragraph}
-                      </p>
-                    )}
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 }
