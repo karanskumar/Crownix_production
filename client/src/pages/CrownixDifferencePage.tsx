@@ -193,6 +193,7 @@ function AccordionItem({ point }: { point: DifferencePoint }) {
       <button
         onClick={() => setIsOpen(!isOpen)}
         className="w-full flex items-center gap-4 p-5 text-left transition-colors hover:bg-muted/50"
+        id={`button-toggle-${point.number}`}
         data-testid={`button-toggle-${point.number}`}
         aria-expanded={isOpen}
         aria-controls={contentId}
