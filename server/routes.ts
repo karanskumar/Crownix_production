@@ -102,17 +102,15 @@ function buildAdminUsers(): Record<string, { password: string; role: "admin" | "
 const ADMIN_USERS = buildAdminUsers();
 
 // State email addresses
-// TODO: Replace test addresses with real state team emails before go-live
 const STATE_EMAILS: Record<StateCode, string> = {
-  NSW: "karan.skumar@gmail.com", // TODO: replace with nsw@crownix.com.au
-  QLD: "karan.skumar@gmail.com", // TODO: replace with qld@crownix.com.au
-  VIC: "karan.skumar@gmail.com", // TODO: replace with vic@crownix.com.au
+  NSW: "info@crownix.com.au",
+  QLD: "info@crownix.com.au",
+  VIC: "info@crownix.com.au",
 };
 
-// Kesh & Pavan email
-// TODO: Replace with actual email before go-live
-const KESH_PAVAN_EMAIL = "karan.skumar@gmail.com";
-const DIV_EMAIL = "karan.skumar@gmail.com";
+// Kesh & Pavan / Div email
+const KESH_PAVAN_EMAIL = "info@crownix.com.au";
+const DIV_EMAIL = "info@crownix.com.au";
 
 // Admin auth middleware
 function requireAdmin(req: Request, res: Response, next: NextFunction) {

@@ -18,7 +18,7 @@ The project includes both a main application structure and a separate website su
   - **Duplicate action**: Pre-fills a new package upload form from an existing record.
   - **Logout** returns user to login page, clears session.
   - File upload infrastructure using `multer` (local `uploads/` directory).
-  - All test email addresses set to `karan.skumar@gmail.com` — marked with TODO for production swap.
+  - All email addresses set to `info@crownix.com.au` (interim); per-role email addresses to be configured in a future update.
   - Input component updated to use `React.forwardRef` for proper react-hook-form integration.
 
 ## March 11, 2026
