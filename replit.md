@@ -6,6 +6,21 @@ The project includes both a main application structure and a separate website su
 
 # Recent Changes
 
+## March 19, 2026
+- **Admin Section – Pricing & Package Portal**: Built a complete password-protected admin portal at `/admin`
+  - Login page at `/admin/login` with session-based auth (express-session); invalid credentials show error
+  - Two roles: `admin` (full access) and `state` (NSW/QLD/VIC scoped users)
+  - **Admin Dashboard** at `/admin` with 3 tiles: Pricing Requests, Package Upload, Active Deals (stub)
+  - **Pricing Request Form** (`/admin/pricing-requests/new`): Multi-section form with state dropdown, suburb/estate, dynamic stages/lots/floor-plan fields, additional costs (pre-filled defaults), land URLs, and file uploads (up to 10 × 100 MB). On submit: sends email to state team and creates "Incomplete" package upload entries per lot.
+  - **Package Upload List** (`/admin/package-uploads`): Filterable by status (Incomplete/Pending/Approved), state-scoped for non-admin users. Shows Lot Address, Land Size, Land Price, Status, and action buttons (Edit, Duplicate, Approve).
+  - **Package Upload Form** (`/admin/package-uploads/new` & `/admin/package-uploads/:id/edit`): Pre-fills from pricing request, supports file uploads (Floor Plan, Sited Floor Plan, Area Table, Facade, Inclusions). On submit: sends notification emails.
+  - **Approval flow**: Admin-only approve button changes status to Approved and sends emails to Kesh & Pavan.
+  - **Duplicate action**: Pre-fills a new package upload form from an existing record.
+  - **Logout** returns user to login page, clears session.
+  - File upload infrastructure using `multer` (local `uploads/` directory).
+  - All test email addresses set to `karan.skumar@gmail.com` — marked with TODO for production swap.
+  - Input component updated to use `React.forwardRef` for proper react-hook-form integration.
+
 ## March 11, 2026
 - **The Crownix Difference Page**: Added new page at `/crownix-difference` showcasing "The Crownix 16" — 16 defined standards. Features hero banner, intro section, 16 numbered cards in responsive grid (4-col desktop, 2-col tablet, 1-col mobile), and modal popups with full descriptions for each point. Added to header navigation and footer quick links.
 

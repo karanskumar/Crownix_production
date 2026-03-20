@@ -27,3 +27,103 @@ export const contactSubmissionSchema = z.object({
 });
 
 export type ContactSubmission = z.infer<typeof contactSubmissionSchema>;
+
+// Admin / Pricing & Package Portal schemas
+
+export type AdminRole = "admin" | "state";
+export type StateCode = "NSW" | "QLD" | "VIC";
+
+export interface AdminSession {
+  username: string;
+  role: AdminRole;
+  state?: StateCode;
+}
+
+// Lot within a stage
+export const lotSchema = z.object({
+  lotNumber: z.string().min(1, "Lot number is required"),
+  landSize: z.string().min(1, "Land size is required"),
+  price: z.string().min(1, "Price is required"),
+  floorPlans: z.array(z.string()).min(1, "At least one floor plan is required"),
+});
+
+export type Lot = z.infer<typeof lotSchema>;
+
+// Stage within a pricing request
+export const stageSchema = z.object({
+  stageName: z.string().min(1, "Stage name is required"),
+  registration: z.string().optional(),
+  lots: z.array(lotSchema).min(1, "At least one lot is required"),
+});
+
+export type Stage = z.infer<typeof stageSchema>;
+
+// Additional costs
+export const additionalCostsSchema = z.object({
+  landBdmExpense: z.string().default("2500"),
+  independentInspection: z.string().default("1200"),
+  additionalMarketing: z.string().optional(),
+});
+
+export type AdditionalCosts = z.infer<typeof additionalCostsSchema>;
+
+// File attachment metadata
+export const fileMetaSchema = z.object({
+  originalName: z.string(),
+  filename: z.string(),
+  mimetype: z.string(),
+  size: z.number(),
+  path: z.string(),
+});
+
+export type FileMeta = z.infer<typeof fileMetaSchema>;
+
+// Pricing request
+export const pricingRequestSchema = z.object({
+  state: z.enum(["NSW", "QLD", "VIC"]),
+  suburb: z.string().min(1, "Suburb is required"),
+  estate: z.string().min(1, "Estate is required"),
+  stages: z.array(stageSchema).min(1, "At least one stage is required"),
+  additionalCosts: additionalCostsSchema,
+  landLinks: z.array(z.string()).optional(),
+  attachments: z.array(fileMetaSchema).optional(),
+});
+
+export type PricingRequestInput = z.infer<typeof pricingRequestSchema>;
+
+export type PricingRequestStatus = "Incomplete" | "Pending" | "Approved";
+
+export interface PricingRequest extends PricingRequestInput {
+  id: string;
+  status: PricingRequestStatus;
+  createdAt: string;
+}
+
+// Package upload
+export const packageUploadSchema = z.object({
+  pricingRequestId: z.string().optional(),
+  lotAddress: z.string().min(1, "Lot address is required"),
+  landSize: z.string().min(1, "Land size is required"),
+  landPrice: z.string().min(1, "Land price is required"),
+  floorPlanSize: z.string().optional(),
+  registration: z.string().optional(),
+  floorPlanName: z.string().optional(),
+  facadeName: z.string().optional(),
+  state: z.enum(["NSW", "QLD", "VIC"]).optional(),
+  // file uploads (stored as metadata)
+  floorPlanFiles: z.array(fileMetaSchema).optional(),
+  sitedFloorPlanFiles: z.array(fileMetaSchema).optional(),
+  areaTableFiles: z.array(fileMetaSchema).optional(),
+  facadeFiles: z.array(fileMetaSchema).optional(),
+  inclusionFiles: z.array(fileMetaSchema).optional(),
+});
+
+export type PackageUploadInput = z.infer<typeof packageUploadSchema>;
+
+export type PackageUploadStatus = "Incomplete" | "Pending" | "Approved";
+
+export interface PackageUpload extends PackageUploadInput {
+  id: string;
+  status: PackageUploadStatus;
+  createdAt: string;
+}
