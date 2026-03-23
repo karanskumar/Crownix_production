@@ -103,10 +103,10 @@ function ProjectImageCard({ title }: { title: string }) {
       <ImageWithFallback
         src={url}
         alt={title}
-        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+        className="w-full h-full object-cover transition-[filter] duration-300 group-hover:brightness-110"
       />
-      <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent" />
-      <div className="absolute inset-0 flex items-end p-3">
+      <div className="absolute inset-0 bg-black/40" />
+      <div className="absolute inset-0 flex items-center justify-center p-3 text-center">
         <p
           className="text-white text-sm font-medium leading-snug"
           style={{ opacity: 0.5 }}
