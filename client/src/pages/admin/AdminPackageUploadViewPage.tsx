@@ -2,7 +2,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Loader2, ArrowLeft, Pencil } from 'lucide-react';
+import { Loader2, ArrowLeft, Pencil, Download } from 'lucide-react';
 import type { PackageUpload } from '@shared/schema';
 
 const STATUS_COLORS: Record<string, string> = {
@@ -115,8 +115,18 @@ export function AdminPackageUploadViewPage() {
                       <p className="text-xs text-muted-foreground font-medium uppercase tracking-wide mb-1">{label}</p>
                       <ul className="space-y-1">
                         {files.map((f, i) => (
-                          <li key={i} className="text-sm text-foreground">
-                            {f.originalName} <span className="text-muted-foreground">({Math.round(f.size / 1024)} KB)</span>
+                          <li key={i} className="flex items-center gap-2">
+                            <a
+                              href={`/admin/api/files/${f.filename}`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-sm text-primary underline underline-offset-2 hover:opacity-80 flex items-center gap-1.5 min-w-0"
+                              data-testid={`file-link-${i}`}
+                            >
+                              <Download className="h-3.5 w-3.5 shrink-0" />
+                              <span className="truncate">{f.originalName}</span>
+                            </a>
+                            <span className="text-xs text-muted-foreground shrink-0">({Math.round(f.size / 1024)} KB)</span>
                           </li>
                         ))}
                       </ul>

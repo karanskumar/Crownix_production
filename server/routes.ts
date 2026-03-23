@@ -149,12 +149,39 @@ export async function registerRoutes(app: Express): Promise<Server> {
     })
   );
 
-  // Serve uploaded files statically (admin only in real app, simplified here)
-  app.use("/uploads", (req, res, next) => {
-    if (!req.session.admin) {
-      return res.status(401).send("Unauthorized");
+  // File download endpoint — admin only, serves by multer filename with original name
+  app.get("/admin/api/files/:filename", requireAdmin, (req, res) => {
+    const { filename } = req.params;
+    const filePath = path.join(uploadsDir, filename);
+    if (!fs.existsSync(filePath)) {
+      return res.status(404).json({ success: false, message: "File not found" });
     }
-    next();
+    // Look up original name and mimetype from all package uploads in storage
+    storage.getAllPackageUploads().then(uploads => {
+      let originalName = filename;
+      let mimetype = "application/octet-stream";
+      outer: for (const u of uploads) {
+        const allFiles = [
+          ...(u.floorPlanFiles ?? []),
+          ...(u.sitedFloorPlanFiles ?? []),
+          ...(u.areaTableFiles ?? []),
+          ...(u.facadeFiles ?? []),
+          ...(u.inclusionFiles ?? []),
+        ];
+        for (const f of allFiles) {
+          if (f.filename === filename) {
+            originalName = f.originalName;
+            mimetype = f.mimetype;
+            break outer;
+          }
+        }
+      }
+      res.setHeader("Content-Type", mimetype);
+      res.setHeader("Content-Disposition", `inline; filename="${encodeURIComponent(originalName)}"`);
+      res.sendFile(filePath);
+    }).catch(() => {
+      res.sendFile(filePath);
+    });
   });
 
   // ========== Public Contact Route ==========
