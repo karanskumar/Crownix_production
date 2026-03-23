@@ -110,7 +110,7 @@ function ProjectImageCard({ title }: { title: string }) {
       <div className="absolute inset-0 flex items-center justify-center p-3 text-center">
         <p
           className="text-white text-sm font-medium leading-snug"
-          style={{ opacity: 0.5 }}
+          style={{ opacity: 0.75 }}
         >
           {title}
         </p>
