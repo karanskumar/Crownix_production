@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import lionLogo from '@assets/crownix_logo_1762957456049-7QivhraH_1774259515259.png';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { LogOut, LayoutDashboard, FileText, Package, TrendingUp, Loader2 } from 'lucide-react';
@@ -68,7 +69,14 @@ export function AdminLayout({ children }: AdminLayoutProps) {
       <header className="sticky top-0 z-50 border-b bg-card shadow-sm">
         <div className="flex items-center justify-between px-6 py-3 gap-4">
           <div className="flex items-center gap-6">
-            <span className="font-semibold text-foreground text-lg">Crownix Admin</span>
+            <div className="flex items-center gap-2">
+              <img
+                src={lionLogo}
+                alt="Crownix lion"
+                className="h-8 w-auto object-contain"
+              />
+              <span className="font-semibold text-foreground text-lg">Crownix Admin</span>
+            </div>
             <nav className="hidden md:flex items-center gap-1">
               {navItems.map(item => {
                 const isActive = location.pathname === item.href;
