@@ -156,8 +156,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
     if (!fs.existsSync(filePath)) {
       return res.status(404).json({ success: false, message: "File not found" });
     }
-    // Look up original name and mimetype from all package uploads in storage
-    storage.getAllPackageUploads().then(uploads => {
+    // Look up original name and mimetype from package uploads and pricing request attachments
+    Promise.all([storage.getAllPackageUploads(), storage.getAllPricingRequests()]).then(([uploads, requests]) => {
       let originalName = filename;
       let mimetype = "application/octet-stream";
       outer: for (const u of uploads) {
@@ -169,11 +169,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
           ...(u.inclusionFiles ?? []),
         ];
         for (const f of allFiles) {
-          if (f.filename === filename) {
-            originalName = f.originalName;
-            mimetype = f.mimetype;
-            break outer;
-          }
+          if (f.filename === filename) { originalName = f.originalName; mimetype = f.mimetype; break outer; }
+        }
+      }
+      for (const r of requests) {
+        for (const f of (r.attachments ?? [])) {
+          if (f.filename === filename) { originalName = f.originalName; mimetype = f.mimetype; break; }
         }
       }
       res.setHeader("Content-Type", mimetype);
