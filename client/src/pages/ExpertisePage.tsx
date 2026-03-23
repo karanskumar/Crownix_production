@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { ChevronDown } from 'lucide-react';
 import { ImageWithFallback } from '../components/figma/ImageWithFallback';
 
@@ -228,13 +229,13 @@ export function ExpertisePage() {
             <p className="text-white/90 text-lg mb-8">
               Discover how Crownix can deliver your next project with the same precision and excellence.
             </p>
-            <a
-              href="/contact"
+            <Link
+              to="/contact"
               className="inline-flex items-center gap-2 px-8 py-3 bg-accent text-primary rounded-md hover:bg-accent/90 transition-colors font-medium"
               data-testid="link-contact-cta"
             >
               Get in Touch
-            </a>
+            </Link>
           </div>
         </div>
       </section>
