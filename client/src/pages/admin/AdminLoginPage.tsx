@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import lionLogo from '@assets/crownix_logo_1762957456049-7QivhraH_1774259515259.png';
 import { useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -44,6 +45,7 @@ export function AdminLoginPage() {
     <div className="min-h-screen flex items-center justify-center bg-background px-4">
       <div className="w-full max-w-sm">
         <div className="text-center mb-8">
+          <img src={lionLogo} alt="Crownix lion" className="h-20 w-auto object-contain mx-auto mb-4" />
           <h1 className="text-2xl font-bold text-foreground">Crownix Admin</h1>
           <p className="text-muted-foreground mt-1">Sign in to access the portal</p>
         </div>
