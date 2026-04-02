@@ -529,6 +529,13 @@ ${validatedData.message}
     try {
       const validatedData = packageUploadSchema.partial().parse(req.body);
       const existing = await storage.getPackageUpload(req.params.id);
+      if (!existing) {
+        return res.status(404).json({ success: false, message: "Package upload not found" });
+      }
+      // State-scoped users can only update their own state's uploads
+      if (req.session.admin!.role === "state" && req.session.admin!.state && existing.state !== req.session.admin!.state) {
+        return res.status(403).json({ success: false, message: "Forbidden" });
+      }
       const updated = await storage.updatePackageUpload(req.params.id, validatedData);
       if (!updated) {
         return res.status(404).json({ success: false, message: "Package upload not found" });
