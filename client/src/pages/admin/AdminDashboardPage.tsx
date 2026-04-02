@@ -2,8 +2,15 @@ import { Link } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { FileText, Package, TrendingUp, ArrowRight } from 'lucide-react';
+import { useQuery } from '@tanstack/react-query';
 
-const tiles = [
+interface AdminUser {
+  username: string;
+  role: string;
+  state?: string;
+}
+
+const ALL_TILES = [
   {
     title: 'Pricing Requests',
     description: 'Submit new pricing requests for NSW, QLD, and VIC estates. Automatically notifies the relevant state team.',
@@ -11,14 +18,16 @@ const tiles = [
     href: '/admin/pricing-requests/new',
     action: 'New Pricing Request',
     testId: 'tile-pricing-requests',
+    adminOnly: true,
   },
   {
     title: 'Package Upload',
-    description: 'Manage package uploads for submitted pricing requests. Review, edit, and approve packages.',
+    description: 'Manage package uploads for submitted pricing requests. Review and upload packages.',
     icon: Package,
     href: '/admin/package-uploads',
     action: 'View Packages',
     testId: 'tile-package-upload',
+    adminOnly: false,
   },
   {
     title: 'Active Deals',
@@ -27,10 +36,19 @@ const tiles = [
     href: '/admin/active-deals',
     action: 'View Deals',
     testId: 'tile-active-deals',
+    adminOnly: false,
   },
 ];
 
 export function AdminDashboardPage() {
+  const { data: meData } = useQuery<{ success: boolean; user: AdminUser }>({
+    queryKey: ['/admin/api/me'],
+    queryFn: () => fetch('/admin/api/me', { credentials: 'include' }).then(r => r.json()),
+  });
+
+  const isAdmin = meData?.user?.role === 'admin';
+  const tiles = ALL_TILES.filter(t => !t.adminOnly || isAdmin);
+
   return (
     <div className="p-6 max-w-5xl mx-auto">
       <div className="mb-8">

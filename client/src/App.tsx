@@ -17,6 +17,7 @@ import { AdminPricingRequestPage } from './pages/admin/AdminPricingRequestPage';
 import { AdminPackageUploadListPage } from './pages/admin/AdminPackageUploadListPage';
 import { AdminPackageUploadFormPage } from './pages/admin/AdminPackageUploadFormPage';
 import { AdminPackageUploadViewPage } from './pages/admin/AdminPackageUploadViewPage';
+import { AdminPackageUploadPage } from './pages/admin/AdminPackageUploadPage';
 import { AdminActiveDealPage } from './pages/admin/AdminActiveDealPage';
 import { AdminLayout } from './components/admin/AdminLayout';
 import { QueryClientProvider } from '@tanstack/react-query';
@@ -45,6 +46,7 @@ export default function App() {
             <Route path="/admin/package-uploads/new" element={<AdminLayout><AdminPackageUploadFormPage /></AdminLayout>} />
             <Route path="/admin/package-uploads/:id/view" element={<AdminLayout><AdminPackageUploadViewPage /></AdminLayout>} />
             <Route path="/admin/package-uploads/:id/edit" element={<AdminLayout><AdminPackageUploadFormPage /></AdminLayout>} />
+            <Route path="/admin/package-uploads/:id/upload" element={<AdminLayout><AdminPackageUploadPage /></AdminLayout>} />
             <Route path="/admin/active-deals" element={<AdminLayout><AdminActiveDealPage /></AdminLayout>} />
 
             {/* Public routes (with header/footer) */}

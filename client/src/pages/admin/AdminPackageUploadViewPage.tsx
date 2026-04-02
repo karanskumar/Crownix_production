@@ -11,6 +11,12 @@ const STATUS_COLORS: Record<string, string> = {
   Approved: 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300',
 };
 
+const STATUS_LABELS: Record<string, string> = {
+  Incomplete: 'Incomplete',
+  Pending: 'Pending Approval',
+  Approved: 'Approved',
+};
+
 function Field({ label, value }: { label: string; value?: string | null }) {
   if (!value) return null;
   return (
@@ -86,7 +92,7 @@ export function AdminPackageUploadViewPage() {
                   className={`inline-flex items-center px-2.5 py-0.5 rounded text-xs font-medium ${STATUS_COLORS[upload.status]}`}
                   data-testid="status-badge"
                 >
-                  {upload.status}
+                  {STATUS_LABELS[upload.status] ?? upload.status}
                 </span>
               </div>
             </CardHeader>

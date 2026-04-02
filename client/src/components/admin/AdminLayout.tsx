@@ -57,12 +57,14 @@ export function AdminLayout({ children }: AdminLayoutProps) {
 
   if (!user) return null;
 
+  const isAdmin = user.role === 'admin';
+
   const navItems = [
-    { href: '/admin', label: 'Dashboard', icon: LayoutDashboard },
-    { href: '/admin/pricing-requests/new', label: 'Pricing Requests', icon: FileText },
-    { href: '/admin/package-uploads', label: 'Package Upload', icon: Package },
-    { href: '/admin/active-deals', label: 'Active Deals', icon: TrendingUp },
-  ];
+    { href: '/admin', label: 'Dashboard', icon: LayoutDashboard, adminOnly: false },
+    { href: '/admin/pricing-requests/new', label: 'Pricing Requests', icon: FileText, adminOnly: true },
+    { href: '/admin/package-uploads', label: 'Package Upload', icon: Package, adminOnly: false },
+    { href: '/admin/active-deals', label: 'Active Deals', icon: TrendingUp, adminOnly: false },
+  ].filter(item => !item.adminOnly || isAdmin);
 
   return (
     <div className="min-h-screen flex flex-col bg-background">

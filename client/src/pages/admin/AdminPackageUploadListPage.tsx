@@ -4,7 +4,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Plus, Eye, Pencil, CheckCircle, Copy, Loader2, ArrowUpDown } from 'lucide-react';
+import { Plus, Upload, CheckCircle, Copy, Loader2, ArrowUpDown } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
 interface PackageUpload {
@@ -29,6 +29,12 @@ const STATUS_COLORS: Record<string, string> = {
   Incomplete: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300',
   Pending: 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300',
   Approved: 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300',
+};
+
+const STATUS_LABELS: Record<string, string> = {
+  Incomplete: 'Incomplete',
+  Pending: 'Pending Approval',
+  Approved: 'Approved',
 };
 
 const STATUS_ORDER: Record<string, number> = { Incomplete: 0, Pending: 1, Approved: 2 };
@@ -99,13 +105,15 @@ export function AdminPackageUploadListPage() {
           <h1 className="text-2xl font-bold text-foreground">Package Upload</h1>
           <p className="text-muted-foreground mt-1">Manage package uploads and approvals</p>
         </div>
-        <Button
-          onClick={() => navigate('/admin/package-uploads/new')}
-          data-testid="button-create-new"
-        >
-          <Plus className="h-4 w-4" />
-          Create New
-        </Button>
+        {isAdmin && (
+          <Button
+            onClick={() => navigate('/admin/package-uploads/new')}
+            data-testid="button-create-new"
+          >
+            <Plus className="h-4 w-4" />
+            Create New
+          </Button>
+        )}
       </div>
 
       <Card>
@@ -125,13 +133,13 @@ export function AdminPackageUploadListPage() {
               </Button>
               <span className="text-sm text-muted-foreground">Filter:</span>
               <Select value={statusFilter} onValueChange={setStatusFilter}>
-                <SelectTrigger className="w-36" data-testid="select-status-filter">
+                <SelectTrigger className="w-44" data-testid="select-status-filter">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">All</SelectItem>
                   <SelectItem value="Incomplete">Incomplete</SelectItem>
-                  <SelectItem value="Pending">Pending</SelectItem>
+                  <SelectItem value="Pending">Pending Approval</SelectItem>
                   <SelectItem value="Approved">Approved</SelectItem>
                 </SelectContent>
               </Select>
@@ -173,28 +181,20 @@ export function AdminPackageUploadListPage() {
                           className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium ${STATUS_COLORS[upload.status]}`}
                           data-testid={`status-package-${upload.id}`}
                         >
-                          {upload.status}
+                          {STATUS_LABELS[upload.status] ?? upload.status}
                         </span>
                       </td>
                       <td className="px-6 py-3">
                         <div className="flex items-center justify-end gap-1">
                           <Button
                             variant="ghost"
-                            size="icon"
-                            onClick={() => navigate(`/admin/package-uploads/${upload.id}/view`)}
-                            title="View"
-                            data-testid={`button-view-${upload.id}`}
+                            size="sm"
+                            onClick={() => navigate(`/admin/package-uploads/${upload.id}/upload`)}
+                            className="gap-1.5"
+                            data-testid={`button-upload-${upload.id}`}
                           >
-                            <Eye className="h-4 w-4" />
-                          </Button>
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            onClick={() => navigate(`/admin/package-uploads/${upload.id}/edit`)}
-                            title="Edit"
-                            data-testid={`button-edit-${upload.id}`}
-                          >
-                            <Pencil className="h-4 w-4" />
+                            <Upload className="h-3.5 w-3.5" />
+                            Upload
                           </Button>
                           <Button
                             variant="ghost"

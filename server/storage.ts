@@ -1,5 +1,7 @@
 import { type User, type InsertUser, type PricingRequest, type PricingRequestInput, type PackageUpload, type PackageUploadInput, type PricingRequestStatus, type PackageUploadStatus } from "@shared/schema";
 import { randomUUID } from "crypto";
+import fs from "fs";
+import path from "path";
 
 export interface IStorage {
   getUser(id: string): Promise<User | undefined>;
@@ -20,31 +22,68 @@ export interface IStorage {
   updatePackageUploadStatus(id: string, status: PackageUploadStatus): Promise<PackageUpload | undefined>;
 }
 
-export class MemStorage implements IStorage {
-  private users: Map<string, User>;
-  private pricingRequests: Map<string, PricingRequest>;
-  private packageUploads: Map<string, PackageUpload>;
+interface StorageData {
+  users: Record<string, User>;
+  pricingRequests: Record<string, PricingRequest>;
+  packageUploads: Record<string, PackageUpload>;
+}
+
+const DATA_FILE = path.join(process.cwd(), "data", "admin-data.json");
+
+function ensureDataDir() {
+  const dir = path.dirname(DATA_FILE);
+  if (!fs.existsSync(dir)) {
+    fs.mkdirSync(dir, { recursive: true });
+  }
+}
+
+function loadData(): StorageData {
+  ensureDataDir();
+  if (!fs.existsSync(DATA_FILE)) {
+    return { users: {}, pricingRequests: {}, packageUploads: {} };
+  }
+  try {
+    const raw = fs.readFileSync(DATA_FILE, "utf-8");
+    return JSON.parse(raw) as StorageData;
+  } catch {
+    console.warn("Failed to parse admin-data.json, starting fresh.");
+    return { users: {}, pricingRequests: {}, packageUploads: {} };
+  }
+}
+
+function saveData(data: StorageData) {
+  ensureDataDir();
+  fs.writeFileSync(DATA_FILE, JSON.stringify(data, null, 2), "utf-8");
+}
+
+export class JsonFileStorage implements IStorage {
+  private data: StorageData;
 
   constructor() {
-    this.users = new Map();
-    this.pricingRequests = new Map();
-    this.packageUploads = new Map();
+    this.data = loadData();
+    console.log(
+      `[storage] Loaded ${Object.keys(this.data.pricingRequests).length} pricing requests, ` +
+      `${Object.keys(this.data.packageUploads).length} package uploads from disk.`
+    );
+  }
+
+  private save() {
+    saveData(this.data);
   }
 
   async getUser(id: string): Promise<User | undefined> {
-    return this.users.get(id);
+    return this.data.users[id];
   }
 
   async getUserByUsername(username: string): Promise<User | undefined> {
-    return Array.from(this.users.values()).find(
-      (user) => user.username === username,
-    );
+    return Object.values(this.data.users).find((u) => u.username === username);
   }
 
   async createUser(insertUser: InsertUser): Promise<User> {
     const id = randomUUID();
     const user: User = { ...insertUser, id };
-    this.users.set(id, user);
+    this.data.users[id] = user;
+    this.save();
     return user;
   }
 
@@ -56,26 +95,27 @@ export class MemStorage implements IStorage {
       status: "Incomplete",
       createdAt: new Date().toISOString(),
     };
-    this.pricingRequests.set(id, request);
+    this.data.pricingRequests[id] = request;
+    this.save();
     return request;
   }
 
   async getPricingRequest(id: string): Promise<PricingRequest | undefined> {
-    return this.pricingRequests.get(id);
+    return this.data.pricingRequests[id];
   }
 
   async getAllPricingRequests(): Promise<PricingRequest[]> {
-    return Array.from(this.pricingRequests.values()).sort(
+    return Object.values(this.data.pricingRequests).sort(
       (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
     );
   }
 
   async updatePricingRequestStatus(id: string, status: PricingRequestStatus): Promise<PricingRequest | undefined> {
-    const request = this.pricingRequests.get(id);
+    const request = this.data.pricingRequests[id];
     if (!request) return undefined;
-    const updated = { ...request, status };
-    this.pricingRequests.set(id, updated);
-    return updated;
+    request.status = status;
+    this.save();
+    return request;
   }
 
   async createPackageUpload(input: PackageUploadInput, initialStatus?: PackageUploadStatus): Promise<PackageUpload> {
@@ -86,35 +126,36 @@ export class MemStorage implements IStorage {
       status: initialStatus || "Pending",
       createdAt: new Date().toISOString(),
     };
-    this.packageUploads.set(id, upload);
+    this.data.packageUploads[id] = upload;
+    this.save();
     return upload;
   }
 
   async getPackageUpload(id: string): Promise<PackageUpload | undefined> {
-    return this.packageUploads.get(id);
+    return this.data.packageUploads[id];
   }
 
   async getAllPackageUploads(): Promise<PackageUpload[]> {
-    return Array.from(this.packageUploads.values()).sort(
+    return Object.values(this.data.packageUploads).sort(
       (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
     );
   }
 
   async updatePackageUpload(id: string, input: Partial<PackageUploadInput>): Promise<PackageUpload | undefined> {
-    const upload = this.packageUploads.get(id);
+    const upload = this.data.packageUploads[id];
     if (!upload) return undefined;
-    const updated = { ...upload, ...input };
-    this.packageUploads.set(id, updated);
-    return updated;
+    Object.assign(upload, input);
+    this.save();
+    return upload;
   }
 
   async updatePackageUploadStatus(id: string, status: PackageUploadStatus): Promise<PackageUpload | undefined> {
-    const upload = this.packageUploads.get(id);
+    const upload = this.data.packageUploads[id];
     if (!upload) return undefined;
-    const updated = { ...upload, status };
-    this.packageUploads.set(id, updated);
-    return updated;
+    upload.status = status;
+    this.save();
+    return upload;
   }
 }
 
-export const storage = new MemStorage();
+export const storage = new JsonFileStorage();
