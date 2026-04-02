@@ -6,6 +6,14 @@ The project includes both a main application structure and a separate website su
 
 # Recent Changes
 
+## April 2, 2026
+- **Persistent JSON File Storage**: Replaced in-memory MemStorage with JsonFileStorage writing to `data/admin-data.json`. All pricing requests and package uploads now survive server restarts/redeploys.
+- **Role-aware Admin Nav & Dashboard**: AdminLayout filters "Pricing Requests" nav item to admin role only. AdminDashboard fetches `/admin/api/me` and hides the Pricing Requests tile for state users.
+- **State Usernames Updated**: NSW_USERNAME → CrownixNSW, VIC_USERNAME → CrownixVIC, QLD_USERNAME → CrownixQLD (updated as Replit secrets).
+- **Package Upload List UX**: Replaced View (eye) + Edit (pencil) icon buttons with a single "Upload" button per row; navigates to the new combined upload page. "Create New" button now admin-only.
+- **Combined Upload Page**: New page at `/admin/package-uploads/:id/upload` — top section shows read-only pricing request details (estate, suburb, state, stages/lots table, additional costs, land links, attachments); bottom section is the editable upload form with file uploads. On submit, status transitions from Incomplete → Pending (emails sent).
+- **"Pending Approval" Label**: All UI now displays "Pending Approval" for Pending status; stored value remains "Pending" for backward compatibility.
+
 ## March 19, 2026
 - **Admin Section – Pricing & Package Portal**: Built a complete password-protected admin portal at `/admin`
   - Login page at `/admin/login` with session-based auth (express-session); invalid credentials show error
