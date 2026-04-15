@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { LogOut, LayoutDashboard, FileText, Package, TrendingUp, Loader2 } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
+import { queryClient } from '@/lib/queryClient';
 
 interface AdminUser {
   username: string;
@@ -44,6 +45,7 @@ export function AdminLayout({ children }: AdminLayoutProps) {
 
   const handleLogout = async () => {
     await fetch('/admin/api/logout', { method: 'POST', credentials: 'include' });
+    queryClient.clear();
     navigate('/admin/login');
   };
 

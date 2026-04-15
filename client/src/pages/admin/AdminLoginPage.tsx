@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import lionLogo from '@assets/crownix_logo_1762957456049-7QivhraH_1774259515259.png';
 import { useNavigate } from 'react-router-dom';
+import { queryClient } from '@/lib/queryClient';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -30,6 +31,7 @@ export function AdminLoginPage() {
       const data = await res.json();
 
       if (data.success) {
+        queryClient.clear();
         navigate('/admin');
       } else {
         setError(data.message || 'Invalid credentials');
