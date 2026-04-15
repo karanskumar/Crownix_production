@@ -216,16 +216,29 @@ export function AdminPricingRequestPage() {
   const [submitting, setSubmitting] = useState(false);
   const [attachments, setAttachments] = useState<File[]>([]);
 
-  // Redirect state users — only admin role can access this page
-  const { data: meData } = useQuery<{ success: boolean; user: { role: string } }>({
+  // Gate access: only admin role may see or use this page.
+  // AdminLayout already fetched /admin/api/me so this hits the cache immediately.
+  const { data: meData, isLoading: roleLoading } = useQuery<{ success: boolean; user: { role: string } }>({
     queryKey: ['/admin/api/me'],
     queryFn: () => fetch('/admin/api/me', { credentials: 'include' }).then(r => r.json()),
   });
+
+  const userRole = meData?.user?.role;
+
   useEffect(() => {
-    if (meData?.user?.role === 'state') {
+    if (!roleLoading && userRole && userRole !== 'admin') {
       navigate('/admin');
     }
-  }, [meData, navigate]);
+  }, [roleLoading, userRole, navigate]);
+
+  // Don't render the form until we've confirmed admin role
+  if (roleLoading || !userRole || userRole !== 'admin') {
+    return (
+      <div className="flex items-center justify-center py-24">
+        <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+      </div>
+    );
+  }
 
   const methods = useForm<FormValues>({
     defaultValues: {

@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { FileText, Package, TrendingUp, ArrowRight } from 'lucide-react';
+import { FileText, Package, TrendingUp, ArrowRight, Loader2 } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 
 interface AdminUser {
@@ -41,12 +41,28 @@ const ALL_TILES = [
 ];
 
 export function AdminDashboardPage() {
-  const { data: meData } = useQuery<{ success: boolean; user: AdminUser }>({
+  // AdminLayout already fetched this; this hits the shared cache immediately.
+  const { data: meData, isLoading } = useQuery<{ success: boolean; user: AdminUser }>({
     queryKey: ['/admin/api/me'],
     queryFn: () => fetch('/admin/api/me', { credentials: 'include' }).then(r => r.json()),
   });
 
-  const isAdmin = meData?.user?.role === 'admin';
+  // While loading, render no tiles — prevents showing admin-only tiles before role resolves
+  if (isLoading || !meData?.user) {
+    return (
+      <div className="p-6 max-w-5xl mx-auto">
+        <div className="mb-8">
+          <h1 className="text-2xl font-bold text-foreground">Dashboard</h1>
+          <p className="text-muted-foreground mt-1">Welcome to the Crownix admin portal</p>
+        </div>
+        <div className="flex items-center justify-center py-16">
+          <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+        </div>
+      </div>
+    );
+  }
+
+  const isAdmin = meData.user.role === 'admin';
   const tiles = ALL_TILES.filter(t => !t.adminOnly || isAdmin);
 
   return (

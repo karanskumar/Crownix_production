@@ -1,10 +1,11 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import lionLogo from '@assets/crownix_logo_1762957456049-7QivhraH_1774259515259.png';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { LogOut, LayoutDashboard, FileText, Package, TrendingUp, Loader2 } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 import { queryClient } from '@/lib/queryClient';
+import { useQuery } from '@tanstack/react-query';
 
 interface AdminUser {
   username: string;
@@ -19,29 +20,22 @@ interface AdminLayoutProps {
 export function AdminLayout({ children }: AdminLayoutProps) {
   const navigate = useNavigate();
   const location = useLocation();
-  const [user, setUser] = useState<AdminUser | null>(null);
-  const [loading, setLoading] = useState(true);
+
+  const { data: meData, isLoading } = useQuery<{ success: boolean; user: AdminUser }>({
+    queryKey: ['/admin/api/me'],
+    queryFn: () =>
+      fetch('/admin/api/me', { credentials: 'include' }).then(r => {
+        if (!r.ok) throw new Error('Unauthorized');
+        return r.json();
+      }),
+    retry: false,
+  });
 
   useEffect(() => {
-    fetch('/admin/api/me', { credentials: 'include' })
-      .then(res => {
-        if (!res.ok) {
-          navigate('/admin/login');
-          return null;
-        }
-        return res.json();
-      })
-      .then(data => {
-        if (data?.success) {
-          setUser(data.user);
-        }
-        setLoading(false);
-      })
-      .catch(() => {
-        navigate('/admin/login');
-        setLoading(false);
-      });
-  }, [navigate]);
+    if (!isLoading && !meData?.success) {
+      navigate('/admin/login');
+    }
+  }, [isLoading, meData, navigate]);
 
   const handleLogout = async () => {
     await fetch('/admin/api/logout', { method: 'POST', credentials: 'include' });
@@ -49,7 +43,7 @@ export function AdminLayout({ children }: AdminLayoutProps) {
     navigate('/admin/login');
   };
 
-  if (loading) {
+  if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background">
         <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
@@ -57,6 +51,7 @@ export function AdminLayout({ children }: AdminLayoutProps) {
     );
   }
 
+  const user = meData?.user;
   if (!user) return null;
 
   const isAdmin = user.role === 'admin';
