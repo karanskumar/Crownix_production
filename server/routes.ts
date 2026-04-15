@@ -99,8 +99,11 @@ function buildAdminUsers(): Record<string, { password: string; role: "admin" | "
   return users;
 }
 
-const ADMIN_USERS = buildAdminUsers();
-console.log("[auth] Loaded admin users:", Object.entries(ADMIN_USERS).map(([u, v]) => `${u} (${v.role}${v.state ? "/" + v.state : ""})`).join(", ") || "(none)");
+// Log loaded users at startup (dev/staging only — avoid disclosing usernames in production logs)
+if (process.env.NODE_ENV !== "production") {
+  const startupUsers = buildAdminUsers();
+  console.log("[auth] Loaded admin users:", Object.entries(startupUsers).map(([u, v]) => `${u} (${v.role}${v.state ? "/" + v.state : ""})`).join(", ") || "(none)");
+}
 
 // State email addresses (testing — all pointing to test inbox)
 const STATE_EMAILS: Record<StateCode, string> = {
