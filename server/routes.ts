@@ -114,12 +114,19 @@ const KESH_PAVAN_EMAIL = "22kskumar@gmail.com";
 const DIV_EMAIL = "22kskumar@gmail.com";
 
 // Helper: read uploaded files from disk and return Resend-compatible attachment objects.
+// Only reads files that are inside the known uploadsDir to prevent path traversal.
 // Files that cannot be read are silently skipped.
 function buildEmailAttachments(files: Array<{ originalName: string; path: string }>): Array<{ filename: string; content: Buffer }> {
+  const safeDirPrefix = path.resolve(uploadsDir) + path.sep;
   const result: Array<{ filename: string; content: Buffer }> = [];
   for (const f of files) {
     try {
-      const content = fs.readFileSync(f.path);
+      const resolved = path.resolve(f.path);
+      if (!resolved.startsWith(safeDirPrefix)) {
+        console.warn(`[email] Skipping file outside uploadsDir: ${f.path}`);
+        continue;
+      }
+      const content = fs.readFileSync(resolved);
       result.push({ filename: f.originalName, content });
     } catch (err) {
       console.warn(`[email] Could not read attachment ${f.path}:`, err);
@@ -277,7 +284,9 @@ ${validatedData.message}
       return res.status(400).json({ success: false, message: "Username and password are required" });
     }
 
-    const userConfig = ADMIN_USERS[username];
+    // Rebuild user map at login time so any secret/env changes since startup are honoured
+    const currentUsers = buildAdminUsers();
+    const userConfig = currentUsers[username];
     if (!userConfig || userConfig.password !== password) {
       return res.status(401).json({ success: false, message: "Invalid credentials" });
     }
@@ -459,7 +468,14 @@ ${validatedData.message}
   // ========== Package Uploads ==========
   app.post("/admin/api/package-uploads", requireAdmin, async (req, res) => {
     try {
-      const validatedData = packageUploadSchema.parse(req.body);
+      let validatedData = packageUploadSchema.parse(req.body);
+
+      // State-role users can only create uploads for their own state.
+      // Override whatever state was sent in the body to prevent spoofing.
+      if (req.session.admin!.role === "state" && req.session.admin!.state) {
+        validatedData = { ...validatedData, state: req.session.admin!.state };
+      }
+
       const upload = await storage.createPackageUpload(validatedData);
 
       // If linked to a pricing request, update its status to Pending
