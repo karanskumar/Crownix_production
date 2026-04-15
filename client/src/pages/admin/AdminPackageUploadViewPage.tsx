@@ -2,7 +2,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Loader2, ArrowLeft, Pencil, Download } from 'lucide-react';
+import { Loader2, ArrowLeft, Pencil, Download, ExternalLink } from 'lucide-react';
 import type { PackageUpload, PricingRequest, FileMeta } from '@shared/schema';
 
 const STATUS_COLORS: Record<string, string> = {
@@ -48,6 +48,7 @@ export function AdminPackageUploadViewPage() {
   });
 
   const pricingAttachments: FileMeta[] = prData?.request?.attachments ?? [];
+  const landLinks: string[] = prData?.request?.landLinks ?? [];
 
   return (
     <div className="p-6 max-w-3xl mx-auto">
@@ -151,6 +152,32 @@ export function AdminPackageUploadViewPage() {
               </CardContent>
             </Card>
           ) : null}
+
+          {landLinks.length > 0 && (
+            <Card>
+              <CardHeader className="pb-2">
+                <CardTitle className="text-base">Land Links</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <ul className="space-y-1">
+                  {landLinks.map((link, i) => (
+                    <li key={i}>
+                      <a
+                        href={link}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-sm text-primary underline underline-offset-2 hover:opacity-80 flex items-center gap-1.5 min-w-0"
+                        data-testid={`land-link-${i}`}
+                      >
+                        <ExternalLink className="h-3.5 w-3.5 shrink-0" />
+                        <span className="truncate">{link}</span>
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </CardContent>
+            </Card>
+          )}
 
           {pricingAttachments.length > 0 && (
             <Card>

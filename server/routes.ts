@@ -100,17 +100,33 @@ function buildAdminUsers(): Record<string, { password: string; role: "admin" | "
 }
 
 const ADMIN_USERS = buildAdminUsers();
+console.log("[auth] Loaded admin users:", Object.entries(ADMIN_USERS).map(([u, v]) => `${u} (${v.role}${v.state ? "/" + v.state : ""})`).join(", ") || "(none)");
 
-// State email addresses
+// State email addresses (testing — all pointing to test inbox)
 const STATE_EMAILS: Record<StateCode, string> = {
-  NSW: "info@crownix.com.au",
-  QLD: "info@crownix.com.au",
-  VIC: "info@crownix.com.au",
+  NSW: "22kskumar@gmail.com",
+  QLD: "22kskumar@gmail.com",
+  VIC: "22kskumar@gmail.com",
 };
 
-// Kesh & Pavan / Div email
-const KESH_PAVAN_EMAIL = "info@crownix.com.au";
-const DIV_EMAIL = "info@crownix.com.au";
+// Kesh & Pavan / Div email (testing — all pointing to test inbox)
+const KESH_PAVAN_EMAIL = "22kskumar@gmail.com";
+const DIV_EMAIL = "22kskumar@gmail.com";
+
+// Helper: read uploaded files from disk and return Resend-compatible attachment objects.
+// Files that cannot be read are silently skipped.
+function buildEmailAttachments(files: Array<{ originalName: string; path: string }>): Array<{ filename: string; content: Buffer }> {
+  const result: Array<{ filename: string; content: Buffer }> = [];
+  for (const f of files) {
+    try {
+      const content = fs.readFileSync(f.path);
+      result.push({ filename: f.originalName, content });
+    } catch (err) {
+      console.warn(`[email] Could not read attachment ${f.path}:`, err);
+    }
+  }
+  return result;
+}
 
 // Admin auth middleware
 function requireAdmin(req: Request, res: Response, next: NextFunction) {
@@ -315,6 +331,10 @@ ${validatedData.message}
 
   // ========== Pricing Requests ==========
   app.post("/admin/api/pricing-requests", requireAdmin, async (req, res) => {
+    // Only admin role can create pricing requests
+    if (req.session.admin!.role !== "admin") {
+      return res.status(403).json({ success: false, message: "Only admin users can submit pricing requests" });
+    }
     try {
       const validatedData = pricingRequestSchema.parse(req.body);
       const request = await storage.createPricingRequest(validatedData);
@@ -366,6 +386,8 @@ ${validatedData.message}
           </table>
         `).join('');
 
+        const pricingAttachments = buildEmailAttachments(validatedData.attachments ?? []);
+
         await client.emails.send({
           from: fromEmail,
           to: stateEmail,
@@ -386,6 +408,7 @@ ${validatedData.message}
               <ul>${validatedData.landLinks.map(link => `<li><a href="${escapeHtml(link)}">${escapeHtml(link)}</a></li>`).join('')}</ul>
             ` : ''}
           `,
+          ...(pricingAttachments.length > 0 ? { attachments: pricingAttachments } : {}),
         });
       } catch (emailError) {
         console.error("Failed to send pricing request email:", emailError);
@@ -616,12 +639,23 @@ ${validatedData.message}
 
       const updated = await storage.updatePackageUploadStatus(req.params.id, "Approved");
 
-      // Send approval emails to Kesh & Pavan
+      // Send approval emails to Kesh & Pavan, CC Divyan, with all package file attachments
       try {
         const { client, fromEmail } = await getUncachableResendClient();
+
+        const allPackageFiles = [
+          ...(upload.floorPlanFiles ?? []),
+          ...(upload.sitedFloorPlanFiles ?? []),
+          ...(upload.areaTableFiles ?? []),
+          ...(upload.facadeFiles ?? []),
+          ...(upload.inclusionFiles ?? []),
+        ];
+        const approvalAttachments = buildEmailAttachments(allPackageFiles);
+
         await client.emails.send({
           from: fromEmail,
           to: KESH_PAVAN_EMAIL,
+          cc: [DIV_EMAIL],
           subject: `Package Approved – ${upload.lotAddress}`,
           html: `
             <h2>Package Upload Approved</h2>
@@ -632,6 +666,7 @@ ${validatedData.message}
             ${upload.floorPlanName ? `<p><strong>Floor Plan:</strong> ${escapeHtml(upload.floorPlanName)}</p>` : ''}
             <!-- TODO: Trigger Zoho CRM product creation on approval -->
           `,
+          ...(approvalAttachments.length > 0 ? { attachments: approvalAttachments } : {}),
         });
       } catch (emailError) {
         console.error("Failed to send approval email:", emailError);

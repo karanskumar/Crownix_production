@@ -1,5 +1,6 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useQuery } from '@tanstack/react-query';
 import { useForm, useFieldArray, useFormContext, FormProvider, Controller } from 'react-hook-form';
 import type { ArrayPath } from 'react-hook-form';
 import type { FileMeta } from '@shared/schema';
@@ -214,6 +215,17 @@ export function AdminPricingRequestPage() {
   const { toast } = useToast();
   const [submitting, setSubmitting] = useState(false);
   const [attachments, setAttachments] = useState<File[]>([]);
+
+  // Redirect state users — only admin role can access this page
+  const { data: meData } = useQuery<{ success: boolean; user: { role: string } }>({
+    queryKey: ['/admin/api/me'],
+    queryFn: () => fetch('/admin/api/me', { credentials: 'include' }).then(r => r.json()),
+  });
+  useEffect(() => {
+    if (meData?.user?.role === 'state') {
+      navigate('/admin');
+    }
+  }, [meData, navigate]);
 
   const methods = useForm<FormValues>({
     defaultValues: {
