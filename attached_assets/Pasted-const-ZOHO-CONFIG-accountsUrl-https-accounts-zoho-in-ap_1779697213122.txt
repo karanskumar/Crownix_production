@@ -1,0 +1,143 @@
+const ZOHO_CONFIG = {
+  accountsUrl: "https://accounts.zoho.in",
+  apiDomain: "https://www.zohoapis.in",
+  clientId: "1000.160DE78Q9GD90NWRKRN5LPZV6JGD8V",
+  clientSecret: "f8118154cb48fc0d2ff10cec2ec3f9851437b95993",
+  refreshToken: "1000.ff9a31fdc97911642f58fafecfed9aa2.e868343dac008681d6da6cea3f8c736e",
+  apiVersion: "v8"
+};
+
+async function main() {
+  console.log("Script started");
+
+  const accessToken = await getAccessToken();
+  console.log("Access token received");
+
+  const response = await createZohoProduct({
+    fieldMap: {
+      Product_Name: "Test Product ONE 1",
+      Stage_Batch: "7777",
+      Vendor_Name: "1147855000000600719",
+      Release_Date: "2025-05-23",
+      EOI_Deadline: "2025-06-15",
+
+      Land_Size_m2: 250,
+      Build_Size_m2: 180,
+      Land_Price: 250000,
+      Build_Price: 350000,
+      Total_Package_Price: 600000,
+
+      Property_Type: ["House and Land"],
+      Facade_Name: "Modern Facade",
+      Floor_Plan_Name: "Plan A",
+      Bedroom: 4,
+      Bath: 2,
+      Living: 2,
+      Garage: 2,
+      Layout: "1147855000000599158"
+    },
+    accessToken
+  });
+
+  return response;
+}
+
+async function getAccessToken() {
+  const params = new URLSearchParams({
+    refresh_token: ZOHO_CONFIG.refreshToken,
+    client_id: ZOHO_CONFIG.clientId,
+    client_secret: ZOHO_CONFIG.clientSecret,
+    grant_type: "refresh_token"
+  });
+
+  const res = await fetch(`${ZOHO_CONFIG.accountsUrl}/oauth/v2/token`, {
+    method: "POST",
+    body: params
+  });
+
+  const data = await res.json();
+
+  if (!res.ok || !data.access_token) {
+    throw new Error(`Access token error: ${JSON.stringify(data)}`);
+  }
+
+  return data.access_token;
+}
+
+async function createZohoProduct({ fieldMap, accessToken }) {
+  const moduleApiName = "Products";
+
+  const url = `${ZOHO_CONFIG.apiDomain}/crm/${ZOHO_CONFIG.apiVersion}/${moduleApiName}`;
+
+  const payload = {
+    data: [fieldMap]
+  };
+
+  console.log("Creating Product...");
+  console.log(JSON.stringify(payload, null, 2));
+
+  const res = await fetch(url, {
+    method: "POST",
+    headers: {
+      Authorization: `Zoho-oauthtoken ${accessToken}`,
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(payload)
+  });
+
+  const data = await res.json();
+
+  if (!res.ok) {
+    throw new Error(`Create product error: ${JSON.stringify(data)}`);
+  }
+
+  return data;
+}
+
+main()
+  .then(result => {
+    console.log("SUCCESS:");
+    console.log(JSON.stringify(result, null, 2));
+  })
+  .catch(error => {
+    console.error("ERROR:");
+    console.error(error.message);
+  });
+
+
+  async function uploadFilesToZohoProduct({ productId, files, accessToken }) {
+  const moduleApiName = "Products";
+
+  const uploadResults = [];
+
+  for (const file of files) {
+    const formData = new FormData();
+    formData.append("file", file);
+
+    console.log(`Uploading file: ${file.name}`);
+
+    const res = await fetch(
+      `${ZOHO_CONFIG.apiDomain}/crm/${ZOHO_CONFIG.apiVersion}/${moduleApiName}/${productId}/Attachments`,
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Zoho-oauthtoken ${accessToken}`
+        },
+        body: formData
+      }
+    );
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      throw new Error(`File upload error for ${file.name}: ${JSON.stringify(data)}`);
+    }
+
+    uploadResults.push({
+      fileName: file.name,
+      response: data
+    });
+  }
+
+  return uploadResults;
+}

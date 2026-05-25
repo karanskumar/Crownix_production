@@ -170,8 +170,13 @@
       "registration": "Q4 2026",
       "state": "QLD",
       "id": "bbc1b76e-f40f-46a7-9c5f-a210a3127445",
-      "status": "Incomplete",
-      "createdAt": "2026-05-25T08:03:25.056Z"
+      "status": "Approved",
+      "createdAt": "2026-05-25T08:03:25.056Z",
+      "floorPlanFiles": [],
+      "sitedFloorPlanFiles": [],
+      "areaTableFiles": [],
+      "facadeFiles": [],
+      "inclusionFiles": []
     },
     "964f1711-7717-4775-8496-ee56f5e0aa5a": {
       "pricingRequestId": "1097e49c-89ee-4044-9f3f-2ca351f83357",
