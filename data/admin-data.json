@@ -39,6 +39,67 @@
       "id": "74a0fb62-31f7-4085-9620-8da8ba451d21",
       "status": "Pending",
       "createdAt": "2026-05-25T07:52:44.179Z"
+    },
+    "1097e49c-89ee-4044-9f3f-2ca351f83357": {
+      "state": "QLD",
+      "suburb": "HEather",
+      "estate": "Lakefront",
+      "stages": [
+        {
+          "stageName": "Test",
+          "registration": "Q4 2026",
+          "lots": [
+            {
+              "lotNumber": "101",
+              "landSize": "450",
+              "price": "350000",
+              "floorPlans": [
+                "Zeus"
+              ]
+            },
+            {
+              "lotNumber": "102",
+              "landSize": "450",
+              "price": "350000",
+              "floorPlans": [
+                "Athena"
+              ]
+            }
+          ]
+        },
+        {
+          "stageName": "Test Again",
+          "registration": "Q4 2026",
+          "lots": [
+            {
+              "lotNumber": "201",
+              "landSize": "550",
+              "price": "500000",
+              "floorPlans": [
+                "Dionysus"
+              ]
+            },
+            {
+              "lotNumber": "202",
+              "landSize": "550",
+              "price": "500000",
+              "floorPlans": [
+                "Hercules"
+              ]
+            }
+          ]
+        }
+      ],
+      "additionalCosts": {
+        "landBdmExpense": "2500",
+        "independentInspection": "1200",
+        "additionalMarketing": "1000"
+      },
+      "landLinks": [],
+      "attachments": [],
+      "id": "1097e49c-89ee-4044-9f3f-2ca351f83357",
+      "status": "Pending",
+      "createdAt": "2026-05-25T08:03:25.054Z"
     }
   },
   "packageUploads": {
@@ -52,7 +113,9 @@
       "state": "NSW",
       "id": "4d595941-db66-47cb-87ea-adc0d203312d",
       "status": "Approved",
-      "createdAt": "2026-05-25T07:52:44.180Z"
+      "createdAt": "2026-05-25T07:52:44.180Z",
+      "lotNumber": "101",
+      "stageName": "1"
     },
     "0100901e-dd9d-4d8e-bd84-ee786d16acd6": {
       "pricingRequestId": "74a0fb62-31f7-4085-9620-8da8ba451d21",
@@ -64,24 +127,65 @@
       "state": "NSW",
       "id": "0100901e-dd9d-4d8e-bd84-ee786d16acd6",
       "status": "Incomplete",
-      "createdAt": "2026-05-25T07:52:44.180Z"
+      "createdAt": "2026-05-25T07:52:44.180Z",
+      "lotNumber": "102",
+      "stageName": "1"
     },
-    "b84035c5-810f-4bad-88b3-aa9daaaaa0bd": {
-      "pricingRequestId": "74a0fb62-31f7-4085-9620-8da8ba451d21",
-      "lotAddress": "Lot 101, Riverwalk, Werribee",
+    "fd99868d-626c-4dcb-a1b5-f4c4ef42ba76": {
+      "pricingRequestId": "1097e49c-89ee-4044-9f3f-2ca351f83357",
+      "lotNumber": "101",
+      "stageName": "Test",
+      "lotAddress": "Lot 101, Lakefront, HEather",
       "landSize": "450",
       "landPrice": "350000",
-      "registration": "Q3 2026",
       "floorPlanName": "Zeus",
-      "state": "NSW",
-      "floorPlanFiles": [],
-      "sitedFloorPlanFiles": [],
-      "areaTableFiles": [],
-      "facadeFiles": [],
-      "inclusionFiles": [],
-      "id": "b84035c5-810f-4bad-88b3-aa9daaaaa0bd",
+      "registration": "Q4 2026",
+      "state": "QLD",
+      "id": "fd99868d-626c-4dcb-a1b5-f4c4ef42ba76",
       "status": "Approved",
-      "createdAt": "2026-05-25T07:53:48.552Z"
+      "createdAt": "2026-05-25T08:03:25.055Z"
+    },
+    "d296b39f-9cb5-4293-bffa-df275f56e84e": {
+      "pricingRequestId": "1097e49c-89ee-4044-9f3f-2ca351f83357",
+      "lotNumber": "102",
+      "stageName": "Test",
+      "lotAddress": "Lot 102, Lakefront, HEather",
+      "landSize": "450",
+      "landPrice": "350000",
+      "floorPlanName": "Athena",
+      "registration": "Q4 2026",
+      "state": "QLD",
+      "id": "d296b39f-9cb5-4293-bffa-df275f56e84e",
+      "status": "Incomplete",
+      "createdAt": "2026-05-25T08:03:25.055Z"
+    },
+    "bbc1b76e-f40f-46a7-9c5f-a210a3127445": {
+      "pricingRequestId": "1097e49c-89ee-4044-9f3f-2ca351f83357",
+      "lotNumber": "201",
+      "stageName": "Test Again",
+      "lotAddress": "Lot 201, Lakefront, HEather",
+      "landSize": "550",
+      "landPrice": "500000",
+      "floorPlanName": "Dionysus",
+      "registration": "Q4 2026",
+      "state": "QLD",
+      "id": "bbc1b76e-f40f-46a7-9c5f-a210a3127445",
+      "status": "Incomplete",
+      "createdAt": "2026-05-25T08:03:25.056Z"
+    },
+    "964f1711-7717-4775-8496-ee56f5e0aa5a": {
+      "pricingRequestId": "1097e49c-89ee-4044-9f3f-2ca351f83357",
+      "lotNumber": "202",
+      "stageName": "Test Again",
+      "lotAddress": "Lot 202, Lakefront, HEather",
+      "landSize": "550",
+      "landPrice": "500000",
+      "floorPlanName": "Hercules",
+      "registration": "Q4 2026",
+      "state": "QLD",
+      "id": "964f1711-7717-4775-8496-ee56f5e0aa5a",
+      "status": "Incomplete",
+      "createdAt": "2026-05-25T08:03:25.056Z"
     }
   }
 }

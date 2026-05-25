@@ -12,7 +12,7 @@ interface PackageUpload {
   lotAddress: string;
   landSize: string;
   landPrice: string;
-  status: 'Incomplete' | 'Pending' | 'Approved';
+  status: 'Incomplete' | 'Pending' | 'Reviewed' | 'Approved';
   state?: string;
   floorPlanName?: string;
   pricingRequestId?: string;
@@ -30,16 +30,18 @@ interface AdminUser {
 const STATUS_COLORS: Record<string, string> = {
   Incomplete: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300',
   Pending: 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300',
+  Reviewed: 'bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-300',
   Approved: 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300',
 };
 
 const STATUS_LABELS: Record<string, string> = {
   Incomplete: 'Incomplete',
   Pending: 'Pending Approval',
+  Reviewed: '1st Approval',
   Approved: 'Approved',
 };
 
-const STATUS_ORDER: Record<string, number> = { Incomplete: 0, Pending: 1, Approved: 2 };
+const STATUS_ORDER: Record<string, number> = { Incomplete: 0, Pending: 1, Reviewed: 2, Approved: 3 };
 
 type SortOrder = 'default' | 'status-asc' | 'status-desc';
 
@@ -68,7 +70,12 @@ export function AdminPackageUploadListPage() {
       }).then(r => r.json()),
     onSuccess: (result) => {
       if (result.success) {
-        toast({ title: 'Package approved', description: 'Approval emails sent.' });
+        const newStatus = result.upload?.status;
+        const title = newStatus === 'Reviewed' ? '1st Approval recorded' : 'Package approved';
+        const description = newStatus === 'Reviewed'
+          ? 'Awaiting final approval by admin.'
+          : 'Final approval complete. Emails sent.';
+        toast({ title, description });
         queryClient.invalidateQueries({ queryKey: ['/admin/api/package-uploads'] });
       } else {
         toast({ title: 'Error', description: result.message, variant: 'destructive' });
@@ -142,6 +149,7 @@ export function AdminPackageUploadListPage() {
                   <SelectItem value="all">All</SelectItem>
                   <SelectItem value="Incomplete">Incomplete</SelectItem>
                   <SelectItem value="Pending">Pending Approval</SelectItem>
+                  <SelectItem value="Reviewed">1st Approval</SelectItem>
                   <SelectItem value="Approved">Approved</SelectItem>
                 </SelectContent>
               </Select>
@@ -202,23 +210,41 @@ export function AdminPackageUploadListPage() {
                             <Upload className="h-3.5 w-3.5" />
                             Upload
                           </Button>
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            onClick={() => navigate(`/admin/package-uploads/new?duplicateFrom=${upload.id}`)}
-                            title="Duplicate"
-                            data-testid={`button-duplicate-${upload.id}`}
-                          >
-                            <Copy className="h-4 w-4" />
-                          </Button>
-                          {isAdmin && upload.status !== 'Approved' && (
+                          {!upload.pricingRequestId && (
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              onClick={() => navigate(`/admin/package-uploads/new?duplicateFrom=${upload.id}`)}
+                              title="Duplicate"
+                              data-testid={`button-duplicate-${upload.id}`}
+                            >
+                              <Copy className="h-4 w-4" />
+                            </Button>
+                          )}
+                          {upload.status === 'Pending' && (
                             <Button
                               variant="ghost"
                               size="icon"
                               onClick={() => approveMutation.mutate(upload.id)}
                               disabled={approveMutation.isPending}
-                              title="Approve"
+                              title="1st Approval"
                               data-testid={`button-approve-${upload.id}`}
+                            >
+                              {approveMutation.isPending ? (
+                                <Loader2 className="h-4 w-4 animate-spin" />
+                              ) : (
+                                <CheckCircle className="h-4 w-4 text-purple-600" />
+                              )}
+                            </Button>
+                          )}
+                          {isAdmin && upload.status === 'Reviewed' && (
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              onClick={() => approveMutation.mutate(upload.id)}
+                              disabled={approveMutation.isPending}
+                              title="Final Approval"
+                              data-testid={`button-final-approve-${upload.id}`}
                             >
                               {approveMutation.isPending ? (
                                 <Loader2 className="h-4 w-4 animate-spin" />

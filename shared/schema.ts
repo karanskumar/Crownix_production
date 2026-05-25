@@ -123,7 +123,7 @@ export const packageUploadSchema = z.object({
 
 export type PackageUploadInput = z.infer<typeof packageUploadSchema>;
 
-export type PackageUploadStatus = "Incomplete" | "Pending" | "Approved";
+export type PackageUploadStatus = "Incomplete" | "Pending" | "Reviewed" | "Approved";
 
 export interface PackageUpload extends PackageUploadInput {
   id: string;

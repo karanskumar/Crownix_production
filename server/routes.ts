@@ -665,52 +665,85 @@ ${validatedData.message}
 
   app.post("/admin/api/package-uploads/:id/approve", requireAdmin, async (req, res) => {
     try {
-      // Only admin role can approve
-      if (req.session.admin!.role !== "admin") {
-        return res.status(403).json({ success: false, message: "Only admin users can approve packages" });
-      }
-
       const upload = await storage.getPackageUpload(req.params.id);
       if (!upload) {
         return res.status(404).json({ success: false, message: "Package upload not found" });
       }
 
-      const updated = await storage.updatePackageUploadStatus(req.params.id, "Approved");
+      const role = req.session.admin!.role;
 
-      // Send approval emails to Kesh & Pavan, CC Divyan, with all package file attachments
-      try {
-        const { client, fromEmail } = await getUncachableResendClient();
+      // Double-approval policy:
+      // Step 1 — Pending → Reviewed: any admin (including state users)
+      // Step 2 — Reviewed → Approved: admin role only
+      if (upload.status === "Pending") {
+        const updated = await storage.updatePackageUploadStatus(req.params.id, "Reviewed");
 
-        const allPackageFiles = [
-          ...(upload.floorPlanFiles ?? []),
-          ...(upload.sitedFloorPlanFiles ?? []),
-          ...(upload.areaTableFiles ?? []),
-          ...(upload.facadeFiles ?? []),
-          ...(upload.inclusionFiles ?? []),
-        ];
-        const approvalAttachments = buildEmailAttachments(allPackageFiles);
+        try {
+          const { client, fromEmail } = await getUncachableResendClient();
+          await client.emails.send({
+            from: fromEmail,
+            to: KESH_PAVAN_EMAIL,
+            cc: [DIV_EMAIL],
+            subject: `Package Reviewed (1st Approval) – ${upload.lotAddress}`,
+            html: `
+              <h2>Package Upload – 1st Approval</h2>
+              <p>The following package has been reviewed and is awaiting final approval:</p>
+              <p><strong>Lot Address:</strong> ${escapeHtml(upload.lotAddress)}</p>
+              <p><strong>Land Size:</strong> ${escapeHtml(upload.landSize)} sqm</p>
+              <p><strong>Land Price:</strong> $${escapeHtml(upload.landPrice)}</p>
+              ${upload.floorPlanName ? `<p><strong>Floor Plan:</strong> ${escapeHtml(upload.floorPlanName)}</p>` : ''}
+            `,
+          });
+        } catch (emailError) {
+          console.error("Failed to send 1st approval email:", emailError);
+        }
 
-        await client.emails.send({
-          from: fromEmail,
-          to: KESH_PAVAN_EMAIL,
-          cc: [DIV_EMAIL],
-          subject: `Package Approved – ${upload.lotAddress}`,
-          html: `
-            <h2>Package Upload Approved</h2>
-            <p>The following package has been approved:</p>
-            <p><strong>Lot Address:</strong> ${escapeHtml(upload.lotAddress)}</p>
-            <p><strong>Land Size:</strong> ${escapeHtml(upload.landSize)} sqm</p>
-            <p><strong>Land Price:</strong> $${escapeHtml(upload.landPrice)}</p>
-            ${upload.floorPlanName ? `<p><strong>Floor Plan:</strong> ${escapeHtml(upload.floorPlanName)}</p>` : ''}
-            <!-- TODO: Trigger Zoho CRM product creation on approval -->
-          `,
-          ...(approvalAttachments.length > 0 ? { attachments: approvalAttachments } : {}),
-        });
-      } catch (emailError) {
-        console.error("Failed to send approval email:", emailError);
+        return res.json({ success: true, upload: updated });
       }
 
-      res.json({ success: true, upload: updated });
+      if (upload.status === "Reviewed") {
+        if (role !== "admin") {
+          return res.status(403).json({ success: false, message: "Only admin users can give final approval" });
+        }
+
+        const updated = await storage.updatePackageUploadStatus(req.params.id, "Approved");
+
+        try {
+          const { client, fromEmail } = await getUncachableResendClient();
+
+          const allPackageFiles = [
+            ...(upload.floorPlanFiles ?? []),
+            ...(upload.sitedFloorPlanFiles ?? []),
+            ...(upload.areaTableFiles ?? []),
+            ...(upload.facadeFiles ?? []),
+            ...(upload.inclusionFiles ?? []),
+          ];
+          const approvalAttachments = buildEmailAttachments(allPackageFiles);
+
+          await client.emails.send({
+            from: fromEmail,
+            to: KESH_PAVAN_EMAIL,
+            cc: [DIV_EMAIL],
+            subject: `Package Approved – ${upload.lotAddress}`,
+            html: `
+              <h2>Package Upload Approved</h2>
+              <p>The following package has been approved:</p>
+              <p><strong>Lot Address:</strong> ${escapeHtml(upload.lotAddress)}</p>
+              <p><strong>Land Size:</strong> ${escapeHtml(upload.landSize)} sqm</p>
+              <p><strong>Land Price:</strong> $${escapeHtml(upload.landPrice)}</p>
+              ${upload.floorPlanName ? `<p><strong>Floor Plan:</strong> ${escapeHtml(upload.floorPlanName)}</p>` : ''}
+              <!-- TODO: Trigger Zoho CRM product creation on approval -->
+            `,
+            ...(approvalAttachments.length > 0 ? { attachments: approvalAttachments } : {}),
+          });
+        } catch (emailError) {
+          console.error("Failed to send final approval email:", emailError);
+        }
+
+        return res.json({ success: true, upload: updated });
+      }
+
+      return res.status(400).json({ success: false, message: "Package is not in an approvable state" });
     } catch (error) {
       console.error("Approve package upload error:", error);
       res.status(500).json({ success: false, message: "Failed to approve package upload" });
