@@ -108,10 +108,16 @@ export const packageUploadSchema = z.object({
   lotAddress: z.string().min(1, "Lot address is required"),
   landSize: z.string().min(1, "Land size is required"),
   landPrice: z.string().min(1, "Land price is required"),
-  floorPlanSize: z.string().optional(),
-  registration: z.string().optional(),
+  buildSize: z.string().optional(),
+  buildPrice: z.string().optional(),
+  forecastRegistrationDate: z.string().optional(),
   floorPlanName: z.string().optional(),
   facadeName: z.string().optional(),
+  bedroom: z.number().optional(),
+  bath: z.number().optional(),
+  living: z.number().optional(),
+  garage: z.number().optional(),
+  description: z.string().optional(),
   state: z.enum(["NSW", "QLD", "VIC"]).optional(),
   // file uploads (stored as metadata)
   floorPlanFiles: z.array(fileMetaSchema).optional(),
@@ -119,6 +125,7 @@ export const packageUploadSchema = z.object({
   areaTableFiles: z.array(fileMetaSchema).optional(),
   facadeFiles: z.array(fileMetaSchema).optional(),
   inclusionFiles: z.array(fileMetaSchema).optional(),
+  packageFiles: z.array(fileMetaSchema).optional(),
 });
 
 export type PackageUploadInput = z.infer<typeof packageUploadSchema>;

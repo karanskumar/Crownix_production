@@ -17,8 +17,8 @@ const STATUS_LABELS: Record<string, string> = {
   Approved: 'Approved',
 };
 
-function Field({ label, value }: { label: string; value?: string | null }) {
-  if (!value) return null;
+function Field({ label, value }: { label: string; value?: string | number | null }) {
+  if (value == null || value === '') return null;
   return (
     <div className="space-y-1">
       <p className="text-xs text-muted-foreground font-medium uppercase tracking-wide">{label}</p>
@@ -97,15 +97,36 @@ export function AdminPackageUploadViewPage() {
                 </span>
               </div>
             </CardHeader>
-            <CardContent className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <Field label="Lot Address" value={upload.lotAddress} />
-              <Field label="State" value={upload.state} />
-              <Field label="Land Size" value={upload.landSize ? `${upload.landSize} sqm` : undefined} />
-              <Field label="Land Price" value={upload.landPrice ? `$${upload.landPrice}` : undefined} />
-              <Field label="Floor Plan Name" value={upload.floorPlanName} />
-              <Field label="Floor Plan Size" value={upload.floorPlanSize} />
-              <Field label="Facade Name" value={upload.facadeName} />
-              <Field label="Registration" value={upload.registration} />
+            <CardContent className="space-y-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <Field label="Lot Address" value={upload.lotAddress} />
+                <Field label="State" value={upload.state} />
+                <Field label="Stage" value={upload.stageName} />
+                <Field label="Forecast Registration Date" value={upload.forecastRegistrationDate} />
+                <Field label="Land Size" value={upload.landSize ? `${upload.landSize} sqm` : undefined} />
+                <Field label="Land Price" value={upload.landPrice ? `$${upload.landPrice}` : undefined} />
+                <Field label="Build Size" value={upload.buildSize} />
+                <Field label="Build Price" value={upload.buildPrice ? `$${upload.buildPrice}` : undefined} />
+              </div>
+              {(upload.floorPlanName || upload.facadeName || upload.bedroom != null || upload.bath != null || upload.living != null || upload.garage != null || upload.description) && (
+                <div className="pt-2 border-t space-y-3">
+                  <p className="text-xs text-muted-foreground font-medium uppercase tracking-wide">Property Details</p>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <Field label="Floor Plan Name" value={upload.floorPlanName} />
+                    <Field label="Facade Name" value={upload.facadeName} />
+                    <Field label="Bedroom" value={upload.bedroom} />
+                    <Field label="Bath" value={upload.bath} />
+                    <Field label="Living" value={upload.living} />
+                    <Field label="Garage" value={upload.garage} />
+                  </div>
+                  {upload.description && (
+                    <div className="space-y-1">
+                      <p className="text-xs text-muted-foreground font-medium uppercase tracking-wide">Description</p>
+                      <p className="text-sm text-foreground whitespace-pre-wrap">{upload.description}</p>
+                    </div>
+                  )}
+                </div>
+              )}
             </CardContent>
           </Card>
 
@@ -113,7 +134,8 @@ export function AdminPackageUploadViewPage() {
            (upload.sitedFloorPlanFiles?.length ?? 0) > 0 ||
            (upload.areaTableFiles?.length ?? 0) > 0 ||
            (upload.facadeFiles?.length ?? 0) > 0 ||
-           (upload.inclusionFiles?.length ?? 0) > 0 ? (
+           (upload.inclusionFiles?.length ?? 0) > 0 ||
+           (upload.packageFiles?.length ?? 0) > 0 ? (
             <Card>
               <CardHeader className="pb-2">
                 <CardTitle className="text-base">Uploaded Files</CardTitle>
@@ -125,6 +147,7 @@ export function AdminPackageUploadViewPage() {
                   { label: 'Area Table', files: upload.areaTableFiles },
                   { label: 'Facade', files: upload.facadeFiles },
                   { label: 'Inclusions', files: upload.inclusionFiles },
+                  { label: 'Package Upload', files: upload.packageFiles },
                 ].map(({ label, files }) =>
                   files && files.length > 0 ? (
                     <div key={label}>

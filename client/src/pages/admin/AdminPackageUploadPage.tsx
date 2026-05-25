@@ -6,6 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Upload, X, Loader2, ArrowLeft, Download } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
@@ -15,10 +16,17 @@ interface FormValues {
   lotAddress: string;
   landSize: string;
   landPrice: string;
-  floorPlanSize: string;
-  registration: string;
+  buildSize: string;
+  buildPrice: string;
+  forecastRegistrationDate: string;
+  stageName: string;
   floorPlanName: string;
   facadeName: string;
+  bedroom: string;
+  bath: string;
+  living: string;
+  garage: string;
+  description: string;
   state: 'NSW' | 'QLD' | 'VIC' | '';
 }
 
@@ -28,6 +36,7 @@ interface FileGroup {
   areaTableFiles: File[];
   facadeFiles: File[];
   inclusionFiles: File[];
+  packageFiles: File[];
 }
 
 const FILE_FIELDS: { key: keyof FileGroup; label: string }[] = [
@@ -36,6 +45,7 @@ const FILE_FIELDS: { key: keyof FileGroup; label: string }[] = [
   { key: 'areaTableFiles', label: 'Area Table' },
   { key: 'facadeFiles', label: 'Facade' },
   { key: 'inclusionFiles', label: 'Inclusions' },
+  { key: 'packageFiles', label: 'Package Upload' },
 ];
 
 const STATUS_COLORS: Record<string, string> = {
@@ -123,8 +133,8 @@ function FileUploadField({
   );
 }
 
-function ReadonlyField({ label, value }: { label: string; value?: string | null }) {
-  if (!value) return null;
+function ReadonlyField({ label, value }: { label: string; value?: string | number | null }) {
+  if (value == null || value === '') return null;
   return (
     <div className="space-y-1">
       <p className="text-xs text-muted-foreground font-medium uppercase tracking-wide">{label}</p>
@@ -146,6 +156,7 @@ export function AdminPackageUploadPage() {
     areaTableFiles: [],
     facadeFiles: [],
     inclusionFiles: [],
+    packageFiles: [],
   });
 
   const {
@@ -159,10 +170,17 @@ export function AdminPackageUploadPage() {
       lotAddress: '',
       landSize: '',
       landPrice: '',
-      floorPlanSize: '',
-      registration: '',
+      buildSize: '',
+      buildPrice: '',
+      forecastRegistrationDate: '',
+      stageName: '',
       floorPlanName: '',
       facadeName: '',
+      bedroom: '',
+      bath: '',
+      living: '',
+      garage: '',
+      description: '',
       state: '',
     },
   });
@@ -184,6 +202,7 @@ export function AdminPackageUploadPage() {
   });
 
   const pricingRequest = prData?.request;
+  const stageNames = pricingRequest?.stages?.map(s => s.stageName) ?? [];
 
   useEffect(() => {
     if (upload) {
@@ -191,10 +210,17 @@ export function AdminPackageUploadPage() {
         lotAddress: upload.lotAddress || '',
         landSize: upload.landSize || '',
         landPrice: upload.landPrice || '',
-        floorPlanSize: upload.floorPlanSize || '',
-        registration: upload.registration || '',
+        buildSize: upload.buildSize || '',
+        buildPrice: upload.buildPrice || '',
+        forecastRegistrationDate: upload.forecastRegistrationDate || '',
+        stageName: upload.stageName || '',
         floorPlanName: upload.floorPlanName || '',
         facadeName: upload.facadeName || '',
+        bedroom: upload.bedroom != null ? String(upload.bedroom) : '',
+        bath: upload.bath != null ? String(upload.bath) : '',
+        living: upload.living != null ? String(upload.living) : '',
+        garage: upload.garage != null ? String(upload.garage) : '',
+        description: upload.description || '',
         state: (upload.state as FormValues['state']) || '',
       });
     }
@@ -229,13 +255,14 @@ export function AdminPackageUploadPage() {
     if (!id) return;
     setSubmitting(true);
     try {
-      const [floorPlanFiles, sitedFloorPlanFiles, areaTableFiles, facadeFiles, inclusionFiles] =
+      const [floorPlanFiles, sitedFloorPlanFiles, areaTableFiles, facadeFiles, inclusionFiles, packageFiles] =
         await Promise.all([
           uploadFileGroup(files.floorPlanFiles, 'floorPlanFiles'),
           uploadFileGroup(files.sitedFloorPlanFiles, 'sitedFloorPlanFiles'),
           uploadFileGroup(files.areaTableFiles, 'areaTableFiles'),
           uploadFileGroup(files.facadeFiles, 'facadeFiles'),
           uploadFileGroup(files.inclusionFiles, 'inclusionFiles'),
+          uploadFileGroup(files.packageFiles, 'packageFiles'),
         ]);
 
       const payload: Record<string, unknown> = {
@@ -243,16 +270,24 @@ export function AdminPackageUploadPage() {
         lotAddress: values.lotAddress,
         landSize: values.landSize,
         landPrice: values.landPrice,
-        floorPlanSize: values.floorPlanSize || undefined,
-        registration: values.registration || undefined,
+        buildSize: values.buildSize || undefined,
+        buildPrice: values.buildPrice || undefined,
+        forecastRegistrationDate: values.forecastRegistrationDate || undefined,
+        stageName: values.stageName || undefined,
         floorPlanName: values.floorPlanName || undefined,
         facadeName: values.facadeName || undefined,
+        bedroom: values.bedroom ? Number(values.bedroom) : undefined,
+        bath: values.bath ? Number(values.bath) : undefined,
+        living: values.living ? Number(values.living) : undefined,
+        garage: values.garage ? Number(values.garage) : undefined,
+        description: values.description || undefined,
         state: values.state || undefined,
         floorPlanFiles: [...(upload?.floorPlanFiles ?? []), ...floorPlanFiles],
         sitedFloorPlanFiles: [...(upload?.sitedFloorPlanFiles ?? []), ...sitedFloorPlanFiles],
         areaTableFiles: [...(upload?.areaTableFiles ?? []), ...areaTableFiles],
         facadeFiles: [...(upload?.facadeFiles ?? []), ...facadeFiles],
         inclusionFiles: [...(upload?.inclusionFiles ?? []), ...inclusionFiles],
+        packageFiles: [...(upload?.packageFiles ?? []), ...packageFiles],
       };
 
       const res = await fetch(`/admin/api/package-uploads/${id}`, {
@@ -331,9 +366,6 @@ export function AdminPackageUploadPage() {
             </div>
 
             {pricingRequest.stages && pricingRequest.stages.length > 0 && (() => {
-              // Match by lotNumber+stageName (unique identifiers stored on the upload).
-              // Fall back to landSize+landPrice match for older records that predate
-              // the lotNumber/stageName fields.
               const matchedStages = pricingRequest.stages
                 .map(stage => ({
                   ...stage,
@@ -448,6 +480,7 @@ export function AdminPackageUploadPage() {
 
       {/* Upload Form */}
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+        {/* Package Details */}
         <Card>
           <CardHeader className="pb-3">
             <CardTitle className="text-base">Package Details</CardTitle>
@@ -483,7 +516,44 @@ export function AdminPackageUploadPage() {
                 />
               </div>
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="grid gap-2">
+                <Label>Stage</Label>
+                {stageNames.length > 0 ? (
+                  <Controller
+                    name="stageName"
+                    control={control}
+                    render={({ field }) => (
+                      <Select onValueChange={field.onChange} value={field.value || ''}>
+                        <SelectTrigger data-testid="select-stage-name">
+                          <SelectValue placeholder="Select stage" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {stageNames.map(name => (
+                            <SelectItem key={name} value={name}>{name}</SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    )}
+                  />
+                ) : (
+                  <Input
+                    {...register('stageName')}
+                    placeholder="e.g. Stage 1"
+                    data-testid="input-stage-name"
+                  />
+                )}
+              </div>
+              <div className="grid gap-2">
+                <Label>Forecast Registration Date</Label>
+                <Input
+                  {...register('forecastRegistrationDate')}
+                  placeholder="e.g. Q3 2025"
+                  data-testid="input-forecast-registration-date"
+                />
+              </div>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="grid gap-2">
                 <Label>Land Size (sqm) <span className="text-destructive">*</span></Label>
                 <Input
@@ -502,24 +572,35 @@ export function AdminPackageUploadPage() {
                 />
                 {errors.landPrice && <p className="text-destructive text-sm">{errors.landPrice.message}</p>}
               </div>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="grid gap-2">
-                <Label>Floor Plan Size</Label>
+                <Label>Build Size</Label>
                 <Input
-                  {...register('floorPlanSize')}
+                  {...register('buildSize')}
                   placeholder="e.g. 28sq"
-                  data-testid="input-floor-plan-size"
+                  data-testid="input-build-size"
+                />
+              </div>
+              <div className="grid gap-2">
+                <Label>Build Price ($)</Label>
+                <Input
+                  {...register('buildPrice')}
+                  placeholder="e.g. 280000"
+                  data-testid="input-build-price"
                 />
               </div>
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-              <div className="grid gap-2">
-                <Label>Registration</Label>
-                <Input
-                  {...register('registration')}
-                  placeholder="e.g. Q3 2025"
-                  data-testid="input-registration"
-                />
-              </div>
+          </CardContent>
+        </Card>
+
+        {/* Property Details */}
+        <Card>
+          <CardHeader className="pb-3">
+            <CardTitle className="text-base">Property Details</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="grid gap-2">
                 <Label>Floor Plan Name</Label>
                 <Input
@@ -537,9 +618,61 @@ export function AdminPackageUploadPage() {
                 />
               </div>
             </div>
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+              <div className="grid gap-2">
+                <Label>Bedroom</Label>
+                <Input
+                  {...register('bedroom')}
+                  type="number"
+                  min="0"
+                  placeholder="e.g. 4"
+                  data-testid="input-bedroom"
+                />
+              </div>
+              <div className="grid gap-2">
+                <Label>Bath</Label>
+                <Input
+                  {...register('bath')}
+                  type="number"
+                  min="0"
+                  placeholder="e.g. 2"
+                  data-testid="input-bath"
+                />
+              </div>
+              <div className="grid gap-2">
+                <Label>Living</Label>
+                <Input
+                  {...register('living')}
+                  type="number"
+                  min="0"
+                  placeholder="e.g. 2"
+                  data-testid="input-living"
+                />
+              </div>
+              <div className="grid gap-2">
+                <Label>Garage</Label>
+                <Input
+                  {...register('garage')}
+                  type="number"
+                  min="0"
+                  placeholder="e.g. 2"
+                  data-testid="input-garage"
+                />
+              </div>
+            </div>
+            <div className="grid gap-2">
+              <Label>Description</Label>
+              <Textarea
+                {...register('description')}
+                placeholder="Enter a description of the property..."
+                rows={4}
+                data-testid="input-description"
+              />
+            </div>
           </CardContent>
         </Card>
 
+        {/* File Uploads */}
         <Card>
           <CardHeader className="pb-3">
             <CardTitle className="text-base">File Uploads</CardTitle>
@@ -550,7 +683,7 @@ export function AdminPackageUploadPage() {
                 key={key}
                 label={label}
                 files={files[key]}
-                existingFiles={upload?.[key]}
+                existingFiles={upload?.[key as keyof typeof upload] as FileMeta[] | undefined}
                 onChange={(newFiles) => updateFileGroup(key, newFiles)}
                 onRemove={(idx) => removeFile(key, idx)}
                 testId={`input-${key}`}

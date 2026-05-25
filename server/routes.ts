@@ -365,7 +365,7 @@ ${validatedData.message}
               landSize: lot.landSize,
               landPrice: lot.price,
               floorPlanName: lot.floorPlans[0],
-              registration: stage.registration,
+              forecastRegistrationDate: stage.registration,
               state: validatedData.state,
               lotNumber: lot.lotNumber,
               stageName: stage.stageName,
@@ -379,7 +379,7 @@ ${validatedData.message}
               landSize: lot.landSize,
               landPrice: lot.price,
               floorPlanName: lot.floorPlans[0],
-              registration: stage.registration,
+              forecastRegistrationDate: stage.registration,
               state: validatedData.state,
             }, "Incomplete");
           }
@@ -524,10 +524,11 @@ ${validatedData.message}
           <p><strong>Lot Address:</strong> ${escapeHtml(validatedData.lotAddress)}</p>
           <p><strong>Land Size:</strong> ${escapeHtml(validatedData.landSize)} sqm</p>
           <p><strong>Land Price:</strong> $${escapeHtml(validatedData.landPrice)}</p>
-          ${validatedData.floorPlanSize ? `<p><strong>Floor Plan Size:</strong> ${escapeHtml(validatedData.floorPlanSize)}</p>` : ''}
+          ${validatedData.buildSize ? `<p><strong>Build Size:</strong> ${escapeHtml(validatedData.buildSize)}</p>` : ''}
+          ${validatedData.buildPrice ? `<p><strong>Build Price:</strong> $${escapeHtml(validatedData.buildPrice)}</p>` : ''}
           ${validatedData.floorPlanName ? `<p><strong>Floor Plan Name:</strong> ${escapeHtml(validatedData.floorPlanName)}</p>` : ''}
           ${validatedData.facadeName ? `<p><strong>Facade Name:</strong> ${escapeHtml(validatedData.facadeName)}</p>` : ''}
-          ${validatedData.registration ? `<p><strong>Registration:</strong> ${escapeHtml(validatedData.registration)}</p>` : ''}
+          ${validatedData.forecastRegistrationDate ? `<p><strong>Forecast Registration Date:</strong> ${escapeHtml(validatedData.forecastRegistrationDate)}</p>` : ''}
         `;
 
         const recipients: string[] = [KESH_PAVAN_EMAIL, DIV_EMAIL];
@@ -628,10 +629,11 @@ ${validatedData.message}
             <p><strong>Lot Address:</strong> ${escapeHtml(finalUpload.lotAddress)}</p>
             <p><strong>Land Size:</strong> ${escapeHtml(finalUpload.landSize)} sqm</p>
             <p><strong>Land Price:</strong> $${escapeHtml(finalUpload.landPrice)}</p>
-            ${finalUpload.floorPlanSize ? `<p><strong>Floor Plan Size:</strong> ${escapeHtml(finalUpload.floorPlanSize)}</p>` : ''}
+            ${finalUpload.buildSize ? `<p><strong>Build Size:</strong> ${escapeHtml(finalUpload.buildSize)}</p>` : ''}
+            ${finalUpload.buildPrice ? `<p><strong>Build Price:</strong> $${escapeHtml(finalUpload.buildPrice)}</p>` : ''}
             ${finalUpload.floorPlanName ? `<p><strong>Floor Plan Name:</strong> ${escapeHtml(finalUpload.floorPlanName)}</p>` : ''}
             ${finalUpload.facadeName ? `<p><strong>Facade Name:</strong> ${escapeHtml(finalUpload.facadeName)}</p>` : ''}
-            ${finalUpload.registration ? `<p><strong>Registration:</strong> ${escapeHtml(finalUpload.registration)}</p>` : ''}
+            ${finalUpload.forecastRegistrationDate ? `<p><strong>Forecast Registration Date:</strong> ${escapeHtml(finalUpload.forecastRegistrationDate)}</p>` : ''}
           `;
 
           const recipients: string[] = [KESH_PAVAN_EMAIL, DIV_EMAIL];
