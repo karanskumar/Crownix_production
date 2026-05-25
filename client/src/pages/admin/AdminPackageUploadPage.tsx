@@ -331,14 +331,21 @@ export function AdminPackageUploadPage() {
             </div>
 
             {pricingRequest.stages && pricingRequest.stages.length > 0 && (() => {
-              // Only show the stage/lot that matches this specific package upload
+              // Match by lotNumber+stageName (unique identifiers stored on the upload).
+              // Fall back to landSize+landPrice match for older records that predate
+              // the lotNumber/stageName fields.
               const matchedStages = pricingRequest.stages
                 .map(stage => ({
                   ...stage,
-                  lots: stage.lots.filter(lot =>
-                    String(lot.landSize).trim() === String(upload.landSize ?? '').trim() &&
-                    String(lot.price).trim() === String(upload.landPrice ?? '').trim()
-                  ),
+                  lots: stage.lots.filter(lot => {
+                    if (upload.lotNumber && upload.stageName) {
+                      return lot.lotNumber === upload.lotNumber && stage.stageName === upload.stageName;
+                    }
+                    return (
+                      String(lot.landSize).trim() === String(upload.landSize ?? '').trim() &&
+                      String(lot.price).trim() === String(upload.landPrice ?? '').trim()
+                    );
+                  }),
                 }))
                 .filter(stage => stage.lots.length > 0);
 

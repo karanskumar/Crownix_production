@@ -17,6 +17,7 @@ export interface IStorage {
   // Package Uploads
   createPackageUpload(input: PackageUploadInput, initialStatus?: PackageUploadStatus): Promise<PackageUpload>;
   getPackageUpload(id: string): Promise<PackageUpload | undefined>;
+  findPackageUploadByLot(pricingRequestId: string, lotNumber: string, stageName: string): Promise<PackageUpload | undefined>;
   getAllPackageUploads(): Promise<PackageUpload[]>;
   updatePackageUpload(id: string, input: Partial<PackageUploadInput>): Promise<PackageUpload | undefined>;
   updatePackageUploadStatus(id: string, status: PackageUploadStatus): Promise<PackageUpload | undefined>;
@@ -133,6 +134,14 @@ export class JsonFileStorage implements IStorage {
 
   async getPackageUpload(id: string): Promise<PackageUpload | undefined> {
     return this.data.packageUploads[id];
+  }
+
+  async findPackageUploadByLot(pricingRequestId: string, lotNumber: string, stageName: string): Promise<PackageUpload | undefined> {
+    return Object.values(this.data.packageUploads).find(
+      u => u.pricingRequestId === pricingRequestId &&
+           u.lotNumber === lotNumber &&
+           u.stageName === stageName
+    );
   }
 
   async getAllPackageUploads(): Promise<PackageUpload[]> {

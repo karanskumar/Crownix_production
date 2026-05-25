@@ -102,6 +102,9 @@ export interface PricingRequest extends PricingRequestInput {
 // Package upload
 export const packageUploadSchema = z.object({
   pricingRequestId: z.string().optional(),
+  // Unique identifiers within a pricing request
+  lotNumber: z.string().optional(),
+  stageName: z.string().optional(),
   lotAddress: z.string().min(1, "Lot address is required"),
   landSize: z.string().min(1, "Land size is required"),
   landPrice: z.string().min(1, "Land price is required"),

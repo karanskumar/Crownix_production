@@ -351,19 +351,38 @@ ${validatedData.message}
       const validatedData = pricingRequestSchema.parse(req.body);
       const request = await storage.createPricingRequest(validatedData);
 
-      // Auto-create "Incomplete" package uploads for each lot in each stage
+      // Upsert "Incomplete" package uploads for each lot in each stage.
+      // Uses lotNumber+stageName as the unique key so re-submitting the
+      // same pricing request never creates duplicate rows.
       for (const stage of validatedData.stages) {
         for (const lot of stage.lots) {
           const lotAddress = `Lot ${lot.lotNumber}, ${validatedData.estate}, ${validatedData.suburb}`;
-          await storage.createPackageUpload({
-            pricingRequestId: request.id,
-            lotAddress,
-            landSize: lot.landSize,
-            landPrice: lot.price,
-            floorPlanName: lot.floorPlans[0],
-            registration: stage.registration,
-            state: validatedData.state,
-          }, "Incomplete");
+          const existing = await storage.findPackageUploadByLot(request.id, lot.lotNumber, stage.stageName);
+          if (existing) {
+            // Already exists — update without changing status
+            await storage.updatePackageUpload(existing.id, {
+              lotAddress,
+              landSize: lot.landSize,
+              landPrice: lot.price,
+              floorPlanName: lot.floorPlans[0],
+              registration: stage.registration,
+              state: validatedData.state,
+              lotNumber: lot.lotNumber,
+              stageName: stage.stageName,
+            });
+          } else {
+            await storage.createPackageUpload({
+              pricingRequestId: request.id,
+              lotNumber: lot.lotNumber,
+              stageName: stage.stageName,
+              lotAddress,
+              landSize: lot.landSize,
+              landPrice: lot.price,
+              floorPlanName: lot.floorPlans[0],
+              registration: stage.registration,
+              state: validatedData.state,
+            }, "Incomplete");
+          }
         }
       }
 
