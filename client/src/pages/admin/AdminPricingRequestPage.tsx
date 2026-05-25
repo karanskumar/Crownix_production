@@ -151,7 +151,7 @@ function StageSection({ stageIdx, canRemove, onRemove }: {
   return (
     <div className="border rounded-md p-4 space-y-4">
       <div className="flex items-center justify-between gap-2 flex-wrap">
-        <h3 className="font-medium text-foreground">Stage {stageIdx + 1}</h3>
+        <h3 className="font-medium text-foreground">Stage</h3>
         {canRemove && (
           <Button
             type="button"

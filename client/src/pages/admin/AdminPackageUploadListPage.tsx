@@ -16,6 +16,8 @@ interface PackageUpload {
   state?: string;
   floorPlanName?: string;
   pricingRequestId?: string;
+  lotNumber?: string;
+  stageName?: string;
   createdAt: string;
 }
 
@@ -164,6 +166,7 @@ export function AdminPackageUploadListPage() {
                 <thead>
                   <tr className="border-b">
                     <th className="text-left px-6 py-3 text-muted-foreground font-medium">Lot Address</th>
+                    <th className="text-left px-4 py-3 text-muted-foreground font-medium">Stage</th>
                     <th className="text-left px-4 py-3 text-muted-foreground font-medium">Land Size</th>
                     <th className="text-left px-4 py-3 text-muted-foreground font-medium">Land Price</th>
                     <th className="text-left px-4 py-3 text-muted-foreground font-medium">Status</th>
@@ -174,6 +177,9 @@ export function AdminPackageUploadListPage() {
                   {sorted.map((upload) => (
                     <tr key={upload.id} className="border-b last:border-0" data-testid={`row-package-${upload.id}`}>
                       <td className="px-6 py-3 font-medium text-foreground">{upload.lotAddress}</td>
+                      <td className="px-4 py-3 text-muted-foreground">
+                        {upload.stageName ? `Stage ${upload.stageName}` : '—'}
+                      </td>
                       <td className="px-4 py-3 text-muted-foreground">{upload.landSize} sqm</td>
                       <td className="px-4 py-3 text-muted-foreground">${upload.landPrice}</td>
                       <td className="px-4 py-3">
