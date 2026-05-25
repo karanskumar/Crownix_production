@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useForm, Controller } from 'react-hook-form';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
@@ -18,8 +18,10 @@ interface FormValues {
   landPrice: string;
   buildSize: string;
   buildPrice: string;
+  totalPackagePrice: string;
   forecastRegistrationDate: string;
   stageName: string;
+  propertyType: string;
   floorPlanName: string;
   facadeName: string;
   bedroom: string;
@@ -164,6 +166,8 @@ export function AdminPackageUploadPage() {
     control,
     handleSubmit,
     reset,
+    watch,
+    setValue,
     formState: { errors },
   } = useForm<FormValues>({
     defaultValues: {
@@ -172,8 +176,10 @@ export function AdminPackageUploadPage() {
       landPrice: '',
       buildSize: '',
       buildPrice: '',
+      totalPackagePrice: '',
       forecastRegistrationDate: '',
       stageName: '',
+      propertyType: 'House and Land',
       floorPlanName: '',
       facadeName: '',
       bedroom: '',
@@ -206,14 +212,19 @@ export function AdminPackageUploadPage() {
 
   useEffect(() => {
     if (upload) {
+      const land = parseFloat(upload.landPrice || '0') || 0;
+      const build = parseFloat(upload.buildPrice || '0') || 0;
+      const autoTotal = land > 0 || build > 0 ? String(land + build) : '';
       reset({
         lotAddress: upload.lotAddress || '',
         landSize: upload.landSize || '',
         landPrice: upload.landPrice || '',
         buildSize: upload.buildSize || '',
         buildPrice: upload.buildPrice || '',
+        totalPackagePrice: upload.totalPackagePrice || autoTotal,
         forecastRegistrationDate: upload.forecastRegistrationDate || '',
         stageName: upload.stageName || '',
+        propertyType: upload.propertyType || 'House and Land',
         floorPlanName: upload.floorPlanName || '',
         facadeName: upload.facadeName || '',
         bedroom: upload.bedroom != null ? String(upload.bedroom) : '',
@@ -225,6 +236,21 @@ export function AdminPackageUploadPage() {
       });
     }
   }, [upload, reset]);
+
+  const watchedLandPrice = watch('landPrice');
+  const watchedBuildPrice = watch('buildPrice');
+  const watchedTotal = watch('totalPackagePrice');
+  const lastAutoTotal = useRef('');
+
+  useEffect(() => {
+    const land = parseFloat(watchedLandPrice) || 0;
+    const build = parseFloat(watchedBuildPrice) || 0;
+    const computed = land > 0 || build > 0 ? String(land + build) : '';
+    if (watchedTotal === lastAutoTotal.current || watchedTotal === '') {
+      setValue('totalPackagePrice', computed);
+    }
+    lastAutoTotal.current = computed;
+  }, [watchedLandPrice, watchedBuildPrice]);
 
   const updateFileGroup = (key: keyof FileGroup, newFiles: File[]) => {
     setFiles(prev => ({ ...prev, [key]: newFiles }));
@@ -272,8 +298,10 @@ export function AdminPackageUploadPage() {
         landPrice: values.landPrice,
         buildSize: values.buildSize || undefined,
         buildPrice: values.buildPrice || undefined,
+        totalPackagePrice: values.totalPackagePrice || undefined,
         forecastRegistrationDate: values.forecastRegistrationDate || undefined,
         stageName: values.stageName || undefined,
+        propertyType: values.propertyType || undefined,
         floorPlanName: values.floorPlanName || undefined,
         facadeName: values.facadeName || undefined,
         bedroom: values.bedroom ? Number(values.bedroom) : undefined,
@@ -591,6 +619,15 @@ export function AdminPackageUploadPage() {
                 />
               </div>
             </div>
+            <div className="grid gap-2">
+              <Label>Total Package Price ($)</Label>
+              <Input
+                {...register('totalPackagePrice')}
+                placeholder="e.g. 630000"
+                data-testid="input-total-package-price"
+              />
+              <p className="text-xs text-muted-foreground">Auto-calculated from Land Price + Build Price. Edit to override.</p>
+            </div>
           </CardContent>
         </Card>
 
@@ -600,6 +637,27 @@ export function AdminPackageUploadPage() {
             <CardTitle className="text-base">Property Details</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
+            <div className="grid gap-2">
+              <Label>Property Type</Label>
+              <Controller
+                name="propertyType"
+                control={control}
+                render={({ field }) => (
+                  <Select onValueChange={field.onChange} value={field.value || 'House and Land'}>
+                    <SelectTrigger data-testid="select-property-type">
+                      <SelectValue placeholder="Select property type" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="House and Land">House and Land</SelectItem>
+                      <SelectItem value="House Only">House Only</SelectItem>
+                      <SelectItem value="Duplex">Duplex</SelectItem>
+                      <SelectItem value="Dual Key">Dual Key</SelectItem>
+                      <SelectItem value="Single Contract">Single Contract</SelectItem>
+                    </SelectContent>
+                  </Select>
+                )}
+              />
+            </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="grid gap-2">
                 <Label>Floor Plan Name</Label>
