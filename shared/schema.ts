@@ -111,6 +111,7 @@ export const packageUploadSchema = z.object({
   buildSize: z.string().optional(),
   buildPrice: z.string().optional(),
   totalPackagePrice: z.string().optional(),
+  productCategory: z.string().optional(),
   forecastRegistrationDate: z.string().optional(),
   propertyType: z.string().optional(),
   floorPlanName: z.string().optional(),

@@ -20,6 +20,7 @@ interface FormValues {
   buildSize: string;
   buildPrice: string;
   totalPackagePrice: string;
+  productCategory: string;
   forecastRegistrationDate: string;
   stageName: string;
   propertyType: string;
@@ -162,6 +163,7 @@ export function AdminPackageUploadFormPage() {
       buildSize: '',
       buildPrice: '',
       totalPackagePrice: '',
+      productCategory: 'Actual',
       forecastRegistrationDate: '',
       stageName: '',
       propertyType: 'House and Land',
@@ -214,6 +216,7 @@ export function AdminPackageUploadFormPage() {
         buildSize: u.buildSize || '',
         buildPrice: u.buildPrice || '',
         totalPackagePrice: u.totalPackagePrice || autoTotal,
+        productCategory: u.productCategory || 'Actual',
         forecastRegistrationDate: u.forecastRegistrationDate || '',
         stageName: u.stageName || '',
         propertyType: u.propertyType || 'House and Land',
@@ -244,6 +247,7 @@ export function AdminPackageUploadFormPage() {
         buildSize: '',
         buildPrice: '',
         totalPackagePrice: land > 0 ? String(land) : '',
+        productCategory: 'Actual',
         forecastRegistrationDate: firstStage?.registration || '',
         stageName: firstStage?.stageName || '',
         propertyType: 'House and Land',
@@ -273,6 +277,7 @@ export function AdminPackageUploadFormPage() {
         buildSize: u.buildSize || '',
         buildPrice: u.buildPrice || '',
         totalPackagePrice: u.totalPackagePrice || autoTotal,
+        productCategory: u.productCategory || 'Actual',
         forecastRegistrationDate: u.forecastRegistrationDate || '',
         stageName: u.stageName || '',
         propertyType: u.propertyType || 'House and Land',
@@ -350,6 +355,7 @@ export function AdminPackageUploadFormPage() {
         buildSize: values.buildSize || undefined,
         buildPrice: values.buildPrice || undefined,
         totalPackagePrice: values.totalPackagePrice || undefined,
+        productCategory: values.productCategory || undefined,
         forecastRegistrationDate: values.forecastRegistrationDate || undefined,
         stageName: values.stageName || undefined,
         propertyType: values.propertyType || undefined,
@@ -541,6 +547,24 @@ export function AdminPackageUploadFormPage() {
                 data-testid="input-total-package-price"
               />
               <p className="text-xs text-muted-foreground">Auto-calculated from Land Price + Build Price. Edit to override.</p>
+            </div>
+            <div className="grid gap-2">
+              <Label>Product Category</Label>
+              <Controller
+                name="productCategory"
+                control={control}
+                render={({ field }) => (
+                  <Select onValueChange={field.onChange} value={field.value || 'Actual'}>
+                    <SelectTrigger data-testid="select-product-category">
+                      <SelectValue placeholder="Select category" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="Actual">Actual</SelectItem>
+                      <SelectItem value="Pre-release">Pre-release</SelectItem>
+                    </SelectContent>
+                  </Select>
+                )}
+              />
             </div>
           </CardContent>
         </Card>
