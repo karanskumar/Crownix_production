@@ -330,43 +330,58 @@ export function AdminPackageUploadPage() {
               <ReadonlyField label="Estate" value={pricingRequest.estate} />
             </div>
 
-            {pricingRequest.stages && pricingRequest.stages.length > 0 && (
-              <div className="space-y-3">
-                <p className="text-xs text-muted-foreground font-medium uppercase tracking-wide">Stages & Lots</p>
-                {pricingRequest.stages.map((stage, si) => (
-                  <div key={si} className="rounded-md border p-3 space-y-2">
-                    <div className="flex items-center gap-3 flex-wrap">
-                      <p className="text-sm font-medium text-foreground">{stage.stageName}</p>
-                      {stage.registration && (
-                        <span className="text-xs text-muted-foreground">Registration: {stage.registration}</span>
-                      )}
-                    </div>
-                    <div className="overflow-x-auto">
-                      <table className="w-full text-xs">
-                        <thead>
-                          <tr className="border-b">
-                            <th className="text-left py-1.5 pr-4 text-muted-foreground font-medium">Lot</th>
-                            <th className="text-left py-1.5 pr-4 text-muted-foreground font-medium">Land Size</th>
-                            <th className="text-left py-1.5 pr-4 text-muted-foreground font-medium">Price</th>
-                            <th className="text-left py-1.5 text-muted-foreground font-medium">Floor Plans</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {stage.lots.map((lot, li) => (
-                            <tr key={li} className="border-b last:border-0">
-                              <td className="py-1.5 pr-4 font-medium text-foreground">{lot.lotNumber}</td>
-                              <td className="py-1.5 pr-4 text-muted-foreground">{lot.landSize} sqm</td>
-                              <td className="py-1.5 pr-4 text-muted-foreground">${lot.price}</td>
-                              <td className="py-1.5 text-muted-foreground">{lot.floorPlans.join(', ')}</td>
+            {pricingRequest.stages && pricingRequest.stages.length > 0 && (() => {
+              // Only show the stage/lot that matches this specific package upload
+              const matchedStages = pricingRequest.stages
+                .map(stage => ({
+                  ...stage,
+                  lots: stage.lots.filter(lot =>
+                    String(lot.landSize).trim() === String(upload.landSize ?? '').trim() &&
+                    String(lot.price).trim() === String(upload.landPrice ?? '').trim()
+                  ),
+                }))
+                .filter(stage => stage.lots.length > 0);
+
+              if (matchedStages.length === 0) return null;
+
+              return (
+                <div className="space-y-3">
+                  <p className="text-xs text-muted-foreground font-medium uppercase tracking-wide">Stage & Lot</p>
+                  {matchedStages.map((stage, si) => (
+                    <div key={si} className="rounded-md border p-3 space-y-2">
+                      <div className="flex items-center gap-3 flex-wrap">
+                        <p className="text-sm font-medium text-foreground">Stage {stage.stageName}</p>
+                        {stage.registration && (
+                          <span className="text-xs text-muted-foreground">Registration: {stage.registration}</span>
+                        )}
+                      </div>
+                      <div className="overflow-x-auto">
+                        <table className="w-full text-xs">
+                          <thead>
+                            <tr className="border-b">
+                              <th className="text-left py-1.5 pr-4 text-muted-foreground font-medium">Lot</th>
+                              <th className="text-left py-1.5 pr-4 text-muted-foreground font-medium">Land Size</th>
+                              <th className="text-left py-1.5 pr-4 text-muted-foreground font-medium">Price</th>
+                              <th className="text-left py-1.5 text-muted-foreground font-medium">Floor Plans</th>
                             </tr>
-                          ))}
-                        </tbody>
-                      </table>
+                          </thead>
+                          <tbody>
+                            {stage.lots.map((lot, li) => (
+                              <tr key={li} className="border-b last:border-0">
+                                <td className="py-1.5 pr-4 font-medium text-foreground">{lot.lotNumber}</td>
+                                <td className="py-1.5 pr-4 text-muted-foreground">{lot.landSize} sqm</td>
+                                <td className="py-1.5 pr-4 text-muted-foreground">${lot.price}</td>
+                                <td className="py-1.5 text-muted-foreground">{lot.floorPlans.join(', ')}</td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
                     </div>
-                  </div>
-                ))}
-              </div>
-            )}
+                  ))}
+                </div>
+              );
+            })()}
 
             {pricingRequest.additionalCosts && (
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
