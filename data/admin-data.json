@@ -349,7 +349,8 @@
       "packageFiles": [],
       "id": "85234511-ab9b-4bc0-abd7-3ba8e80e185c",
       "status": "Approved",
-      "createdAt": "2026-05-26T13:10:27.344Z"
+      "createdAt": "2026-05-26T13:10:27.344Z",
+      "zohoSyncError": "Zoho create product error: {\"data\":[{\"code\":\"MANDATORY_NOT_FOUND\",\"details\":{\"api_name\":\"Test1\",\"json_path\":\"$.data[0].Test1\"},\"message\":\"required field not found\",\"status\":\"error\"}]}"
     },
     "e559e435-f480-43b0-899e-9bc183a67988": {
       "stageName": "111",
@@ -386,7 +387,8 @@
       "packageFiles": [],
       "id": "e559e435-f480-43b0-899e-9bc183a67988",
       "status": "Approved",
-      "createdAt": "2026-05-26T13:17:28.941Z"
+      "createdAt": "2026-05-26T13:17:28.941Z",
+      "zohoSyncError": "Zoho create product error: {\"data\":[{\"code\":\"MANDATORY_NOT_FOUND\",\"details\":{\"api_name\":\"Test1\",\"json_path\":\"$.data[0].Test1\"},\"message\":\"required field not found\",\"status\":\"error\"}]}"
     }
   }
 }
