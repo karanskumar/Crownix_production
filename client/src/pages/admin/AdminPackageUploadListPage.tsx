@@ -225,6 +225,7 @@ export function AdminPackageUploadListPage() {
   const [statusFilter, setStatusFilter] = useState<string>('all');
   const [sortOrder, setSortOrder] = useState<SortOrder>('default');
   const [crmModalUpload, setCrmModalUpload] = useState<PackageUpload | null>(null);
+  const [retryingId, setRetryingId] = useState<string | null>(null);
 
   const { data: meData } = useQuery<{ success: boolean; user: AdminUser }>({
     queryKey: ['/admin/api/me'],
@@ -237,12 +238,15 @@ export function AdminPackageUploadListPage() {
   });
 
   const retryZohoMutation = useMutation({
-    mutationFn: (id: string) =>
-      fetch(`/admin/api/package-uploads/${id}/retry-zoho`, {
+    mutationFn: (id: string) => {
+      setRetryingId(id);
+      return fetch(`/admin/api/package-uploads/${id}/retry-zoho`, {
         method: 'POST',
         credentials: 'include',
-      }).then(r => r.json()),
-    onSuccess: (result, id) => {
+      }).then(r => r.json());
+    },
+    onSuccess: (result) => {
+      setRetryingId(null);
       if (result.success) {
         toast({ title: 'CRM sync successful', description: `Zoho Product ID: ${result.zohoProductId}` });
       } else {
@@ -251,6 +255,7 @@ export function AdminPackageUploadListPage() {
       queryClient.invalidateQueries({ queryKey: ['/admin/api/package-uploads'] });
     },
     onError: () => {
+      setRetryingId(null);
       toast({ title: 'Error', description: 'Failed to retry CRM sync.', variant: 'destructive' });
     },
   });
@@ -490,11 +495,11 @@ export function AdminPackageUploadListPage() {
                                 variant="ghost"
                                 size="sm"
                                 onClick={() => retryZohoMutation.mutate(upload.id)}
-                                disabled={retryZohoMutation.isPending}
+                                disabled={retryingId === upload.id}
                                 className="gap-1.5 text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300"
                                 data-testid={`button-retry-crm-${upload.id}`}
                               >
-                                {retryZohoMutation.isPending ? (
+                                {retryingId === upload.id ? (
                                   <Loader2 className="h-3.5 w-3.5 animate-spin" />
                                 ) : (
                                   <RotateCcw className="h-3.5 w-3.5" />
@@ -502,11 +507,11 @@ export function AdminPackageUploadListPage() {
                                 Retry
                               </Button>
                             </TooltipTrigger>
-                            {upload.zohoSyncError && (
-                              <TooltipContent className="max-w-xs break-words">
-                                <p className="text-xs">{upload.zohoSyncError}</p>
-                              </TooltipContent>
-                            )}
+                            <TooltipContent className="max-w-xs break-words">
+                              <p className="text-xs">
+                                {upload.zohoSyncError ?? 'No error details stored — check server logs.'}
+                              </p>
+                            </TooltipContent>
                           </Tooltip>
                         ) : (
                           <span className="text-muted-foreground text-xs">—</span>
