@@ -369,6 +369,7 @@ export function AdminPackageUploadListPage() {
                     <th className="text-left px-4 py-3 text-muted-foreground font-medium">Land Price</th>
                     <th className="text-left px-4 py-3 text-muted-foreground font-medium">Status</th>
                     <th className="text-right px-6 py-3 text-muted-foreground font-medium">Actions</th>
+                    <th className="text-left px-4 py-3 text-muted-foreground font-medium">CRM Product</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -449,6 +450,29 @@ export function AdminPackageUploadListPage() {
                             </>
                           ) : null}
                         </div>
+                      </td>
+                      <td className="px-4 py-3" data-testid={`cell-crm-${upload.id}`}>
+                        {upload.zohoProductId ? (
+                          <a
+                            href={`https://crm.zoho.in/crm/org60062934311/tab/Products/${upload.zohoProductId}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            data-testid={`link-crm-product-${upload.id}`}
+                          >
+                            <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300 hover:opacity-80 transition-opacity">
+                              Created
+                            </span>
+                          </a>
+                        ) : upload.status === 'Approved' ? (
+                          <span
+                            className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300"
+                            data-testid={`badge-crm-failed-${upload.id}`}
+                          >
+                            Failed
+                          </span>
+                        ) : (
+                          <span className="text-muted-foreground text-xs">—</span>
+                        )}
                       </td>
                     </tr>
                   ))}
