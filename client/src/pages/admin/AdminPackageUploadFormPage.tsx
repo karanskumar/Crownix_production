@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { useForm, Controller } from 'react-hook-form';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -131,6 +131,7 @@ export function AdminPackageUploadFormPage() {
   const { id } = useParams<{ id: string }>();
   const [searchParams] = useSearchParams();
   const { toast } = useToast();
+  const queryClient = useQueryClient();
   const [submitting, setSubmitting] = useState(false);
   const isEditing = !!id;
 
@@ -393,6 +394,7 @@ export function AdminPackageUploadFormPage() {
           title: isEditing ? 'Package updated' : 'Package submitted',
           description: isEditing ? 'Changes saved.' : 'Notification emails sent.',
         });
+        await queryClient.invalidateQueries({ queryKey: ['/admin/api/package-uploads'] });
         navigate('/admin/package-uploads');
       } else {
         toast({ title: 'Error', description: data.message || 'Please try again.', variant: 'destructive' });
@@ -445,10 +447,11 @@ export function AdminPackageUploadFormPage() {
                 {errors.lotAddress && <p className="text-destructive text-sm">{errors.lotAddress.message}</p>}
               </div>
               <div className="grid gap-2">
-                <Label>State</Label>
+                <Label>State <span className="text-destructive">*</span></Label>
                 <Controller
                   name="state"
                   control={control}
+                  rules={{ required: 'State is required', validate: v => v !== '' || 'State is required' }}
                   render={({ field }) => (
                     <Select onValueChange={field.onChange} value={field.value || ''}>
                       <SelectTrigger data-testid="select-state">
@@ -462,6 +465,7 @@ export function AdminPackageUploadFormPage() {
                     </Select>
                   )}
                 />
+                {errors.state && <p className="text-destructive text-sm">{errors.state.message}</p>}
               </div>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">

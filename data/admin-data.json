@@ -191,6 +191,314 @@
       "id": "964f1711-7717-4775-8496-ee56f5e0aa5a",
       "status": "Incomplete",
       "createdAt": "2026-05-25T08:03:25.056Z"
+    },
+    "bfe6da4e-e12a-42ca-800a-ba056f7cb6a7": {
+      "stageName": "aaaa",
+      "lotAddress": "Lot 1, test, test",
+      "landSize": "1",
+      "landPrice": "1",
+      "buildSize": "1",
+      "totalPackagePrice": "2",
+      "productCategory": "Actual",
+      "forecastRegistrationDate": "aaa",
+      "propertyType": "House and Land",
+      "state": "VIC",
+      "floorPlanFiles": [],
+      "sitedFloorPlanFiles": [],
+      "areaTableFiles": [],
+      "facadeFiles": [],
+      "inclusionFiles": [],
+      "packageFiles": [],
+      "id": "bfe6da4e-e12a-42ca-800a-ba056f7cb6a7",
+      "status": "Approved",
+      "createdAt": "2026-05-26T10:04:27.739Z",
+      "bedroom": 1,
+      "bath": 1,
+      "living": 1,
+      "garage": 1,
+      "buildPrice": "1"
+    },
+    "6343bf59-fec9-4db9-b45a-8a56488fcbb5": {
+      "stageName": "1`",
+      "lotAddress": "Balaji Test",
+      "landSize": "1",
+      "landPrice": "1",
+      "buildSize": "1",
+      "buildPrice": "1",
+      "totalPackagePrice": "2",
+      "productCategory": "Actual",
+      "forecastRegistrationDate": "1111",
+      "propertyType": "House and Land",
+      "floorPlanName": "111",
+      "facadeName": "111",
+      "bedroom": 1,
+      "bath": 1,
+      "living": 1,
+      "garage": 1,
+      "floorPlanFiles": [],
+      "sitedFloorPlanFiles": [],
+      "areaTableFiles": [],
+      "facadeFiles": [],
+      "inclusionFiles": [],
+      "packageFiles": [],
+      "id": "6343bf59-fec9-4db9-b45a-8a56488fcbb5",
+      "status": "Approved",
+      "createdAt": "2026-05-26T10:23:34.302Z"
+    },
+    "302012b2-0826-42e8-b844-0d67b546f379": {
+      "stageName": "1",
+      "lotAddress": "Balaji Test 1",
+      "landSize": "11",
+      "landPrice": "1",
+      "buildSize": "1",
+      "buildPrice": "1",
+      "totalPackagePrice": "2",
+      "productCategory": "Actual",
+      "forecastRegistrationDate": "1",
+      "propertyType": "House and Land",
+      "floorPlanName": "1",
+      "facadeName": "1",
+      "bedroom": 1,
+      "bath": 1,
+      "living": 1,
+      "garage": 1,
+      "floorPlanFiles": [],
+      "sitedFloorPlanFiles": [],
+      "areaTableFiles": [],
+      "facadeFiles": [],
+      "inclusionFiles": [],
+      "packageFiles": [],
+      "id": "302012b2-0826-42e8-b844-0d67b546f379",
+      "status": "Approved",
+      "createdAt": "2026-05-26T10:25:16.561Z",
+      "zohoProductId": "1147855000003427001"
+    },
+    "2dce218a-2b6b-4925-9410-d885a857eca7": {
+      "stageName": "1222",
+      "lotAddress": "Developer 1",
+      "landSize": "100",
+      "landPrice": "100",
+      "buildSize": "100",
+      "buildPrice": "100",
+      "totalPackagePrice": "200",
+      "productCategory": "Actual",
+      "forecastRegistrationDate": "July 10 ",
+      "propertyType": "House and Land",
+      "floorPlanName": "harmony",
+      "facadeName": "Coastal",
+      "bedroom": 2,
+      "bath": 1,
+      "living": 1,
+      "garage": 1,
+      "state": "QLD",
+      "floorPlanFiles": [],
+      "sitedFloorPlanFiles": [],
+      "areaTableFiles": [],
+      "facadeFiles": [],
+      "inclusionFiles": [],
+      "packageFiles": [],
+      "id": "2dce218a-2b6b-4925-9410-d885a857eca7",
+      "status": "Approved",
+      "createdAt": "2026-05-26T11:00:14.146Z",
+      "zohoProductId": "1147855000003412004"
+    },
+    "2e69b05b-8312-4e98-9244-ce34171e495e": {
+      "stageName": "2",
+      "lotAddress": "Developer 2",
+      "landSize": "1",
+      "landPrice": "1",
+      "buildSize": "1",
+      "buildPrice": "1",
+      "totalPackagePrice": "2",
+      "productCategory": "Pre-release",
+      "forecastRegistrationDate": "Mar 10 2027",
+      "propertyType": "Dual Key",
+      "floorPlanName": "Harmony 1",
+      "facadeName": "Coastal 1101",
+      "bedroom": 1,
+      "bath": 2,
+      "living": 1,
+      "garage": 1,
+      "state": "VIC",
+      "floorPlanFiles": [
+        {
+          "originalName": "Zoho CRM - v2 (2).docx",
+          "filename": "7ba847d00a13010706fbea519327b0de",
+          "mimetype": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+          "size": 19247,
+          "path": "/home/runner/workspace/uploads/7ba847d00a13010706fbea519327b0de"
+        }
+      ],
+      "sitedFloorPlanFiles": [
+        {
+          "originalName": "Zoho Preminum Partner.png",
+          "filename": "09397866d35bef04a405d161f55881fc",
+          "mimetype": "image/png",
+          "size": 4882,
+          "path": "/home/runner/workspace/uploads/09397866d35bef04a405d161f55881fc"
+        }
+      ],
+      "areaTableFiles": [
+        {
+          "originalName": "time.png",
+          "filename": "4f7a07d30af7cffd0bb301dc7d09854d",
+          "mimetype": "image/png",
+          "size": 6386,
+          "path": "/home/runner/workspace/uploads/4f7a07d30af7cffd0bb301dc7d09854d"
+        }
+      ],
+      "facadeFiles": [
+        {
+          "originalName": "Home.png",
+          "filename": "47ae4a49de57e3d4f00bc88c12909814",
+          "mimetype": "image/png",
+          "size": 232275,
+          "path": "/home/runner/workspace/uploads/47ae4a49de57e3d4f00bc88c12909814"
+        }
+      ],
+      "inclusionFiles": [
+        {
+          "originalName": "HalfBlue_Trademark_Nobg.png",
+          "filename": "212c9e627abad52eb7703b20fd0fd754",
+          "mimetype": "image/png",
+          "size": 23811,
+          "path": "/home/runner/workspace/uploads/212c9e627abad52eb7703b20fd0fd754"
+        }
+      ],
+      "packageFiles": [
+        {
+          "originalName": "Home.png",
+          "filename": "77a358e2f72cebd183c01c2024cd75f3",
+          "mimetype": "image/png",
+          "size": 232275,
+          "path": "/home/runner/workspace/uploads/77a358e2f72cebd183c01c2024cd75f3"
+        }
+      ],
+      "id": "2e69b05b-8312-4e98-9244-ce34171e495e",
+      "status": "Approved",
+      "createdAt": "2026-05-26T11:08:56.823Z",
+      "zohoProductId": "1147855000003428001"
+    },
+    "d8063780-53a5-401b-911b-9e7e0efb9ce0": {
+      "stageName": "2",
+      "lotAddress": "Developer 3",
+      "landSize": "11",
+      "landPrice": "1500",
+      "buildSize": "11",
+      "buildPrice": "100",
+      "totalPackagePrice": "1600",
+      "productCategory": "Actual",
+      "forecastRegistrationDate": "111",
+      "propertyType": "House and Land",
+      "floorPlanName": "harmony",
+      "facadeName": "Coastal",
+      "bedroom": 2,
+      "bath": 2,
+      "living": 1,
+      "garage": 1,
+      "state": "QLD",
+      "floorPlanFiles": [
+        {
+          "originalName": "Zoho Preminum Partner.png",
+          "filename": "2bbe13708ee3620e510140b2b6bbf4e9",
+          "mimetype": "image/png",
+          "size": 4882,
+          "path": "/home/runner/workspace/uploads/2bbe13708ee3620e510140b2b6bbf4e9"
+        }
+      ],
+      "sitedFloorPlanFiles": [
+        {
+          "originalName": "Home.png",
+          "filename": "d98c3f01e49793f9dba1e565281c5fe1",
+          "mimetype": "image/png",
+          "size": 232275,
+          "path": "/home/runner/workspace/uploads/d98c3f01e49793f9dba1e565281c5fe1"
+        }
+      ],
+      "areaTableFiles": [
+        {
+          "originalName": "time.png",
+          "filename": "a4bca81689558aeb2b1428a2acd9285c",
+          "mimetype": "image/png",
+          "size": 6386,
+          "path": "/home/runner/workspace/uploads/a4bca81689558aeb2b1428a2acd9285c"
+        }
+      ],
+      "facadeFiles": [
+        {
+          "originalName": "thumbnail.png",
+          "filename": "3b01259488de958928dcfb7df63ba50e",
+          "mimetype": "image/png",
+          "size": 1214777,
+          "path": "/home/runner/workspace/uploads/3b01259488de958928dcfb7df63ba50e"
+        }
+      ],
+      "inclusionFiles": [
+        {
+          "originalName": "20634.jpg",
+          "filename": "d479e70c8e90cca4388e0f762fd439cd",
+          "mimetype": "image/jpeg",
+          "size": 1657023,
+          "path": "/home/runner/workspace/uploads/d479e70c8e90cca4388e0f762fd439cd"
+        }
+      ],
+      "packageFiles": [
+        {
+          "originalName": "aaaaaa.png",
+          "filename": "11a109d11893be0338f9495e8df0c84a",
+          "mimetype": "image/png",
+          "size": 36588,
+          "path": "/home/runner/workspace/uploads/11a109d11893be0338f9495e8df0c84a"
+        }
+      ],
+      "id": "d8063780-53a5-401b-911b-9e7e0efb9ce0",
+      "status": "Approved",
+      "createdAt": "2026-05-26T11:17:59.273Z",
+      "zohoProductId": "1147855000003413005"
+    },
+    "b786319c-d4ed-4c4f-aca7-afa5b62e7261": {
+      "stageName": "123",
+      "lotAddress": "Developer 4",
+      "landSize": "1",
+      "landPrice": "11111",
+      "buildSize": "11",
+      "buildPrice": "1111",
+      "totalPackagePrice": "12222",
+      "productCategory": "Actual",
+      "forecastRegistrationDate": "111",
+      "propertyType": "Duplex",
+      "floorPlanName": "harmony1111",
+      "facadeName": "Coastal1111",
+      "bedroom": 1,
+      "bath": 1,
+      "living": 1,
+      "garage": 1,
+      "state": "QLD",
+      "floorPlanFiles": [
+        {
+          "originalName": "aaaaaa.png",
+          "filename": "0e4c1cd009ada4c1078b8f953c09b767",
+          "mimetype": "image/png",
+          "size": 36588,
+          "path": "/home/runner/workspace/uploads/0e4c1cd009ada4c1078b8f953c09b767"
+        }
+      ],
+      "sitedFloorPlanFiles": [
+        {
+          "originalName": "thumbnail.png",
+          "filename": "f6d028334df51b98d19f5ba875a52629",
+          "mimetype": "image/png",
+          "size": 1214777,
+          "path": "/home/runner/workspace/uploads/f6d028334df51b98d19f5ba875a52629"
+        }
+      ],
+      "areaTableFiles": [],
+      "facadeFiles": [],
+      "inclusionFiles": [],
+      "packageFiles": [],
+      "id": "b786319c-d4ed-4c4f-aca7-afa5b62e7261",
+      "status": "Reviewed",
+      "createdAt": "2026-05-26T11:21:36.206Z"
     }
   }
 }

@@ -7,6 +7,7 @@ import fs from "fs";
 import { storage } from "./storage";
 import { contactSubmissionSchema, pricingRequestSchema, packageUploadSchema, type AdminSession, type StateCode } from "@shared/schema";
 import { getUncachableResendClient } from "./resend-client";
+import { syncPackageToZohoProduct } from "./zoho";
 
 // Extend express-session to include our admin session data
 declare module "express-session" {
@@ -710,6 +711,35 @@ ${validatedData.message}
 
         const updated = await storage.updatePackageUploadStatus(req.params.id, "Approved");
 
+        // Zoho CRM sync (idempotent — skip if already synced)
+        let zohoSyncStatus: "synced" | "skipped" | "failed" = "failed";
+        let zohoSyncError: string | undefined;
+        let zohoProductId: string | undefined;
+
+        if (upload.zohoProductId) {
+          zohoSyncStatus = "skipped";
+          zohoProductId = upload.zohoProductId;
+          console.log(`[zoho] Skipping CRM sync for package ${req.params.id} — already synced (${upload.zohoProductId})`);
+        } else {
+          try {
+            const productId = await syncPackageToZohoProduct(upload);
+            if (productId) {
+              zohoProductId = productId;
+              zohoSyncStatus = "synced";
+              await storage.updatePackageUpload(req.params.id, { zohoProductId } as any);
+              if (updated) (updated as any).zohoProductId = zohoProductId;
+              console.log(`[zoho] Product created for package ${req.params.id}: ${zohoProductId}`);
+            } else {
+              zohoSyncStatus = "failed";
+              zohoSyncError = "Product creation returned no ID — check server logs for details.";
+            }
+          } catch (zohoError) {
+            zohoSyncStatus = "failed";
+            zohoSyncError = zohoError instanceof Error ? zohoError.message : String(zohoError);
+            console.error("[zoho] Failed to sync package to Zoho CRM (non-fatal):", zohoError);
+          }
+        }
+
         try {
           const { client, fromEmail } = await getUncachableResendClient();
 
@@ -734,7 +764,6 @@ ${validatedData.message}
               <p><strong>Land Size:</strong> ${escapeHtml(upload.landSize)} sqm</p>
               <p><strong>Land Price:</strong> $${escapeHtml(upload.landPrice)}</p>
               ${upload.floorPlanName ? `<p><strong>Floor Plan:</strong> ${escapeHtml(upload.floorPlanName)}</p>` : ''}
-              <!-- TODO: Trigger Zoho CRM product creation on approval -->
             `,
             ...(approvalAttachments.length > 0 ? { attachments: approvalAttachments } : {}),
           });
@@ -742,7 +771,7 @@ ${validatedData.message}
           console.error("Failed to send final approval email:", emailError);
         }
 
-        return res.json({ success: true, upload: updated });
+        return res.json({ success: true, upload: updated, zohoSyncStatus, zohoSyncError, zohoProductId });
       }
 
       return res.status(400).json({ success: false, message: "Package is not in an approvable state" });

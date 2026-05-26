@@ -3,22 +3,51 @@ import { useNavigate } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Plus, Upload, CheckCircle, Copy, Loader2, ArrowUpDown } from 'lucide-react';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
+import { Plus, Upload, Copy, Loader2, ArrowUpDown, AlertTriangle } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+
+interface FileMeta {
+  originalName: string;
+  filename: string;
+  mimetype: string;
+  size: number;
+  path: string;
+}
 
 interface PackageUpload {
   id: string;
   lotAddress: string;
   landSize: string;
   landPrice: string;
-  status: 'Incomplete' | 'Pending' | 'Reviewed' | 'Approved';
-  state?: string;
+  buildSize?: string;
+  buildPrice?: string;
+  totalPackagePrice?: string;
+  productCategory?: string;
+  forecastRegistrationDate?: string;
+  propertyType?: string;
   floorPlanName?: string;
+  facadeName?: string;
+  bedroom?: number;
+  bath?: number;
+  living?: number;
+  garage?: number;
+  description?: string;
+  state?: string;
+  stageName?: string;
+  status: 'Incomplete' | 'Pending' | 'Reviewed' | 'Approved';
   pricingRequestId?: string;
   lotNumber?: string;
-  stageName?: string;
   createdAt: string;
+  zohoProductId?: string;
+  floorPlanFiles?: FileMeta[];
+  sitedFloorPlanFiles?: FileMeta[];
+  areaTableFiles?: FileMeta[];
+  facadeFiles?: FileMeta[];
+  inclusionFiles?: FileMeta[];
+  packageFiles?: FileMeta[];
 }
 
 interface AdminUser {
@@ -45,12 +74,155 @@ const STATUS_ORDER: Record<string, number> = { Incomplete: 0, Pending: 1, Review
 
 type SortOrder = 'default' | 'status-asc' | 'status-desc';
 
+const FIELD_ROWS: Array<{ label: string; key: keyof PackageUpload }> = [
+  { label: 'Lot Address (Product Name)', key: 'lotAddress' },
+  { label: 'State', key: 'state' },
+  { label: 'Stage / Batch', key: 'stageName' },
+  { label: 'Forecast Registration Date', key: 'forecastRegistrationDate' },
+  { label: 'Land Size (m²)', key: 'landSize' },
+  { label: 'Land Price ($)', key: 'landPrice' },
+  { label: 'Build Size (m²)', key: 'buildSize' },
+  { label: 'Build Price ($)', key: 'buildPrice' },
+  { label: 'Total Package Price ($)', key: 'totalPackagePrice' },
+  { label: 'Product Category', key: 'productCategory' },
+  { label: 'Property Type', key: 'propertyType' },
+  { label: 'Floor Plan Name', key: 'floorPlanName' },
+  { label: 'Facade Name', key: 'facadeName' },
+  { label: 'Bedrooms', key: 'bedroom' },
+  { label: 'Bathrooms', key: 'bath' },
+  { label: 'Living Areas', key: 'living' },
+  { label: 'Garage', key: 'garage' },
+  { label: 'Description', key: 'description' },
+];
+
+const FILE_CATEGORIES: Array<{ label: string; key: keyof PackageUpload }> = [
+  { label: 'Floor Plan Files', key: 'floorPlanFiles' },
+  { label: 'Sited Floor Plan Files', key: 'sitedFloorPlanFiles' },
+  { label: 'Area Table Files', key: 'areaTableFiles' },
+  { label: 'Facade Files', key: 'facadeFiles' },
+  { label: 'Inclusion Files', key: 'inclusionFiles' },
+  { label: 'Package Files', key: 'packageFiles' },
+];
+
+const MANDATORY_FIELDS: Array<keyof PackageUpload> = ['lotAddress', 'buildSize', 'buildPrice', 'landSize', 'landPrice'];
+
+function CrmConfirmModal({
+  upload,
+  open,
+  onClose,
+  onConfirm,
+  isPending,
+}: {
+  upload: PackageUpload;
+  open: boolean;
+  onClose: () => void;
+  onConfirm: () => void;
+  isPending: boolean;
+}) {
+  const missingFields = MANDATORY_FIELDS.filter(f => {
+    const val = upload[f];
+    return val === undefined || val === null || val === '';
+  });
+
+  const allFiles: Array<{ category: string; name: string }> = [];
+  for (const cat of FILE_CATEGORIES) {
+    const files = upload[cat.key] as FileMeta[] | undefined;
+    if (files && files.length > 0) {
+      for (const f of files) {
+        allFiles.push({ category: cat.label, name: f.originalName });
+      }
+    }
+  }
+
+  return (
+    <Dialog open={open} onOpenChange={(v) => { if (!v) onClose(); }}>
+      <DialogContent className="max-w-2xl max-h-[85vh] overflow-y-auto" data-testid="modal-crm-confirm">
+        <DialogHeader>
+          <DialogTitle>Review Product Creation in CRM</DialogTitle>
+        </DialogHeader>
+
+        {missingFields.length > 0 && (
+          <div className="flex items-start gap-2 rounded-md bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 p-3 text-sm text-yellow-800 dark:text-yellow-300">
+            <AlertTriangle className="h-4 w-4 mt-0.5 shrink-0" />
+            <div>
+              <p className="font-medium">Missing required fields</p>
+              <p className="mt-0.5">The following mandatory fields are empty and must be filled before creating the product: {missingFields.join(', ')}.</p>
+            </div>
+          </div>
+        )}
+
+        <div className="space-y-5">
+          <div>
+            <h3 className="text-sm font-semibold text-foreground mb-2">Fields</h3>
+            <div className="rounded-md border divide-y text-sm">
+              {FIELD_ROWS.map(({ label, key }) => {
+                const val = upload[key];
+                const displayVal = val !== undefined && val !== null && val !== '' ? String(val) : '—';
+                const isMandatory = MANDATORY_FIELDS.includes(key);
+                const isEmpty = val === undefined || val === null || val === '';
+                return (
+                  <div key={key} className="flex items-start px-3 py-2 gap-3">
+                    <span className="w-48 shrink-0 text-muted-foreground">
+                      {label}
+                      {isMandatory && <span className="text-red-500 ml-0.5">*</span>}
+                    </span>
+                    <span className={isEmpty && isMandatory ? 'text-red-500 font-medium' : 'text-foreground'}>
+                      {displayVal}
+                    </span>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+
+          <div>
+            <h3 className="text-sm font-semibold text-foreground mb-2">Files to Attach</h3>
+            {allFiles.length === 0 ? (
+              <p className="text-sm text-muted-foreground">No files attached to this package.</p>
+            ) : (
+              <div className="rounded-md border divide-y text-sm">
+                {allFiles.map((f, i) => (
+                  <div key={i} className="flex items-center px-3 py-2 gap-3">
+                    <span className="w-48 shrink-0 text-muted-foreground">{f.category}</span>
+                    <span className="text-foreground">{f.name}</span>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+
+        <DialogFooter className="gap-2 flex-wrap">
+          <Button variant="outline" onClick={onClose} disabled={isPending} data-testid="button-crm-cancel">
+            Cancel
+          </Button>
+          <Button
+            onClick={onConfirm}
+            disabled={isPending || missingFields.length > 0}
+            data-testid="button-crm-confirm"
+          >
+            {isPending ? (
+              <>
+                <Loader2 className="h-4 w-4 animate-spin" />
+                Creating...
+              </>
+            ) : (
+              'Create Product in Zoho CRM'
+            )}
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
+}
+
 export function AdminPackageUploadListPage() {
   const navigate = useNavigate();
   const { toast } = useToast();
   const queryClient = useQueryClient();
   const [statusFilter, setStatusFilter] = useState<string>('all');
   const [sortOrder, setSortOrder] = useState<SortOrder>('default');
+  const [crmModalUpload, setCrmModalUpload] = useState<PackageUpload | null>(null);
 
   const { data: meData } = useQuery<{ success: boolean; user: AdminUser }>({
     queryKey: ['/admin/api/me'],
@@ -71,12 +243,30 @@ export function AdminPackageUploadListPage() {
     onSuccess: (result) => {
       if (result.success) {
         const newStatus = result.upload?.status;
-        const title = newStatus === 'Reviewed' ? '1st Approval recorded' : 'Package approved';
-        const description = newStatus === 'Reviewed'
-          ? 'Awaiting final approval by admin.'
-          : 'Final approval complete. Emails sent.';
-        toast({ title, description });
+        if (newStatus === 'Reviewed') {
+          toast({ title: '1st Approval recorded', description: 'Awaiting final approval by admin.' });
+        } else if (newStatus === 'Approved') {
+          const zohoStatus: string = result.zohoSyncStatus;
+          if (zohoStatus === 'synced') {
+            toast({
+              title: 'Package approved & synced to CRM',
+              description: `Zoho Product ID: ${result.zohoProductId}`,
+            });
+          } else if (zohoStatus === 'skipped') {
+            toast({
+              title: 'Package approved',
+              description: 'CRM already synced previously — no duplicate created.',
+            });
+          } else {
+            toast({
+              title: 'Package approved — CRM sync failed',
+              description: result.zohoSyncError ?? 'Unknown error. Check server logs.',
+              variant: 'destructive',
+            });
+          }
+        }
         queryClient.invalidateQueries({ queryKey: ['/admin/api/package-uploads'] });
+        setCrmModalUpload(null);
       } else {
         toast({ title: 'Error', description: result.message, variant: 'destructive' });
       }
@@ -199,7 +389,7 @@ export function AdminPackageUploadListPage() {
                         </span>
                       </td>
                       <td className="px-6 py-3">
-                        <div className="flex items-center justify-end gap-1">
+                        <div className="flex items-center justify-end gap-1 flex-wrap">
                           <Button
                             variant="ghost"
                             size="sm"
@@ -221,38 +411,43 @@ export function AdminPackageUploadListPage() {
                               <Copy className="h-4 w-4" />
                             </Button>
                           )}
-                          {upload.status === 'Pending' && (
-                            <Button
-                              variant="ghost"
-                              size="icon"
-                              onClick={() => approveMutation.mutate(upload.id)}
-                              disabled={approveMutation.isPending}
-                              title="1st Approval"
-                              data-testid={`button-approve-${upload.id}`}
+
+                          {upload.status === 'Approved' ? (
+                            <Badge
+                              className="bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300 no-default-active-elevate"
+                              data-testid={`badge-approved-${upload.id}`}
                             >
-                              {approveMutation.isPending ? (
-                                <Loader2 className="h-4 w-4 animate-spin" />
-                              ) : (
-                                <CheckCircle className="h-4 w-4 text-purple-600" />
+                              Approved
+                            </Badge>
+                          ) : (upload.status === 'Pending' || upload.status === 'Reviewed') ? (
+                            <>
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={() => approveMutation.mutate(upload.id)}
+                                disabled={approveMutation.isPending || upload.status !== 'Pending'}
+                                data-testid={`button-first-approval-${upload.id}`}
+                                className="gap-1"
+                              >
+                                {approveMutation.isPending && upload.status === 'Pending' ? (
+                                  <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                                ) : null}
+                                1st Approval
+                              </Button>
+                              {isAdmin && (
+                                <Button
+                                  variant="ghost"
+                                  size="sm"
+                                  onClick={() => setCrmModalUpload(upload)}
+                                  disabled={approveMutation.isPending || upload.status !== 'Reviewed'}
+                                  data-testid={`button-second-approval-${upload.id}`}
+                                  className="gap-1"
+                                >
+                                  2nd Approval
+                                </Button>
                               )}
-                            </Button>
-                          )}
-                          {isAdmin && upload.status === 'Reviewed' && (
-                            <Button
-                              variant="ghost"
-                              size="icon"
-                              onClick={() => approveMutation.mutate(upload.id)}
-                              disabled={approveMutation.isPending}
-                              title="Final Approval"
-                              data-testid={`button-final-approve-${upload.id}`}
-                            >
-                              {approveMutation.isPending ? (
-                                <Loader2 className="h-4 w-4 animate-spin" />
-                              ) : (
-                                <CheckCircle className="h-4 w-4 text-green-600" />
-                              )}
-                            </Button>
-                          )}
+                            </>
+                          ) : null}
                         </div>
                       </td>
                     </tr>
@@ -263,6 +458,16 @@ export function AdminPackageUploadListPage() {
           )}
         </CardContent>
       </Card>
+
+      {crmModalUpload && (
+        <CrmConfirmModal
+          upload={crmModalUpload}
+          open={true}
+          onClose={() => setCrmModalUpload(null)}
+          onConfirm={() => approveMutation.mutate(crmModalUpload.id)}
+          isPending={approveMutation.isPending}
+        />
+      )}
     </div>
   );
 }
