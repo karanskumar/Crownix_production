@@ -140,4 +140,5 @@ export interface PackageUpload extends PackageUploadInput {
   status: PackageUploadStatus;
   createdAt: string;
   zohoProductId?: string;
+  zohoSyncError?: string;
 }

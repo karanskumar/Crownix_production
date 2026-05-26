@@ -6,7 +6,8 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
-import { Plus, Upload, Copy, Loader2, ArrowUpDown, AlertTriangle } from 'lucide-react';
+import { Plus, Upload, Copy, Loader2, ArrowUpDown, AlertTriangle, RotateCcw } from 'lucide-react';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { useToast } from '@/hooks/use-toast';
 
 interface FileMeta {
@@ -42,6 +43,7 @@ interface PackageUpload {
   lotNumber?: string;
   createdAt: string;
   zohoProductId?: string;
+  zohoSyncError?: string;
   floorPlanFiles?: FileMeta[];
   sitedFloorPlanFiles?: FileMeta[];
   areaTableFiles?: FileMeta[];
@@ -232,6 +234,25 @@ export function AdminPackageUploadListPage() {
   const { data, isLoading } = useQuery<{ success: boolean; uploads: PackageUpload[] }>({
     queryKey: ['/admin/api/package-uploads'],
     queryFn: () => fetch('/admin/api/package-uploads', { credentials: 'include' }).then(r => r.json()),
+  });
+
+  const retryZohoMutation = useMutation({
+    mutationFn: (id: string) =>
+      fetch(`/admin/api/package-uploads/${id}/retry-zoho`, {
+        method: 'POST',
+        credentials: 'include',
+      }).then(r => r.json()),
+    onSuccess: (result, id) => {
+      if (result.success) {
+        toast({ title: 'CRM sync successful', description: `Zoho Product ID: ${result.zohoProductId}` });
+      } else {
+        toast({ title: 'CRM sync failed', description: result.zohoSyncError ?? 'Unknown error.', variant: 'destructive' });
+      }
+      queryClient.invalidateQueries({ queryKey: ['/admin/api/package-uploads'] });
+    },
+    onError: () => {
+      toast({ title: 'Error', description: 'Failed to retry CRM sync.', variant: 'destructive' });
+    },
   });
 
   const approveMutation = useMutation({
@@ -458,18 +479,35 @@ export function AdminPackageUploadListPage() {
                             target="_blank"
                             rel="noopener noreferrer"
                             data-testid={`link-crm-product-${upload.id}`}
+                            className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300 hover:opacity-80 transition-opacity"
                           >
-                            <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300 hover:opacity-80 transition-opacity">
-                              Created
-                            </span>
+                            View in CRM
                           </a>
                         ) : upload.status === 'Approved' ? (
-                          <span
-                            className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300"
-                            data-testid={`badge-crm-failed-${upload.id}`}
-                          >
-                            Failed
-                          </span>
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={() => retryZohoMutation.mutate(upload.id)}
+                                disabled={retryZohoMutation.isPending}
+                                className="gap-1.5 text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300"
+                                data-testid={`button-retry-crm-${upload.id}`}
+                              >
+                                {retryZohoMutation.isPending ? (
+                                  <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                                ) : (
+                                  <RotateCcw className="h-3.5 w-3.5" />
+                                )}
+                                Retry
+                              </Button>
+                            </TooltipTrigger>
+                            {upload.zohoSyncError && (
+                              <TooltipContent className="max-w-xs break-words">
+                                <p className="text-xs">{upload.zohoSyncError}</p>
+                              </TooltipContent>
+                            )}
+                          </Tooltip>
                         ) : (
                           <span className="text-muted-foreground text-xs">—</span>
                         )}
