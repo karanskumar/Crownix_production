@@ -198,21 +198,16 @@ export async function uploadFilesToZohoProduct(
   }
 }
 
-export async function syncPackageToZohoProduct(pkg: PackageUpload): Promise<string | null> {
-  try {
-    const accessToken = await getZohoAccessToken();
-    const fieldMap = mapPackageToZohoProduct(pkg);
-    const productId = await createZohoProduct(fieldMap, accessToken);
+export async function syncPackageToZohoProduct(pkg: PackageUpload): Promise<string> {
+  const accessToken = await getZohoAccessToken();
+  const fieldMap = mapPackageToZohoProduct(pkg);
+  const productId = await createZohoProduct(fieldMap, accessToken);
 
-    const categorisedFiles = buildCategorisedFiles(pkg);
+  const categorisedFiles = buildCategorisedFiles(pkg);
 
-    if (categorisedFiles.length > 0) {
-      await uploadFilesToZohoProduct(productId, categorisedFiles, accessToken);
-    }
-
-    return productId;
-  } catch (err) {
-    console.error("[zoho] syncPackageToZohoProduct failed:", err);
-    return null;
+  if (categorisedFiles.length > 0) {
+    await uploadFilesToZohoProduct(productId, categorisedFiles, accessToken);
   }
+
+  return productId;
 }

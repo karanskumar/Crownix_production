@@ -724,17 +724,11 @@ ${validatedData.message}
         } else {
           try {
             const productId = await syncPackageToZohoProduct(upload);
-            if (productId) {
-              zohoProductId = productId;
-              zohoSyncStatus = "synced";
-              await storage.updatePackageUpload(req.params.id, { zohoProductId } as any);
-              if (updated) (updated as any).zohoProductId = zohoProductId;
-              console.log(`[zoho] Product created for package ${req.params.id}: ${zohoProductId}`);
-            } else {
-              zohoSyncStatus = "failed";
-              zohoSyncError = "Product creation returned no ID — check server logs for details.";
-              await storage.updatePackageUpload(req.params.id, { zohoSyncError } as any);
-            }
+            zohoProductId = productId;
+            zohoSyncStatus = "synced";
+            await storage.updatePackageUpload(req.params.id, { zohoProductId, zohoSyncError: undefined } as any);
+            if (updated) (updated as any).zohoProductId = zohoProductId;
+            console.log(`[zoho] Product created for package ${req.params.id}: ${zohoProductId}`);
           } catch (zohoError) {
             zohoSyncStatus = "failed";
             zohoSyncError = zohoError instanceof Error ? zohoError.message : String(zohoError);
@@ -792,20 +786,19 @@ ${validatedData.message}
       if (upload.status !== "Approved") return res.status(400).json({ success: false, message: "Package must be Approved to retry CRM sync" });
       if (upload.zohoProductId) return res.status(400).json({ success: false, message: "CRM product already created" });
 
-      const productId = await syncPackageToZohoProduct(upload);
-      if (productId) {
+      try {
+        const productId = await syncPackageToZohoProduct(upload);
         await storage.updatePackageUpload(req.params.id, { zohoProductId: productId, zohoSyncError: undefined } as any);
         return res.json({ success: true, zohoProductId: productId });
-      } else {
-        const errMsg = "Product creation returned no ID — check server logs for details.";
+      } catch (error) {
+        const errMsg = error instanceof Error ? error.message : String(error);
         await storage.updatePackageUpload(req.params.id, { zohoSyncError: errMsg } as any);
+        console.error("Retry Zoho sync error:", error);
         return res.json({ success: false, zohoSyncError: errMsg });
       }
     } catch (error) {
-      const errMsg = error instanceof Error ? error.message : String(error);
-      await storage.updatePackageUpload(req.params.id, { zohoSyncError: errMsg } as any);
-      console.error("Retry Zoho sync error:", error);
-      res.status(500).json({ success: false, zohoSyncError: errMsg });
+      console.error("Retry Zoho sync route error:", error);
+      res.status(500).json({ success: false, message: "Unexpected server error" });
     }
   });
 
