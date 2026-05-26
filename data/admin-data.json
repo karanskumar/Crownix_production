@@ -235,7 +235,8 @@
       "packageFiles": [],
       "id": "c8b96664-a63f-4465-8afd-3e6b1192bf78",
       "status": "Approved",
-      "createdAt": "2026-05-26T12:28:55.165Z"
+      "createdAt": "2026-05-26T12:28:55.165Z",
+      "zohoProductId": "1147855000003427006"
     },
     "a19613fa-6d24-493b-9154-a78488d8bd30": {
       "stageName": "11",
@@ -312,6 +313,44 @@
       "status": "Approved",
       "createdAt": "2026-05-26T12:44:00.163Z",
       "zohoProductId": "1147855000003412006"
+    },
+    "85234511-ab9b-4bc0-abd7-3ba8e80e185c": {
+      "stageName": "1",
+      "lotAddress": "India",
+      "landSize": "1",
+      "landPrice": "1",
+      "buildSize": "1",
+      "buildPrice": "1",
+      "totalPackagePrice": "2",
+      "productCategory": "Actual",
+      "forecastRegistrationDate": "1",
+      "propertyType": "House Only",
+      "floorPlanName": "11",
+      "facadeName": "111",
+      "bedroom": 11,
+      "bath": 1,
+      "living": 1,
+      "garage": 1,
+      "description": "11",
+      "state": "QLD",
+      "floorPlanFiles": [
+        {
+          "originalName": "aaaaaa.png",
+          "filename": "ac16d649c00b2789ffc8edbc2ebb0c1b",
+          "mimetype": "image/png",
+          "size": 36588,
+          "path": "/home/runner/workspace/uploads/ac16d649c00b2789ffc8edbc2ebb0c1b"
+        }
+      ],
+      "sitedFloorPlanFiles": [],
+      "areaTableFiles": [],
+      "facadeFiles": [],
+      "inclusionFiles": [],
+      "packageFiles": [],
+      "id": "85234511-ab9b-4bc0-abd7-3ba8e80e185c",
+      "status": "Approved",
+      "createdAt": "2026-05-26T13:10:27.344Z",
+      "zohoSyncError": "Product creation returned no ID — check server logs for details."
     }
   }
 }
