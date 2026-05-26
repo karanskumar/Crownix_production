@@ -349,8 +349,44 @@
       "packageFiles": [],
       "id": "85234511-ab9b-4bc0-abd7-3ba8e80e185c",
       "status": "Approved",
-      "createdAt": "2026-05-26T13:10:27.344Z",
-      "zohoSyncError": "Product creation returned no ID — check server logs for details."
+      "createdAt": "2026-05-26T13:10:27.344Z"
+    },
+    "e559e435-f480-43b0-899e-9bc183a67988": {
+      "stageName": "111",
+      "lotAddress": "Retry Check",
+      "landSize": "111",
+      "landPrice": "111",
+      "buildSize": "11",
+      "buildPrice": "111",
+      "totalPackagePrice": "222",
+      "productCategory": "Pre-release",
+      "forecastRegistrationDate": "11",
+      "propertyType": "House and Land",
+      "floorPlanName": "111",
+      "facadeName": "111",
+      "bedroom": 1,
+      "bath": 1,
+      "living": 1,
+      "garage": 1,
+      "description": "111",
+      "state": "VIC",
+      "floorPlanFiles": [
+        {
+          "originalName": "thumbnail.png",
+          "filename": "7d9e765cd01ee6815db7b4041b51fba8",
+          "mimetype": "image/png",
+          "size": 1214777,
+          "path": "/home/runner/workspace/uploads/7d9e765cd01ee6815db7b4041b51fba8"
+        }
+      ],
+      "sitedFloorPlanFiles": [],
+      "areaTableFiles": [],
+      "facadeFiles": [],
+      "inclusionFiles": [],
+      "packageFiles": [],
+      "id": "e559e435-f480-43b0-899e-9bc183a67988",
+      "status": "Approved",
+      "createdAt": "2026-05-26T13:17:28.941Z"
     }
   }
 }
