@@ -1,39 +1,50 @@
 import { Resend } from 'resend';
 
-let connectionSettings: any;
-
-async function getCredentials() {
-  const hostname = process.env.REPLIT_CONNECTORS_HOSTNAME
-  const xReplitToken = process.env.REPL_IDENTITY 
-    ? 'repl ' + process.env.REPL_IDENTITY 
-    : process.env.WEB_REPL_RENEWAL 
-    ? 'depl ' + process.env.WEB_REPL_RENEWAL 
+async function getReplitCredentials(): Promise<{ apiKey: string; fromEmail: string } | null> {
+  const hostname = process.env.REPLIT_CONNECTORS_HOSTNAME;
+  const xReplitToken = process.env.REPL_IDENTITY
+    ? 'repl ' + process.env.REPL_IDENTITY
+    : process.env.WEB_REPL_RENEWAL
+    ? 'depl ' + process.env.WEB_REPL_RENEWAL
     : null;
 
-  if (!xReplitToken) {
-    throw new Error('X_REPLIT_TOKEN not found for repl/depl');
-  }
+  if (!hostname || !xReplitToken) return null;
 
-  connectionSettings = await fetch(
-    'https://' + hostname + '/api/v2/connection?include_secrets=true&connector_names=resend',
-    {
-      headers: {
-        'Accept': 'application/json',
-        'X_REPLIT_TOKEN': xReplitToken
+  try {
+    const data = await fetch(
+      'https://' + hostname + '/api/v2/connection?include_secrets=true&connector_names=resend',
+      {
+        headers: {
+          'Accept': 'application/json',
+          'X_REPLIT_TOKEN': xReplitToken,
+        },
       }
-    }
-  ).then(res => res.json()).then(data => data.items?.[0]);
+    ).then(res => res.json()).then(d => d.items?.[0]);
 
-  if (!connectionSettings || (!connectionSettings.settings.api_key)) {
-    throw new Error('Resend not connected');
+    if (data?.settings?.api_key) {
+      return { apiKey: data.settings.api_key, fromEmail: data.settings.from_email };
+    }
+  } catch {
+    // fall through to env var
   }
-  return {apiKey: connectionSettings.settings.api_key, fromEmail: connectionSettings.settings.from_email};
+  return null;
 }
 
-export async function getUncachableResendClient() {
-  const credentials = await getCredentials();
+export async function getUncachableResendClient(): Promise<{ client: Resend; fromEmail: string }> {
+  // Try Replit connector first (works in Replit dev + Replit deployments)
+  const replit = await getReplitCredentials();
+  if (replit) {
+    return { client: new Resend(replit.apiKey), fromEmail: replit.fromEmail };
+  }
+
+  // Fall back to plain env vars (Railway, local, any other host)
+  const apiKey = process.env.RESEND_API_KEY;
+  const fromEmail = process.env.RESEND_FROM_EMAIL;
+  if (!apiKey) {
+    throw new Error('Resend is not configured. Set RESEND_API_KEY (and optionally RESEND_FROM_EMAIL) environment variables.');
+  }
   return {
-    client: new Resend(credentials.apiKey),
-    fromEmail: connectionSettings.settings.from_email
+    client: new Resend(apiKey),
+    fromEmail: fromEmail ?? 'noreply@crownix.com.au',
   };
 }

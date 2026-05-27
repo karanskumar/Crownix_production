@@ -14,8 +14,12 @@ async function runMigrations() {
     await pool.end();
     log("database migrations applied");
   } catch (err) {
-    console.error("[migrate] Failed to apply migrations:", err);
-    process.exit(1);
+    if (process.env.NODE_ENV === "production") {
+      console.error("[migrate] Failed to apply migrations:", err);
+      process.exit(1);
+    } else {
+      console.warn("[migrate] Skipping migrations in dev (no reachable DB):", (err as Error).message);
+    }
   }
 }
 

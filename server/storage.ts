@@ -6,6 +6,8 @@ import {
 } from "@shared/schema";
 import { randomUUID } from "crypto";
 import { eq } from "drizzle-orm";
+import fs from "fs";
+import path from "path";
 
 export interface IStorage {
   getUser(id: string): Promise<User | undefined>;
@@ -164,19 +166,108 @@ export class PostgresStorage implements IStorage {
   }
 }
 
-// ─── Singleton ───────────────────────────────────────────────────────────────
-// Imported lazily to avoid crashing at module load if DATABASE_URL is absent
-// (e.g. during frontend-only builds).
+// ─── JSON file storage (dev / Replit fallback) ───────────────────────────────
+
+interface StorageData {
+  users: Record<string, User>;
+  pricingRequests: Record<string, PricingRequest>;
+  packageUploads: Record<string, PackageUpload>;
+}
+
+const DATA_FILE = path.join(process.cwd(), "data", "admin-data.json");
+
+function ensureDataDir() {
+  const dir = path.dirname(DATA_FILE);
+  if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
+}
+
+function loadData(): StorageData {
+  ensureDataDir();
+  if (!fs.existsSync(DATA_FILE)) return { users: {}, pricingRequests: {}, packageUploads: {} };
+  try {
+    return JSON.parse(fs.readFileSync(DATA_FILE, "utf-8")) as StorageData;
+  } catch {
+    console.warn("[storage] Failed to parse admin-data.json, starting fresh.");
+    return { users: {}, pricingRequests: {}, packageUploads: {} };
+  }
+}
+
+function saveData(data: StorageData) {
+  ensureDataDir();
+  fs.writeFileSync(DATA_FILE, JSON.stringify(data, null, 2), "utf-8");
+}
+
+class JsonFileStorage implements IStorage {
+  private data: StorageData;
+
+  constructor() {
+    this.data = loadData();
+    console.log(
+      `[storage] Loaded ${Object.keys(this.data.pricingRequests).length} pricing requests, ` +
+      `${Object.keys(this.data.packageUploads).length} package uploads from disk.`
+    );
+  }
+
+  private save() { saveData(this.data); }
+
+  async getUser(id: string) { return this.data.users[id]; }
+  async getUserByUsername(username: string) { return Object.values(this.data.users).find(u => u.username === username); }
+  async createUser(insertUser: InsertUser): Promise<User> {
+    const id = randomUUID();
+    const user: User = { ...insertUser, id };
+    this.data.users[id] = user; this.save(); return user;
+  }
+
+  async createPricingRequest(input: PricingRequestInput): Promise<PricingRequest> {
+    const id = randomUUID();
+    const request: PricingRequest = { ...input, id, status: "Incomplete", createdAt: new Date().toISOString() };
+    this.data.pricingRequests[id] = request; this.save(); return request;
+  }
+  async getPricingRequest(id: string) { return this.data.pricingRequests[id]; }
+  async getAllPricingRequests() {
+    return Object.values(this.data.pricingRequests).sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+  }
+  async updatePricingRequestStatus(id: string, status: PricingRequestStatus) {
+    const r = this.data.pricingRequests[id]; if (!r) return undefined;
+    r.status = status; this.save(); return r;
+  }
+
+  async createPackageUpload(input: PackageUploadInput, initialStatus: PackageUploadStatus = "Pending"): Promise<PackageUpload> {
+    const id = randomUUID();
+    const upload: PackageUpload = { ...input, id, status: initialStatus, createdAt: new Date().toISOString() };
+    this.data.packageUploads[id] = upload; this.save(); return upload;
+  }
+  async getPackageUpload(id: string) { return this.data.packageUploads[id]; }
+  async findPackageUploadByLot(pricingRequestId: string, lotNumber: string, stageName: string) {
+    return Object.values(this.data.packageUploads).find(
+      u => u.pricingRequestId === pricingRequestId && u.lotNumber === lotNumber && u.stageName === stageName
+    );
+  }
+  async getAllPackageUploads() {
+    return Object.values(this.data.packageUploads).sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+  }
+  async updatePackageUpload(id: string, input: Partial<PackageUploadInput> & { zohoProductId?: string; zohoSyncError?: string | undefined }) {
+    const upload = this.data.packageUploads[id]; if (!upload) return undefined;
+    Object.assign(upload, input); this.save(); return upload;
+  }
+  async updatePackageUploadStatus(id: string, status: PackageUploadStatus) {
+    const upload = this.data.packageUploads[id]; if (!upload) return undefined;
+    upload.status = status; this.save(); return upload;
+  }
+}
+
+// ─── Singleton — picks PostgresStorage in production, JsonFileStorage in dev ─
 
 let _storage: IStorage | undefined;
 
 function createStorage(): IStorage {
-  const url = process.env.DATABASE_URL;
-  if (!url) {
-    throw new Error("DATABASE_URL is required. Set it in your environment variables.");
+  if (process.env.NODE_ENV === "production" && process.env.DATABASE_URL) {
+    const { db } = require("./db") as { db: ReturnType<typeof import("drizzle-orm/neon-serverless").drizzle> };
+    console.log("[storage] Using PostgreSQL storage");
+    return new PostgresStorage(db);
   }
-  const { db } = require("./db") as { db: ReturnType<typeof import("drizzle-orm/neon-serverless").drizzle> };
-  return new PostgresStorage(db);
+  console.log("[storage] Using JSON file storage (dev mode)");
+  return new JsonFileStorage();
 }
 
 export const storage: IStorage = new Proxy({} as IStorage, {
