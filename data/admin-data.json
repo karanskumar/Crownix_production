@@ -100,6 +100,88 @@
       "id": "1097e49c-89ee-4044-9f3f-2ca351f83357",
       "status": "Pending",
       "createdAt": "2026-05-25T08:03:25.054Z"
+    },
+    "a7d980ee-b370-43ae-ba50-5ba67f55f4f5": {
+      "state": "NSW",
+      "suburb": "NEW SUB",
+      "estate": "NEW ESTATE",
+      "stages": [
+        {
+          "stageName": "Apple",
+          "registration": "111",
+          "lots": [
+            {
+              "lotNumber": "111",
+              "landSize": "11",
+              "price": "11",
+              "floorPlans": [
+                "11"
+              ]
+            }
+          ]
+        },
+        {
+          "stageName": "Banana",
+          "registration": "222",
+          "lots": [
+            {
+              "lotNumber": "222",
+              "landSize": "222",
+              "price": "22",
+              "floorPlans": [
+                "222"
+              ]
+            }
+          ]
+        }
+      ],
+      "additionalCosts": {
+        "landBdmExpense": "2500",
+        "independentInspection": "1200"
+      },
+      "landLinks": [],
+      "attachments": [],
+      "id": "a7d980ee-b370-43ae-ba50-5ba67f55f4f5",
+      "status": "Incomplete",
+      "createdAt": "2026-05-26T13:23:49.907Z"
+    },
+    "b867089a-4e81-4c52-ad3b-35d45330f93e": {
+      "state": "NSW",
+      "suburb": "NEWCASE",
+      "estate": "NEWCASE",
+      "stages": [
+        {
+          "stageName": "Summer",
+          "registration": "111",
+          "lots": [
+            {
+              "lotNumber": "111",
+              "landSize": "11",
+              "price": "11",
+              "floorPlans": [
+                "111"
+              ]
+            },
+            {
+              "lotNumber": "222",
+              "landSize": "222",
+              "price": "22",
+              "floorPlans": [
+                "222"
+              ]
+            }
+          ]
+        }
+      ],
+      "additionalCosts": {
+        "landBdmExpense": "2500",
+        "independentInspection": "1200"
+      },
+      "landLinks": [],
+      "attachments": [],
+      "id": "b867089a-4e81-4c52-ad3b-35d45330f93e",
+      "status": "Incomplete",
+      "createdAt": "2026-05-26T13:33:27.152Z"
     }
   },
   "packageUploads": {
@@ -389,6 +471,199 @@
       "status": "Approved",
       "createdAt": "2026-05-26T13:17:28.941Z",
       "zohoSyncError": "Zoho create product error: {\"data\":[{\"code\":\"MANDATORY_NOT_FOUND\",\"details\":{\"api_name\":\"Test1\",\"json_path\":\"$.data[0].Test1\"},\"message\":\"required field not found\",\"status\":\"error\"}]}"
+    },
+    "f337b8bc-0ccc-4330-8962-27a668633019": {
+      "pricingRequestId": "a7d980ee-b370-43ae-ba50-5ba67f55f4f5",
+      "lotNumber": "111",
+      "stageName": "Apple",
+      "lotAddress": "Lot 111, NEW ESTATE, NEW SUB",
+      "landSize": "11",
+      "landPrice": "11",
+      "floorPlanName": "11",
+      "forecastRegistrationDate": "111",
+      "state": "NSW",
+      "id": "f337b8bc-0ccc-4330-8962-27a668633019",
+      "status": "Incomplete",
+      "createdAt": "2026-05-26T13:23:49.908Z"
+    },
+    "86ffdeff-2098-4725-a23e-12104b30b823": {
+      "pricingRequestId": "a7d980ee-b370-43ae-ba50-5ba67f55f4f5",
+      "lotNumber": "222",
+      "stageName": "Banana",
+      "lotAddress": "Lot 222, NEW ESTATE, NEW SUB",
+      "landSize": "222",
+      "landPrice": "22",
+      "floorPlanName": "222",
+      "forecastRegistrationDate": "222",
+      "state": "NSW",
+      "id": "86ffdeff-2098-4725-a23e-12104b30b823",
+      "status": "Approved",
+      "createdAt": "2026-05-26T13:23:49.909Z",
+      "buildSize": "2",
+      "buildPrice": "2",
+      "totalPackagePrice": "24",
+      "productCategory": "Actual",
+      "propertyType": "Duplex",
+      "facadeName": "111",
+      "bedroom": 2,
+      "bath": 2,
+      "living": 2,
+      "garage": 2,
+      "description": "222",
+      "floorPlanFiles": [
+        {
+          "originalName": "thumbnail.png",
+          "filename": "78f90eff831e09a26b040bda5bde17c5",
+          "mimetype": "image/png",
+          "size": 1214777,
+          "path": "/home/runner/workspace/uploads/78f90eff831e09a26b040bda5bde17c5"
+        }
+      ],
+      "sitedFloorPlanFiles": [],
+      "areaTableFiles": [
+        {
+          "originalName": "aaaaaa.png",
+          "filename": "d41dfc4610342233906fd787a61d9527",
+          "mimetype": "image/png",
+          "size": 36588,
+          "path": "/home/runner/workspace/uploads/d41dfc4610342233906fd787a61d9527"
+        }
+      ],
+      "facadeFiles": [],
+      "inclusionFiles": [],
+      "packageFiles": [],
+      "zohoProductId": "1147855000003414003"
+    },
+    "5e18bf01-cd5d-487c-8e2d-7f391471c9d9": {
+      "pricingRequestId": "b867089a-4e81-4c52-ad3b-35d45330f93e",
+      "lotNumber": "111",
+      "stageName": "Summer",
+      "lotAddress": "Lot 111, NEWCASE, NEWCASE",
+      "landSize": "11",
+      "landPrice": "11",
+      "floorPlanName": "111",
+      "forecastRegistrationDate": "111",
+      "state": "NSW",
+      "id": "5e18bf01-cd5d-487c-8e2d-7f391471c9d9",
+      "status": "Incomplete",
+      "createdAt": "2026-05-26T13:33:27.152Z"
+    },
+    "940151e9-08fd-412c-b061-083260a6a20a": {
+      "pricingRequestId": "b867089a-4e81-4c52-ad3b-35d45330f93e",
+      "lotNumber": "222",
+      "stageName": "Summer",
+      "lotAddress": "Lot 222, NEWCASE, NEWCASE",
+      "landSize": "222",
+      "landPrice": "22",
+      "floorPlanName": "222",
+      "forecastRegistrationDate": "111",
+      "state": "NSW",
+      "id": "940151e9-08fd-412c-b061-083260a6a20a",
+      "status": "Approved",
+      "createdAt": "2026-05-26T13:33:27.153Z",
+      "buildSize": "111",
+      "buildPrice": "11",
+      "totalPackagePrice": "33",
+      "productCategory": "Actual",
+      "propertyType": "House and Land",
+      "bedroom": 1,
+      "bath": 1,
+      "living": 1,
+      "garage": 1,
+      "description": "1111",
+      "floorPlanFiles": [
+        {
+          "originalName": "thumbnail.png",
+          "filename": "45a1598d26c1c10084f039b4f1d51b60",
+          "mimetype": "image/png",
+          "size": 1214777,
+          "path": "/home/runner/workspace/uploads/45a1598d26c1c10084f039b4f1d51b60"
+        }
+      ],
+      "sitedFloorPlanFiles": [],
+      "areaTableFiles": [],
+      "facadeFiles": [],
+      "inclusionFiles": [],
+      "packageFiles": [],
+      "zohoProductId": "1147855000003416003"
+    },
+    "c135dd55-64b5-4ecf-be4f-e2ea0ffe9d56": {
+      "stageName": "Stage111",
+      "lotAddress": "New Product Test",
+      "landSize": "11",
+      "landPrice": "11",
+      "buildSize": "11",
+      "buildPrice": "11",
+      "totalPackagePrice": "22",
+      "productCategory": "Pre-release",
+      "forecastRegistrationDate": "11",
+      "propertyType": "Duplex",
+      "floorPlanName": "harmony111",
+      "facadeName": "Coastal111",
+      "bedroom": 1,
+      "bath": 1,
+      "living": 2,
+      "garage": 2,
+      "description": "Test Description",
+      "state": "VIC",
+      "floorPlanFiles": [
+        {
+          "originalName": "time.png",
+          "filename": "3140dd24b8527311734b6806174d8210",
+          "mimetype": "image/png",
+          "size": 6386,
+          "path": "/home/runner/workspace/uploads/3140dd24b8527311734b6806174d8210"
+        }
+      ],
+      "sitedFloorPlanFiles": [
+        {
+          "originalName": "thumbnail.png",
+          "filename": "ce0cc5ebf53090f2b9b3d62289bf083d",
+          "mimetype": "image/png",
+          "size": 1214777,
+          "path": "/home/runner/workspace/uploads/ce0cc5ebf53090f2b9b3d62289bf083d"
+        }
+      ],
+      "areaTableFiles": [
+        {
+          "originalName": "aaaaaa.png",
+          "filename": "5b5bc12eca7f4adb7233e7983b380afe",
+          "mimetype": "image/png",
+          "size": 36588,
+          "path": "/home/runner/workspace/uploads/5b5bc12eca7f4adb7233e7983b380afe"
+        }
+      ],
+      "facadeFiles": [
+        {
+          "originalName": "Home.png",
+          "filename": "8b4936b5178ae7965f4a22b365b020fd",
+          "mimetype": "image/png",
+          "size": 232275,
+          "path": "/home/runner/workspace/uploads/8b4936b5178ae7965f4a22b365b020fd"
+        }
+      ],
+      "inclusionFiles": [
+        {
+          "originalName": "20634.jpg",
+          "filename": "fb31006b0d7f501650200290dcda6e9e",
+          "mimetype": "image/jpeg",
+          "size": 1657023,
+          "path": "/home/runner/workspace/uploads/fb31006b0d7f501650200290dcda6e9e"
+        }
+      ],
+      "packageFiles": [
+        {
+          "originalName": "Zoho Preminum Partner.png",
+          "filename": "b7436baf783599c61f8642d65842240c",
+          "mimetype": "image/png",
+          "size": 4882,
+          "path": "/home/runner/workspace/uploads/b7436baf783599c61f8642d65842240c"
+        }
+      ],
+      "id": "c135dd55-64b5-4ecf-be4f-e2ea0ffe9d56",
+      "status": "Approved",
+      "createdAt": "2026-05-27T09:48:57.427Z",
+      "zohoProductId": "1147855000003419011"
     }
   }
 }
