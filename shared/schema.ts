@@ -1,5 +1,5 @@
 import { sql } from "drizzle-orm";
-import { pgTable, text, varchar } from "drizzle-orm/pg-core";
+import { pgTable, text, varchar, jsonb, timestamp } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 
@@ -102,7 +102,6 @@ export interface PricingRequest extends PricingRequestInput {
 // Package upload
 export const packageUploadSchema = z.object({
   pricingRequestId: z.string().optional(),
-  // Unique identifiers within a pricing request
   lotNumber: z.string().optional(),
   stageName: z.string().optional(),
   lotAddress: z.string().min(1, "Lot address is required"),
@@ -122,7 +121,6 @@ export const packageUploadSchema = z.object({
   garage: z.number().optional(),
   description: z.string().optional(),
   state: z.enum(["NSW", "QLD", "VIC"]).optional(),
-  // file uploads (stored as metadata)
   floorPlanFiles: z.array(fileMetaSchema).optional(),
   sitedFloorPlanFiles: z.array(fileMetaSchema).optional(),
   areaTableFiles: z.array(fileMetaSchema).optional(),
@@ -142,3 +140,21 @@ export interface PackageUpload extends PackageUploadInput {
   zohoProductId?: string;
   zohoSyncError?: string;
 }
+
+// ─── PostgreSQL tables (used by PostgresStorage) ────────────────────────────
+
+export const pricingRequestsTable = pgTable("pricing_requests", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  status: text("status").notNull().default("Incomplete"),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+  data: jsonb("data").notNull(),
+});
+
+export const packageUploadsTable = pgTable("package_uploads", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  status: text("status").notNull().default("Incomplete"),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+  zohoProductId: text("zoho_product_id"),
+  zohoSyncError: text("zoho_sync_error"),
+  data: jsonb("data").notNull(),
+});

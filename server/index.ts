@@ -2,6 +2,23 @@ import express, { type Request, Response, NextFunction } from "express";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
 
+async function runMigrations() {
+  if (!process.env.DATABASE_URL) return;
+  try {
+    const { drizzle } = await import("drizzle-orm/neon-serverless");
+    const { Pool } = await import("@neondatabase/serverless");
+    const { migrate } = await import("drizzle-orm/neon-serverless/migrator");
+    const pool = new Pool({ connectionString: process.env.DATABASE_URL });
+    const db = drizzle(pool);
+    await migrate(db, { migrationsFolder: "./migrations" });
+    await pool.end();
+    log("database migrations applied");
+  } catch (err) {
+    console.error("[migrate] Failed to apply migrations:", err);
+    process.exit(1);
+  }
+}
+
 const app = express();
 
 // Trust Replit's reverse proxy so secure session cookies work in production
@@ -50,6 +67,7 @@ app.use((req, res, next) => {
 });
 
 (async () => {
+  await runMigrations();
   const server = await registerRoutes(app);
 
   app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {

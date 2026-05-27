@@ -1,6 +1,7 @@
 import type { Express, Request, Response, NextFunction } from "express";
 import { createServer, type Server } from "http";
 import session from "express-session";
+import connectPgSimple from "connect-pg-simple";
 import multer from "multer";
 import path from "path";
 import fs from "fs";
@@ -8,6 +9,8 @@ import { storage } from "./storage";
 import { contactSubmissionSchema, pricingRequestSchema, packageUploadSchema, type AdminSession, type StateCode } from "@shared/schema";
 import { getUncachableResendClient } from "./resend-client";
 import { syncPackageToZohoProduct } from "./zoho";
+
+const PgSession = connectPgSimple(session);
 
 // Extend express-session to include our admin session data
 declare module "express-session" {
@@ -148,7 +151,9 @@ function requireAdmin(req: Request, res: Response, next: NextFunction) {
 }
 
 // Set up multer for file uploads
-const uploadsDir = path.join(process.cwd(), "uploads");
+// UPLOADS_DIR env var points to the Railway Volume mount (e.g. /var/uploads).
+// Falls back to local ./uploads for development.
+const uploadsDir = process.env.UPLOADS_DIR ?? path.join(process.cwd(), "uploads");
 if (!fs.existsSync(uploadsDir)) {
   fs.mkdirSync(uploadsDir, { recursive: true });
 }
@@ -165,6 +170,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Session middleware
   app.use(
     session({
+      store: process.env.DATABASE_URL
+        ? new PgSession({
+            conString: process.env.DATABASE_URL,
+            tableName: "session",
+            createTableIfMissing: true,
+          })
+        : undefined,
       secret: process.env.SESSION_SECRET ?? (() => { if (process.env.NODE_ENV === "production") { throw new Error("SESSION_SECRET env var must be set in production"); } return "crownix-dev-only-secret"; })(),
       resave: false,
       saveUninitialized: false,
@@ -211,6 +223,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }).catch(() => {
       res.sendFile(filePath);
     });
+  });
+
+  // ========== Health Check ==========
+  app.get("/api/health", (_req, res) => {
+    res.json({ status: "ok" });
   });
 
   // ========== Public Contact Route ==========
