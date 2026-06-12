@@ -256,23 +256,6 @@ class JsonFileStorage implements IStorage {
   }
 }
 
-// ─── Singleton — picks PostgresStorage in production, JsonFileStorage in dev ─
+// ─── Singleton ───────────────────────────────────────────────────────────────
 
-let _storage: IStorage | undefined;
-
-function createStorage(): IStorage {
-  if (process.env.NODE_ENV === "production" && process.env.DATABASE_URL) {
-    const { db } = require("./db") as { db: ReturnType<typeof import("drizzle-orm/neon-serverless").drizzle> };
-    console.log("[storage] Using PostgreSQL storage");
-    return new PostgresStorage(db);
-  }
-  console.log("[storage] Using JSON file storage (dev mode)");
-  return new JsonFileStorage();
-}
-
-export const storage: IStorage = new Proxy({} as IStorage, {
-  get(_target, prop) {
-    if (!_storage) _storage = createStorage();
-    return (_storage as any)[prop];
-  },
-});
+export const storage: IStorage = new JsonFileStorage();
