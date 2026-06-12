@@ -693,40 +693,11 @@ ${validatedData.message}
 
       const role = req.session.admin!.role;
 
-      // Double-approval policy:
-      // Step 1 — Pending → Reviewed: any admin (including state users)
-      // Step 2 — Reviewed → Approved: admin role only
-      if (upload.status === "Pending") {
-        const updated = await storage.updatePackageUploadStatus(req.params.id, "Reviewed");
-
-        try {
-          const { client, fromEmail } = await getUncachableResendClient();
-          await client.emails.send({
-            from: fromEmail,
-            to: KESH_PAVAN_EMAIL,
-            cc: [DIV_EMAIL],
-            subject: `Package Reviewed (1st Approval) – ${upload.lotAddress}`,
-            html: `
-              <h2>Package Upload – 1st Approval</h2>
-              <p>The following package has been reviewed and is awaiting final approval:</p>
-              <p><strong>Lot Address:</strong> ${escapeHtml(upload.lotAddress)}</p>
-              <p><strong>Land Size:</strong> ${escapeHtml(upload.landSize)} sqm</p>
-              <p><strong>Land Price:</strong> $${escapeHtml(upload.landPrice)}</p>
-              ${upload.floorPlanName ? `<p><strong>Floor Plan:</strong> ${escapeHtml(upload.floorPlanName)}</p>` : ''}
-            `,
-          });
-        } catch (emailError) {
-          console.error("Failed to send 1st approval email:", emailError);
-        }
-
-        return res.json({ success: true, upload: updated });
+      if (role !== "admin") {
+        return res.status(403).json({ success: false, message: "Only admin users can approve packages" });
       }
 
-      if (upload.status === "Reviewed") {
-        if (role !== "admin") {
-          return res.status(403).json({ success: false, message: "Only admin users can give final approval" });
-        }
-
+      if (upload.status === "Pending") {
         const updated = await storage.updatePackageUploadStatus(req.params.id, "Approved");
 
         // Zoho CRM sync (idempotent — skip if already synced)

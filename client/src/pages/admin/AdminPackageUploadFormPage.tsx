@@ -40,7 +40,6 @@ interface FileGroup {
   areaTableFiles: File[];
   facadeFiles: File[];
   inclusionFiles: File[];
-  packageFiles: File[];
 }
 
 interface UploadedFileGroup {
@@ -49,7 +48,6 @@ interface UploadedFileGroup {
   areaTableFiles: FileMeta[];
   facadeFiles: FileMeta[];
   inclusionFiles: FileMeta[];
-  packageFiles: FileMeta[];
 }
 
 const FILE_FIELDS: { key: keyof FileGroup; label: string }[] = [
@@ -58,7 +56,6 @@ const FILE_FIELDS: { key: keyof FileGroup; label: string }[] = [
   { key: 'areaTableFiles', label: 'Area Table' },
   { key: 'facadeFiles', label: 'Facade' },
   { key: 'inclusionFiles', label: 'Inclusions' },
-  { key: 'packageFiles', label: 'Package Upload' },
 ];
 
 function FileUploadField({
@@ -144,7 +141,6 @@ export function AdminPackageUploadFormPage() {
     areaTableFiles: [],
     facadeFiles: [],
     inclusionFiles: [],
-    packageFiles: [],
   });
 
   const {
@@ -337,14 +333,13 @@ export function AdminPackageUploadFormPage() {
   const onSubmit = async (values: FormValues) => {
     setSubmitting(true);
     try {
-      const [floorPlanFiles, sitedFloorPlanFiles, areaTableFiles, facadeFiles, inclusionFiles, packageFiles] =
+      const [floorPlanFiles, sitedFloorPlanFiles, areaTableFiles, facadeFiles, inclusionFiles] =
         await Promise.all([
           uploadFileGroup(files.floorPlanFiles, 'floorPlanFiles'),
           uploadFileGroup(files.sitedFloorPlanFiles, 'sitedFloorPlanFiles'),
           uploadFileGroup(files.areaTableFiles, 'areaTableFiles'),
           uploadFileGroup(files.facadeFiles, 'facadeFiles'),
           uploadFileGroup(files.inclusionFiles, 'inclusionFiles'),
-          uploadFileGroup(files.packageFiles, 'packageFiles'),
         ]);
 
       const existing = existingData?.upload;
@@ -373,7 +368,6 @@ export function AdminPackageUploadFormPage() {
         areaTableFiles: [...(existing?.areaTableFiles ?? []), ...areaTableFiles],
         facadeFiles: [...(existing?.facadeFiles ?? []), ...facadeFiles],
         inclusionFiles: [...(existing?.inclusionFiles ?? []), ...inclusionFiles],
-        packageFiles: [...(existing?.packageFiles ?? []), ...packageFiles],
       };
 
       const url = isEditing
@@ -691,6 +685,36 @@ export function AdminPackageUploadFormPage() {
             ))}
           </CardContent>
         </Card>
+
+        {/* Pricing Request Attachments */}
+        {pricingRequest?.attachments && pricingRequest.attachments.length > 0 && (
+          <Card>
+            <CardHeader className="pb-3">
+              <CardTitle className="text-base">Pricing Request Attachments</CardTitle>
+              <p className="text-xs text-muted-foreground">Files attached to the original pricing request</p>
+            </CardHeader>
+            <CardContent>
+              <ul className="space-y-2">
+                {pricingRequest.attachments.map((f, i) => (
+                  <li key={i} className="flex items-center gap-3 text-sm">
+                    <a
+                      href={`/admin/api/files/${f.filename}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-blue-600 dark:text-blue-400 hover:underline truncate flex-1"
+                      data-testid={`link-pricing-attachment-${i}`}
+                    >
+                      {f.originalName}
+                    </a>
+                    <span className="text-xs text-muted-foreground shrink-0">
+                      {(f.size / 1024 / 1024).toFixed(1)} MB
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            </CardContent>
+          </Card>
+        )}
 
         <div className="flex justify-end gap-3">
           <Button

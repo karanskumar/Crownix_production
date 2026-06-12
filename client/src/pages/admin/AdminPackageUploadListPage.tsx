@@ -38,7 +38,7 @@ interface PackageUpload {
   description?: string;
   state?: string;
   stageName?: string;
-  status: 'Incomplete' | 'Pending' | 'Reviewed' | 'Approved';
+  status: 'Incomplete' | 'Pending' | 'Approved';
   pricingRequestId?: string;
   lotNumber?: string;
   createdAt: string;
@@ -61,18 +61,16 @@ interface AdminUser {
 const STATUS_COLORS: Record<string, string> = {
   Incomplete: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300',
   Pending: 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300',
-  Reviewed: 'bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-300',
   Approved: 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300',
 };
 
 const STATUS_LABELS: Record<string, string> = {
   Incomplete: 'Incomplete',
   Pending: 'Pending Approval',
-  Reviewed: '1st Approval',
   Approved: 'Approved',
 };
 
-const STATUS_ORDER: Record<string, number> = { Incomplete: 0, Pending: 1, Reviewed: 2, Approved: 3 };
+const STATUS_ORDER: Record<string, number> = { Incomplete: 0, Pending: 1, Approved: 2 };
 
 type SortOrder = 'default' | 'status-asc' | 'status-desc';
 
@@ -268,28 +266,23 @@ export function AdminPackageUploadListPage() {
       }).then(r => r.json()),
     onSuccess: (result) => {
       if (result.success) {
-        const newStatus = result.upload?.status;
-        if (newStatus === 'Reviewed') {
-          toast({ title: '1st Approval recorded', description: 'Awaiting final approval by admin.' });
-        } else if (newStatus === 'Approved') {
-          const zohoStatus: string = result.zohoSyncStatus;
-          if (zohoStatus === 'synced') {
-            toast({
-              title: 'Package approved & synced to CRM',
-              description: `Zoho Product ID: ${result.zohoProductId}`,
-            });
-          } else if (zohoStatus === 'skipped') {
-            toast({
-              title: 'Package approved',
-              description: 'CRM already synced previously — no duplicate created.',
-            });
-          } else {
-            toast({
-              title: 'Package approved — CRM sync failed',
-              description: result.zohoSyncError ?? 'Unknown error. Check server logs.',
-              variant: 'destructive',
-            });
-          }
+        const zohoStatus: string = result.zohoSyncStatus;
+        if (zohoStatus === 'synced') {
+          toast({
+            title: 'Package approved & synced to CRM',
+            description: `Zoho Product ID: ${result.zohoProductId}`,
+          });
+        } else if (zohoStatus === 'skipped') {
+          toast({
+            title: 'Package approved',
+            description: 'CRM already synced previously — no duplicate created.',
+          });
+        } else {
+          toast({
+            title: 'Package approved — CRM sync failed',
+            description: result.zohoSyncError ?? 'Unknown error. Check server logs.',
+            variant: 'destructive',
+          });
         }
         queryClient.invalidateQueries({ queryKey: ['/admin/api/package-uploads'] });
         setCrmModalUpload(null);
@@ -365,7 +358,6 @@ export function AdminPackageUploadListPage() {
                   <SelectItem value="all">All</SelectItem>
                   <SelectItem value="Incomplete">Incomplete</SelectItem>
                   <SelectItem value="Pending">Pending Approval</SelectItem>
-                  <SelectItem value="Reviewed">1st Approval</SelectItem>
                   <SelectItem value="Approved">Approved</SelectItem>
                 </SelectContent>
               </Select>
@@ -446,34 +438,20 @@ export function AdminPackageUploadListPage() {
                             >
                               Approved
                             </Badge>
-                          ) : (upload.status === 'Pending' || upload.status === 'Reviewed') ? (
-                            <>
-                              <Button
-                                variant="ghost"
-                                size="sm"
-                                onClick={() => approveMutation.mutate(upload.id)}
-                                disabled={approveMutation.isPending || upload.status !== 'Pending'}
-                                data-testid={`button-first-approval-${upload.id}`}
-                                className="gap-1"
-                              >
-                                {approveMutation.isPending && upload.status === 'Pending' ? (
-                                  <Loader2 className="h-3.5 w-3.5 animate-spin" />
-                                ) : null}
-                                1st Approval
-                              </Button>
-                              {isAdmin && (
-                                <Button
-                                  variant="ghost"
-                                  size="sm"
-                                  onClick={() => setCrmModalUpload(upload)}
-                                  disabled={approveMutation.isPending || upload.status !== 'Reviewed'}
-                                  data-testid={`button-second-approval-${upload.id}`}
-                                  className="gap-1"
-                                >
-                                  2nd Approval
-                                </Button>
-                              )}
-                            </>
+                          ) : upload.status === 'Pending' && isAdmin ? (
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => setCrmModalUpload(upload)}
+                              disabled={approveMutation.isPending}
+                              data-testid={`button-approve-${upload.id}`}
+                              className="gap-1"
+                            >
+                              {approveMutation.isPending ? (
+                                <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                              ) : null}
+                              Approve
+                            </Button>
                           ) : null}
                         </div>
                       </td>
