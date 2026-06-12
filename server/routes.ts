@@ -711,7 +711,10 @@ ${validatedData.message}
           console.log(`[zoho] Skipping CRM sync for package ${req.params.id} — already synced (${upload.zohoProductId})`);
         } else {
           try {
-            const productId = await syncPackageToZohoProduct(upload);
+            const pricingRequest = upload.pricingRequestId
+              ? await storage.getPricingRequest(upload.pricingRequestId)
+              : undefined;
+            const productId = await syncPackageToZohoProduct(upload, pricingRequest);
             zohoProductId = productId;
             zohoSyncStatus = "synced";
             await storage.updatePackageUpload(req.params.id, { zohoProductId, zohoSyncError: undefined } as any);
@@ -775,7 +778,10 @@ ${validatedData.message}
       if (upload.zohoProductId) return res.status(400).json({ success: false, message: "CRM product already created" });
 
       try {
-        const productId = await syncPackageToZohoProduct(upload);
+        const pricingRequest = upload.pricingRequestId
+          ? await storage.getPricingRequest(upload.pricingRequestId)
+          : undefined;
+        const productId = await syncPackageToZohoProduct(upload, pricingRequest);
         await storage.updatePackageUpload(req.params.id, { zohoProductId: productId, zohoSyncError: undefined } as any);
         return res.json({ success: true, zohoProductId: productId });
       } catch (error) {

@@ -1,6 +1,6 @@
 import fs from "fs";
 import path from "path";
-import type { PackageUpload, FileMeta } from "@shared/schema";
+import type { PackageUpload, FileMeta, PricingRequest } from "@shared/schema";
 
 const ZOHO_CONFIG = {
   accountsUrl: "https://accounts.zoho.in",
@@ -121,15 +121,16 @@ const FILE_CATEGORY_LABELS: Record<string, string> = {
   areaTableFiles: "Area_Table",
   facadeFiles: "Facade",
   inclusionFiles: "Inclusion",
-  packageFiles: "Package",
 };
 
 interface CategorisedFile {
-  meta: FileMeta;
+  meta?: FileMeta;
+  buffer?: Buffer;
+  mimetype: string;
   uploadName: string;
 }
 
-function buildCategorisedFiles(pkg: PackageUpload): CategorisedFile[] {
+function buildCategorisedFiles(pkg: PackageUpload, pricingRequest?: PricingRequest): CategorisedFile[] {
   const result: CategorisedFile[] = [];
 
   const categories: Array<{ key: keyof typeof FILE_CATEGORY_LABELS; files: FileMeta[] | undefined }> = [
@@ -138,17 +139,34 @@ function buildCategorisedFiles(pkg: PackageUpload): CategorisedFile[] {
     { key: "areaTableFiles", files: pkg.areaTableFiles },
     { key: "facadeFiles", files: pkg.facadeFiles },
     { key: "inclusionFiles", files: pkg.inclusionFiles },
-    { key: "packageFiles", files: pkg.packageFiles },
   ];
 
   for (const { key, files } of categories) {
     if (!files || files.length === 0) continue;
     const label = FILE_CATEGORY_LABELS[key];
     files.forEach((meta, idx) => {
-      const ext = path.extname(meta.originalName); // e.g. ".pdf"
+      const ext = path.extname(meta.originalName);
       const suffix = files.length > 1 ? `_${idx + 1}` : "";
-      const uploadName = `${label}${suffix}${ext}`;
-      result.push({ meta, uploadName });
+      result.push({ meta, mimetype: meta.mimetype, uploadName: `${label}${suffix}${ext}` });
+    });
+  }
+
+  // Pricing request attachments
+  if (pricingRequest?.attachments && pricingRequest.attachments.length > 0) {
+    pricingRequest.attachments.forEach((meta, idx) => {
+      const ext = path.extname(meta.originalName);
+      const suffix = pricingRequest.attachments!.length > 1 ? `_${idx + 1}` : "";
+      result.push({ meta, mimetype: meta.mimetype, uploadName: `PR_Attachment${suffix}${ext}` });
+    });
+  }
+
+  // Land links as a plain-text file
+  if (pricingRequest?.landLinks && pricingRequest.landLinks.length > 0) {
+    const content = pricingRequest.landLinks.join("\n");
+    result.push({
+      buffer: Buffer.from(content, "utf-8"),
+      mimetype: "text/plain",
+      uploadName: "Land_Links.txt",
     });
   }
 
@@ -160,17 +178,24 @@ export async function uploadFilesToZohoProduct(
   categorisedFiles: CategorisedFile[],
   accessToken: string
 ): Promise<void> {
-  for (const { meta, uploadName } of categorisedFiles) {
+  for (const { meta, buffer, mimetype, uploadName } of categorisedFiles) {
     try {
-      const filePath = meta.path;
+      let fileBuffer: Buffer;
 
-      if (!filePath || !fs.existsSync(filePath)) {
-        console.warn(`[zoho] File not found on disk, skipping: ${uploadName} (${filePath})`);
+      if (buffer) {
+        fileBuffer = buffer;
+      } else if (meta) {
+        const filePath = meta.path;
+        if (!filePath || !fs.existsSync(filePath)) {
+          console.warn(`[zoho] File not found on disk, skipping: ${uploadName} (${filePath})`);
+          continue;
+        }
+        fileBuffer = fs.readFileSync(filePath);
+      } else {
         continue;
       }
 
-      const fileBuffer = fs.readFileSync(filePath);
-      const blob = new Blob([fileBuffer], { type: meta.mimetype });
+      const blob = new Blob([fileBuffer], { type: mimetype });
 
       const formData = new FormData();
       formData.append("file", blob, uploadName);
@@ -190,7 +215,7 @@ export async function uploadFilesToZohoProduct(
         const errData = await res.json().catch(() => ({}));
         console.error(`[zoho] Failed to upload ${uploadName}: ${JSON.stringify(errData)}`);
       } else {
-        console.log(`[zoho] Uploaded file: ${uploadName} (original: ${meta.originalName})`);
+        console.log(`[zoho] Uploaded file: ${uploadName} (original: ${meta?.originalName ?? uploadName})`);
       }
     } catch (err) {
       console.error(`[zoho] Error uploading file ${uploadName}:`, err);
@@ -198,12 +223,12 @@ export async function uploadFilesToZohoProduct(
   }
 }
 
-export async function syncPackageToZohoProduct(pkg: PackageUpload): Promise<string> {
+export async function syncPackageToZohoProduct(pkg: PackageUpload, pricingRequest?: PricingRequest): Promise<string> {
   const accessToken = await getZohoAccessToken();
   const fieldMap = mapPackageToZohoProduct(pkg);
   const productId = await createZohoProduct(fieldMap, accessToken);
 
-  const categorisedFiles = buildCategorisedFiles(pkg);
+  const categorisedFiles = buildCategorisedFiles(pkg, pricingRequest);
 
   if (categorisedFiles.length > 0) {
     await uploadFilesToZohoProduct(productId, categorisedFiles, accessToken);

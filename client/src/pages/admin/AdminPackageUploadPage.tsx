@@ -39,7 +39,6 @@ interface FileGroup {
   areaTableFiles: File[];
   facadeFiles: File[];
   inclusionFiles: File[];
-  packageFiles: File[];
 }
 
 const FILE_FIELDS: { key: keyof FileGroup; label: string }[] = [
@@ -48,7 +47,6 @@ const FILE_FIELDS: { key: keyof FileGroup; label: string }[] = [
   { key: 'areaTableFiles', label: 'Area Table' },
   { key: 'facadeFiles', label: 'Facade' },
   { key: 'inclusionFiles', label: 'Inclusions' },
-  { key: 'packageFiles', label: 'Package Upload' },
 ];
 
 const STATUS_COLORS: Record<string, string> = {
@@ -159,7 +157,6 @@ export function AdminPackageUploadPage() {
     areaTableFiles: [],
     facadeFiles: [],
     inclusionFiles: [],
-    packageFiles: [],
   });
 
   const {
@@ -284,14 +281,13 @@ export function AdminPackageUploadPage() {
     if (!id) return;
     setSubmitting(true);
     try {
-      const [floorPlanFiles, sitedFloorPlanFiles, areaTableFiles, facadeFiles, inclusionFiles, packageFiles] =
+      const [floorPlanFiles, sitedFloorPlanFiles, areaTableFiles, facadeFiles, inclusionFiles] =
         await Promise.all([
           uploadFileGroup(files.floorPlanFiles, 'floorPlanFiles'),
           uploadFileGroup(files.sitedFloorPlanFiles, 'sitedFloorPlanFiles'),
           uploadFileGroup(files.areaTableFiles, 'areaTableFiles'),
           uploadFileGroup(files.facadeFiles, 'facadeFiles'),
           uploadFileGroup(files.inclusionFiles, 'inclusionFiles'),
-          uploadFileGroup(files.packageFiles, 'packageFiles'),
         ]);
 
       const payload: Record<string, unknown> = {
@@ -319,7 +315,6 @@ export function AdminPackageUploadPage() {
         areaTableFiles: [...(upload?.areaTableFiles ?? []), ...areaTableFiles],
         facadeFiles: [...(upload?.facadeFiles ?? []), ...facadeFiles],
         inclusionFiles: [...(upload?.inclusionFiles ?? []), ...inclusionFiles],
-        packageFiles: [...(upload?.packageFiles ?? []), ...packageFiles],
       };
 
       const res = await fetch(`/admin/api/package-uploads/${id}`, {
@@ -464,48 +459,6 @@ export function AdminPackageUploadPage() {
               </div>
             )}
 
-            {pricingRequest.landLinks && pricingRequest.landLinks.length > 0 && (
-              <div className="space-y-1">
-                <p className="text-xs text-muted-foreground font-medium uppercase tracking-wide">Land Links</p>
-                <ul className="space-y-1">
-                  {pricingRequest.landLinks.map((link, i) => (
-                    <li key={i}>
-                      <a
-                        href={link}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-sm text-primary underline underline-offset-2 hover:opacity-80 break-all"
-                      >
-                        {link}
-                      </a>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
-
-            {pricingRequest.attachments && pricingRequest.attachments.length > 0 && (
-              <div className="space-y-1">
-                <p className="text-xs text-muted-foreground font-medium uppercase tracking-wide">Attachments</p>
-                <ul className="space-y-1">
-                  {pricingRequest.attachments.map((f, i) => (
-                    <li key={i} className="flex items-center gap-2">
-                      <a
-                        href={`/admin/api/files/${f.filename}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-sm text-primary underline underline-offset-2 hover:opacity-80 flex items-center gap-1.5 min-w-0"
-                        data-testid={`pricing-file-link-${i}`}
-                      >
-                        <Download className="h-3.5 w-3.5 shrink-0" />
-                        <span className="truncate">{f.originalName}</span>
-                      </a>
-                      <span className="text-xs text-muted-foreground shrink-0">({Math.round(f.size / 1024)} KB)</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
           </CardContent>
         </Card>
       )}
@@ -787,6 +740,62 @@ export function AdminPackageUploadPage() {
           </Button>
         </div>
       </form>
+
+      {/* Pricing Request Links & Files */}
+      {pricingRequest && (
+        (pricingRequest.landLinks && pricingRequest.landLinks.length > 0) ||
+        (pricingRequest.attachments && pricingRequest.attachments.length > 0)
+      ) && (
+        <Card>
+          <CardHeader className="pb-3">
+            <CardTitle className="text-base">Pricing Request Links & Files</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            {pricingRequest!.landLinks && pricingRequest!.landLinks.length > 0 && (
+              <div className="space-y-1">
+                <p className="text-xs text-muted-foreground font-medium uppercase tracking-wide">Land Links</p>
+                <ul className="space-y-1">
+                  {pricingRequest!.landLinks.map((link, i) => (
+                    <li key={i}>
+                      <a
+                        href={link}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-sm text-primary underline underline-offset-2 hover:opacity-80 break-all"
+                        data-testid={`link-land-${i}`}
+                      >
+                        {link}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+            {pricingRequest!.attachments && pricingRequest!.attachments.length > 0 && (
+              <div className="space-y-1">
+                <p className="text-xs text-muted-foreground font-medium uppercase tracking-wide">Attachments</p>
+                <ul className="space-y-1">
+                  {pricingRequest!.attachments.map((f, i) => (
+                    <li key={i} className="flex items-center gap-2">
+                      <a
+                        href={`/admin/api/files/${f.filename}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-sm text-primary underline underline-offset-2 hover:opacity-80 flex items-center gap-1.5 min-w-0"
+                        data-testid={`link-pricing-attachment-${i}`}
+                      >
+                        <Download className="h-3.5 w-3.5 shrink-0" />
+                        <span className="truncate">{f.originalName}</span>
+                      </a>
+                      <span className="text-xs text-muted-foreground shrink-0">({Math.round(f.size / 1024)} KB)</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      )}
     </div>
   );
 }
