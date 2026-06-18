@@ -38,7 +38,7 @@ export async function getZohoAccessToken(): Promise<string> {
   return data.access_token;
 }
 
-export function mapPackageToZohoProduct(pkg: PackageUpload): Record<string, unknown> {
+export function mapPackageToZohoProduct(pkg: PackageUpload, pricingRequest?: PricingRequest): Record<string, unknown> {
   const VENDOR_NAME_ID = "1147855000000600719";
   const LAYOUT_ID = "1147855000000599158";
 
@@ -68,6 +68,12 @@ export function mapPackageToZohoProduct(pkg: PackageUpload): Record<string, unkn
   if (pkg.living != null) fields["Living"] = pkg.living;
   if (pkg.garage != null) fields["Garage"] = pkg.garage;
   if (pkg.description) fields["Description"] = pkg.description;
+
+  // Land links from the pricing request — stored as a newline-separated text field
+  // (cannot be sent as file attachments because Zoho CRM rejects text/plain files)
+  if (pricingRequest?.landLinks && pricingRequest.landLinks.length > 0) {
+    fields["Land_Link"] = pricingRequest.landLinks.join("\n");
+  }
 
   return fields;
 }
@@ -160,18 +166,21 @@ function buildCategorisedFiles(pkg: PackageUpload, pricingRequest?: PricingReque
     });
   }
 
-  // Land links as a plain-text file
-  if (pricingRequest?.landLinks && pricingRequest.landLinks.length > 0) {
-    const content = pricingRequest.landLinks.join("\n");
-    result.push({
-      buffer: Buffer.from(content, "utf-8"),
-      mimetype: "text/plain",
-      uploadName: "Land_Links.txt",
-    });
-  }
+  // Note: land links are NOT uploaded as a file to Zoho — Zoho's attachment API rejects
+  // text files whose content contains bare URLs. Land links remain accessible in the portal.
 
   return result;
 }
+
+// MIME types that Zoho CRM's attachment API rejects — text-based formats trigger
+// a validation error ("cannot hold values other than files") regardless of content.
+const ZOHO_UNSUPPORTED_MIMETYPES = new Set([
+  "text/plain",
+  "text/csv",
+  "text/html",
+  "text/xml",
+  "application/xml",
+]);
 
 export async function uploadFilesToZohoProduct(
   productId: string,
@@ -180,6 +189,12 @@ export async function uploadFilesToZohoProduct(
 ): Promise<void> {
   for (const { meta, buffer, mimetype, uploadName } of categorisedFiles) {
     try {
+      // Skip file types that Zoho CRM's attachment API does not support
+      if (ZOHO_UNSUPPORTED_MIMETYPES.has(mimetype)) {
+        console.warn(`[zoho] Skipping unsupported file type for Zoho attachment: ${uploadName} (${mimetype})`);
+        continue;
+      }
+
       let fileBuffer: Buffer;
 
       if (buffer) {
@@ -225,7 +240,7 @@ export async function uploadFilesToZohoProduct(
 
 export async function syncPackageToZohoProduct(pkg: PackageUpload, pricingRequest?: PricingRequest): Promise<string> {
   const accessToken = await getZohoAccessToken();
-  const fieldMap = mapPackageToZohoProduct(pkg);
+  const fieldMap = mapPackageToZohoProduct(pkg, pricingRequest);
   const productId = await createZohoProduct(fieldMap, accessToken);
 
   const categorisedFiles = buildCategorisedFiles(pkg, pricingRequest);

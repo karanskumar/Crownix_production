@@ -450,9 +450,12 @@ export function AdminPackageUploadPage() {
             })()}
 
             {pricingRequest.additionalCosts && (
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <ReadonlyField label="Land BDM Expense" value={`$${pricingRequest.additionalCosts.landBdmExpense} inc GST`} />
                 <ReadonlyField label="Independent Inspection" value={`$${pricingRequest.additionalCosts.independentInspection} inc GST`} />
+                {pricingRequest.additionalCosts.duplexComms && (
+                  <ReadonlyField label="Duplex Comms" value={`$${pricingRequest.additionalCosts.duplexComms} inc GST`} />
+                )}
                 {pricingRequest.additionalCosts.additionalMarketing && (
                   <ReadonlyField label="Additional Marketing" value={pricingRequest.additionalCosts.additionalMarketing} />
                 )}

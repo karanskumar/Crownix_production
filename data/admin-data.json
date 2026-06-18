@@ -1,5 +1,293 @@
 {
   "users": {},
-  "pricingRequests": {},
-  "packageUploads": {}
+  "pricingRequests": {
+    "54c4aa70-f077-4948-91d7-40aec78cdd20": {
+      "state": "QLD",
+      "suburb": "test",
+      "estate": "test555",
+      "stages": [
+        {
+          "stageName": "Test Balaji",
+          "registration": "rsg",
+          "lots": [
+            {
+              "lotNumber": "111",
+              "landSize": "2",
+              "price": "11",
+              "floorPlans": [
+                "test"
+              ]
+            }
+          ]
+        }
+      ],
+      "additionalCosts": {
+        "landBdmExpense": "2500",
+        "independentInspection": "1200",
+        "duplexComms": "11000"
+      },
+      "landLinks": [
+        "https://replit.com/"
+      ],
+      "attachments": [
+        {
+          "originalName": "Zocraft (4).png",
+          "filename": "d434888459568f8698cb14df6ee19086",
+          "mimetype": "image/png",
+          "size": 8687,
+          "path": "/home/runner/workspace/uploads/d434888459568f8698cb14df6ee19086"
+        }
+      ],
+      "id": "54c4aa70-f077-4948-91d7-40aec78cdd20",
+      "status": "Incomplete",
+      "createdAt": "2026-06-18T18:00:59.319Z"
+    },
+    "614006cb-b26c-46c8-843f-0bfeebf1fe85": {
+      "state": "QLD",
+      "suburb": "Test Record",
+      "estate": "test",
+      "stages": [
+        {
+          "stageName": "Town",
+          "registration": "rsg",
+          "lots": [
+            {
+              "lotNumber": "111",
+              "landSize": "2",
+              "price": "1155",
+              "floorPlans": [
+                "test"
+              ]
+            }
+          ]
+        }
+      ],
+      "additionalCosts": {
+        "landBdmExpense": "2500",
+        "independentInspection": "1200",
+        "duplexComms": "11000"
+      },
+      "landLinks": [
+        "https://replit.com/"
+      ],
+      "attachments": [
+        {
+          "originalName": "Zocraft (4).png",
+          "filename": "a4a35ff7286595229a4fced59cff2c4a",
+          "mimetype": "image/png",
+          "size": 8687,
+          "path": "/home/runner/workspace/uploads/a4a35ff7286595229a4fced59cff2c4a"
+        }
+      ],
+      "id": "614006cb-b26c-46c8-843f-0bfeebf1fe85",
+      "status": "Incomplete",
+      "createdAt": "2026-06-18T18:41:57.379Z"
+    },
+    "0c245717-01fd-41d1-9a54-4d463531b797": {
+      "state": "QLD",
+      "suburb": "New",
+      "estate": "New",
+      "stages": [
+        {
+          "stageName": "Town1",
+          "registration": "rsg",
+          "lots": [
+            {
+              "lotNumber": "1",
+              "landSize": "1",
+              "price": "1",
+              "floorPlans": [
+                "111"
+              ]
+            }
+          ]
+        }
+      ],
+      "additionalCosts": {
+        "landBdmExpense": "2500",
+        "independentInspection": "1200",
+        "duplexComms": "11000"
+      },
+      "landLinks": [
+        "https://replit.com/"
+      ],
+      "attachments": [
+        {
+          "originalName": "ChatGPT Image Sep 13, 2025, 03_33_42 AM.png",
+          "filename": "f02278c139bbc0397971f9d25e3c7587",
+          "mimetype": "image/png",
+          "size": 1467719,
+          "path": "/home/runner/workspace/uploads/f02278c139bbc0397971f9d25e3c7587"
+        }
+      ],
+      "id": "0c245717-01fd-41d1-9a54-4d463531b797",
+      "status": "Incomplete",
+      "createdAt": "2026-06-18T18:48:51.734Z"
+    }
+  },
+  "packageUploads": {
+    "6cdab23e-a85c-46dc-ba0e-e2bb698b7cf3": {
+      "pricingRequestId": "54c4aa70-f077-4948-91d7-40aec78cdd20",
+      "lotNumber": "111",
+      "stageName": "Test Balaji",
+      "lotAddress": "Lot 111, test555, test",
+      "landSize": "2",
+      "landPrice": "11",
+      "floorPlanName": "floor plan test",
+      "forecastRegistrationDate": "rsg",
+      "state": "QLD",
+      "id": "6cdab23e-a85c-46dc-ba0e-e2bb698b7cf3",
+      "status": "Approved",
+      "createdAt": "2026-06-18T18:00:59.328Z",
+      "buildSize": "100111",
+      "buildPrice": "100111",
+      "totalPackagePrice": "100122",
+      "productCategory": "Actual",
+      "propertyType": "House and Land",
+      "facadeName": "Coastal 1111",
+      "bedroom": 1,
+      "bath": 1,
+      "living": 1,
+      "garage": 1,
+      "description": "test",
+      "floorPlanFiles": [
+        {
+          "originalName": "Zocraft (4).png",
+          "filename": "4e85458d2291686a48c7aeac7060b84b",
+          "mimetype": "image/png",
+          "size": 8687,
+          "path": "/home/runner/workspace/uploads/4e85458d2291686a48c7aeac7060b84b"
+        }
+      ],
+      "sitedFloorPlanFiles": [
+        {
+          "originalName": "time.png",
+          "filename": "48c8d5bab1751269a5dc6126a06cbc0e",
+          "mimetype": "image/png",
+          "size": 6386,
+          "path": "/home/runner/workspace/uploads/48c8d5bab1751269a5dc6126a06cbc0e"
+        }
+      ],
+      "areaTableFiles": [
+        {
+          "originalName": "ChatGPT Image Sep 13, 2025, 03_33_42 AM.png",
+          "filename": "06233d5a5cf3877ce6a26fa00af7e60f",
+          "mimetype": "image/png",
+          "size": 1467719,
+          "path": "/home/runner/workspace/uploads/06233d5a5cf3877ce6a26fa00af7e60f"
+        }
+      ],
+      "facadeFiles": [
+        {
+          "originalName": "20634.jpg",
+          "filename": "36845255471b50cfad31066eacf28b75",
+          "mimetype": "image/jpeg",
+          "size": 1657023,
+          "path": "/home/runner/workspace/uploads/36845255471b50cfad31066eacf28b75"
+        }
+      ],
+      "inclusionFiles": [],
+      "zohoProductId": "1147855000004082007"
+    },
+    "11366d58-223f-47cf-a2be-1a105d7ef428": {
+      "pricingRequestId": "614006cb-b26c-46c8-843f-0bfeebf1fe85",
+      "lotNumber": "111",
+      "stageName": "Town",
+      "lotAddress": "Lot 111, test, Test Record",
+      "landSize": "2",
+      "landPrice": "1155",
+      "floorPlanName": "test",
+      "forecastRegistrationDate": "rsg",
+      "state": "QLD",
+      "id": "11366d58-223f-47cf-a2be-1a105d7ef428",
+      "status": "Approved",
+      "createdAt": "2026-06-18T18:41:57.382Z",
+      "buildSize": "100",
+      "buildPrice": "1111",
+      "totalPackagePrice": "2266",
+      "productCategory": "Actual",
+      "propertyType": "House and Land",
+      "facadeName": "Coastal",
+      "bedroom": 1,
+      "bath": 1,
+      "living": 1,
+      "garage": 2,
+      "floorPlanFiles": [
+        {
+          "originalName": "Home _ Cold Cafe..html",
+          "filename": "9333bf7aaf881b3f0f632f90e97e56a2",
+          "mimetype": "text/html",
+          "size": 90487,
+          "path": "/home/runner/workspace/uploads/9333bf7aaf881b3f0f632f90e97e56a2"
+        }
+      ],
+      "sitedFloorPlanFiles": [
+        {
+          "originalName": "time.png",
+          "filename": "08b91a61943d320ab4c2a702f8df931a",
+          "mimetype": "image/png",
+          "size": 6386,
+          "path": "/home/runner/workspace/uploads/08b91a61943d320ab4c2a702f8df931a"
+        }
+      ],
+      "areaTableFiles": [
+        {
+          "originalName": "thumbnail.png",
+          "filename": "d6c91c2063933044429c2cee69b27316",
+          "mimetype": "image/png",
+          "size": 1214777,
+          "path": "/home/runner/workspace/uploads/d6c91c2063933044429c2cee69b27316"
+        }
+      ],
+      "facadeFiles": [],
+      "inclusionFiles": [],
+      "zohoProductId": "1147855000004140009"
+    },
+    "57d22495-6491-415d-9e01-951b5fed9961": {
+      "pricingRequestId": "0c245717-01fd-41d1-9a54-4d463531b797",
+      "lotNumber": "1",
+      "stageName": "Town1",
+      "lotAddress": "Lot 1, New, New",
+      "landSize": "1",
+      "landPrice": "1",
+      "floorPlanName": "111",
+      "forecastRegistrationDate": "rsg",
+      "state": "QLD",
+      "id": "57d22495-6491-415d-9e01-951b5fed9961",
+      "status": "Pending",
+      "createdAt": "2026-06-18T18:48:51.737Z",
+      "buildSize": "111",
+      "buildPrice": "111",
+      "totalPackagePrice": "112",
+      "productCategory": "Actual",
+      "propertyType": "House and Land",
+      "facadeName": "Coastal",
+      "bedroom": 1,
+      "bath": 1,
+      "living": 1,
+      "garage": 1,
+      "description": "1111",
+      "floorPlanFiles": [
+        {
+          "originalName": "ChatGPT Image Jun 18, 2026, 06_57_47 AM.png",
+          "filename": "2b1ddcc9f407817aa4934759df970f8b",
+          "mimetype": "image/png",
+          "size": 1235414,
+          "path": "/home/runner/workspace/uploads/2b1ddcc9f407817aa4934759df970f8b"
+        }
+      ],
+      "sitedFloorPlanFiles": [
+        {
+          "originalName": "Screenshot from 2026-06-18 01-40-03.png",
+          "filename": "af678963d767d3e386c888e8cc098f0c",
+          "mimetype": "image/png",
+          "size": 96907,
+          "path": "/home/runner/workspace/uploads/af678963d767d3e386c888e8cc098f0c"
+        }
+      ],
+      "areaTableFiles": [],
+      "facadeFiles": [],
+      "inclusionFiles": []
+    }
+  }
 }

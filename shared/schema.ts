@@ -62,6 +62,7 @@ export type Stage = z.infer<typeof stageSchema>;
 export const additionalCostsSchema = z.object({
   landBdmExpense: z.string().default("2500"),
   independentInspection: z.string().default("1200"),
+  duplexComms: z.string().default("11000"),
   additionalMarketing: z.string().optional(),
 });
 

@@ -9,6 +9,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '
 import { Plus, Upload, Copy, Loader2, ArrowUpDown, AlertTriangle, RotateCcw } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { useToast } from '@/hooks/use-toast';
+import type { PricingRequest } from '@shared/schema';
 
 interface FileMeta {
   originalName: string;
@@ -108,12 +109,14 @@ const MANDATORY_FIELDS: Array<keyof PackageUpload> = ['lotAddress', 'buildSize',
 
 function CrmConfirmModal({
   upload,
+  pricingRequest,
   open,
   onClose,
   onConfirm,
   isPending,
 }: {
   upload: PackageUpload;
+  pricingRequest?: PricingRequest | null;
   open: boolean;
   onClose: () => void;
   onConfirm: () => void;
@@ -125,6 +128,8 @@ function CrmConfirmModal({
   });
 
   const allFiles: Array<{ category: string; name: string }> = [];
+
+  // Package upload file categories (same as what zoho.ts uploads)
   for (const cat of FILE_CATEGORIES) {
     const files = upload[cat.key] as FileMeta[] | undefined;
     if (files && files.length > 0) {
@@ -133,6 +138,15 @@ function CrmConfirmModal({
       }
     }
   }
+
+  // Pricing request attachments (sent to Zoho as PR_Attachment files)
+  if (pricingRequest?.attachments && pricingRequest.attachments.length > 0) {
+    for (const f of pricingRequest.attachments) {
+      allFiles.push({ category: 'Pricing Request Attachments', name: f.originalName });
+    }
+  }
+
+  // Land links are NOT uploaded to Zoho (Zoho rejects text files containing bare URLs)
 
   return (
     <Dialog open={open} onOpenChange={(v) => { if (!v) onClose(); }}>
@@ -228,6 +242,13 @@ export function AdminPackageUploadListPage() {
   const { data: meData } = useQuery<{ success: boolean; user: AdminUser }>({
     queryKey: ['/admin/api/me'],
     queryFn: () => fetch('/admin/api/me', { credentials: 'include' }).then(r => r.json()),
+  });
+
+  const { data: crmPricingRequestData } = useQuery<{ success: boolean; request: PricingRequest }>({
+    queryKey: ['/admin/api/pricing-requests', crmModalUpload?.pricingRequestId],
+    queryFn: () =>
+      fetch(`/admin/api/pricing-requests/${crmModalUpload!.pricingRequestId}`, { credentials: 'include' }).then(r => r.json()),
+    enabled: !!crmModalUpload?.pricingRequestId,
   });
 
   const { data, isLoading } = useQuery<{ success: boolean; uploads: PackageUpload[] }>({
@@ -507,6 +528,7 @@ export function AdminPackageUploadListPage() {
       {crmModalUpload && (
         <CrmConfirmModal
           upload={crmModalUpload}
+          pricingRequest={crmPricingRequestData?.request ?? null}
           open={true}
           onClose={() => setCrmModalUpload(null)}
           onConfirm={() => approveMutation.mutate(crmModalUpload.id)}

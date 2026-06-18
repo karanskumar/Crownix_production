@@ -37,6 +37,7 @@ interface FormValues {
   additionalCosts: {
     landBdmExpense: string;
     independentInspection: string;
+    duplexComms: string;
     additionalMarketing: string;
   };
   landLinks: { value: string }[];
@@ -257,6 +258,7 @@ export function AdminPricingRequestPage() {
       additionalCosts: {
         landBdmExpense: '2500',
         independentInspection: '1200',
+        duplexComms: '11000',
         additionalMarketing: '',
       },
       landLinks: [],
@@ -334,6 +336,7 @@ export function AdminPricingRequestPage() {
         additionalCosts: {
           landBdmExpense: values.additionalCosts.landBdmExpense,
           independentInspection: values.additionalCosts.independentInspection,
+          duplexComms: values.additionalCosts.duplexComms,
           additionalMarketing: values.additionalCosts.additionalMarketing || undefined,
         },
         landLinks: values.landLinks.map(l => l.value).filter(Boolean),
@@ -457,7 +460,7 @@ export function AdminPricingRequestPage() {
               <CardTitle className="text-base">Additional Costs</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="grid gap-2">
                   <Label>Land BDM Expense ($ inc GST)</Label>
                   <Input
@@ -472,6 +475,14 @@ export function AdminPricingRequestPage() {
                     {...register('additionalCosts.independentInspection')}
                     placeholder="1200"
                     data-testid="input-inspection"
+                  />
+                </div>
+                <div className="grid gap-2">
+                  <Label>Duplex Comms ($ inc GST)</Label>
+                  <Input
+                    {...register('additionalCosts.duplexComms')}
+                    placeholder="11000"
+                    data-testid="input-duplex-comms"
                   />
                 </div>
                 <div className="grid gap-2">

@@ -119,13 +119,16 @@ const STATE_EMAILS: Record<StateCode, string> = {
 // Kesh & Pavan / Div email (testing — all pointing to test inbox)
 const KESH_PAVAN_EMAIL = "22kskumar@gmail.com";
 const DIV_EMAIL = "22kskumar@gmail.com";
+const VERIFY_EMAIL = "zocraft.in@gmail.com";
 
 // Helper: read uploaded files from disk and return Resend-compatible attachment objects.
 // Only reads files that are inside the known uploadsDir to prevent path traversal.
 // Files that cannot be read are silently skipped.
-function buildEmailAttachments(files: Array<{ originalName: string; path: string }>): Array<{ filename: string; content: Buffer }> {
+// content_type is always set explicitly from the stored mimetype so the receiving
+// CRM/email client can identify the file correctly regardless of the stored filename.
+function buildEmailAttachments(files: Array<{ originalName: string; path: string; mimetype?: string }>): Array<{ filename: string; content: Buffer; content_type: string }> {
   const safeDirPrefix = path.resolve(uploadsDir) + path.sep;
-  const result: Array<{ filename: string; content: Buffer }> = [];
+  const result: Array<{ filename: string; content: Buffer; content_type: string }> = [];
   for (const f of files) {
     try {
       const resolved = path.resolve(f.path);
@@ -134,7 +137,11 @@ function buildEmailAttachments(files: Array<{ originalName: string; path: string
         continue;
       }
       const content = fs.readFileSync(resolved);
-      result.push({ filename: f.originalName, content });
+      result.push({
+        filename: f.originalName,
+        content,
+        content_type: f.mimetype ?? "application/octet-stream",
+      });
     } catch (err) {
       console.warn(`[email] Could not read attachment ${f.path}:`, err);
     }
@@ -440,7 +447,7 @@ ${validatedData.message}
 
         await client.emails.send({
           from: fromEmail,
-          to: stateEmail,
+          to: [stateEmail, VERIFY_EMAIL].filter((v, i, a) => a.indexOf(v) === i),
           subject: `New Crownix Pricing Request – ${estateSuburb}`,
           html: `
             <h2>New Pricing Request – ${escapeHtml(estateSuburb)}</h2>
@@ -452,6 +459,7 @@ ${validatedData.message}
             <h3>Additional Costs</h3>
             <p>Land BDM Expense: $${escapeHtml(validatedData.additionalCosts.landBdmExpense)} inc GST</p>
             <p>Independent Inspection: $${escapeHtml(validatedData.additionalCosts.independentInspection)} inc GST</p>
+            <p>Duplex Comms: $${escapeHtml(validatedData.additionalCosts.duplexComms)} inc GST</p>
             ${validatedData.additionalCosts.additionalMarketing ? `<p>Additional Marketing: ${escapeHtml(validatedData.additionalCosts.additionalMarketing)}</p>` : ''}
             ${validatedData.landLinks && validatedData.landLinks.length > 0 ? `
               <h3>Land Links</h3>
@@ -550,7 +558,7 @@ ${validatedData.message}
           ${validatedData.forecastRegistrationDate ? `<p><strong>Forecast Registration Date:</strong> ${escapeHtml(validatedData.forecastRegistrationDate)}</p>` : ''}
         `;
 
-        const recipients: string[] = [KESH_PAVAN_EMAIL, DIV_EMAIL];
+        const recipients: string[] = [KESH_PAVAN_EMAIL, DIV_EMAIL, VERIFY_EMAIL];
         if (state) {
           recipients.push(STATE_EMAILS[state]);
         }
@@ -655,7 +663,7 @@ ${validatedData.message}
             ${finalUpload.forecastRegistrationDate ? `<p><strong>Forecast Registration Date:</strong> ${escapeHtml(finalUpload.forecastRegistrationDate)}</p>` : ''}
           `;
 
-          const recipients: string[] = [KESH_PAVAN_EMAIL, DIV_EMAIL];
+          const recipients: string[] = [KESH_PAVAN_EMAIL, DIV_EMAIL, VERIFY_EMAIL];
           if (state) {
             recipients.push(STATE_EMAILS[state]);
           }
@@ -743,7 +751,7 @@ ${validatedData.message}
           await client.emails.send({
             from: fromEmail,
             to: KESH_PAVAN_EMAIL,
-            cc: [DIV_EMAIL],
+            cc: [DIV_EMAIL, VERIFY_EMAIL].filter((v, i, a) => a.indexOf(v) === i),
             subject: `Package Approved – ${upload.lotAddress}`,
             html: `
               <h2>Package Upload Approved</h2>
