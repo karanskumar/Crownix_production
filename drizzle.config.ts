@@ -1,7 +1,7 @@
 import { defineConfig } from "drizzle-kit";
 
 if (!process.env.DATABASE_URL) {
-  throw new Error("DATABASE_URL, ensure the database is provisioned");
+  throw new Error("DATABASE_URL is required to run db:push. Set it in your environment.");
 }
 
 export default defineConfig({

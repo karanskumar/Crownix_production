@@ -4,6 +4,7 @@ import {
   type PackageUpload, type PackageUploadInput, type PackageUploadStatus,
   pricingRequestsTable, packageUploadsTable, users,
 } from "@shared/schema";
+import { createDb, type Db } from "./db";
 import { randomUUID } from "crypto";
 import { eq } from "drizzle-orm";
 import fs from "fs";
@@ -54,9 +55,9 @@ function rowToPackageUpload(row: typeof packageUploadsTable.$inferSelect): Packa
 // ─── PostgreSQL implementation ──────────────────────────────────────────────
 
 export class PostgresStorage implements IStorage {
-  private db: ReturnType<typeof import("drizzle-orm/neon-serverless").drizzle>;
+  private db: Db;
 
-  constructor(db: ReturnType<typeof import("drizzle-orm/neon-serverless").drizzle>) {
+  constructor(db: Db) {
     this.db = db;
   }
 
@@ -258,4 +259,14 @@ class JsonFileStorage implements IStorage {
 
 // ─── Singleton ───────────────────────────────────────────────────────────────
 
-export const storage: IStorage = new JsonFileStorage();
+function createStorage(): IStorage {
+  if (process.env.DATABASE_URL) {
+    const db = createDb(process.env.DATABASE_URL);
+    console.log("[storage] Using PostgresStorage (DATABASE_URL is set)");
+    return new PostgresStorage(db);
+  }
+  console.log("[storage] Using JsonFileStorage (no DATABASE_URL)");
+  return new JsonFileStorage();
+}
+
+export const storage: IStorage = createStorage();
