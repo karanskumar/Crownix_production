@@ -1,0 +1,29 @@
+# Fallback: use pre-built dist/ committed from Replit.
+# Only installs the 9 server runtime packages — no React, no Vite, no UI libs.
+# To activate: rename this to Dockerfile and remove dist/ from .gitignore,
+# then push dist/ to GitHub.
+
+FROM node:20-slim
+WORKDIR /app
+
+ENV NODE_ENV=production
+
+# Install only what the server actually needs at runtime
+RUN npm install --no-save \
+    express \
+    express-session \
+    connect-pg-simple \
+    drizzle-orm \
+    drizzle-kit \
+    pg \
+    multer \
+    nanoid \
+    resend
+
+COPY dist ./dist
+COPY drizzle.config.ts ./
+COPY shared ./shared
+COPY package.json ./
+
+EXPOSE 5000
+CMD ["sh", "-c", "npx drizzle-kit push && node dist/index.js"]

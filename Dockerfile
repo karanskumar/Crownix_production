@@ -1,13 +1,11 @@
 FROM node:20
 WORKDIR /app
 
+# pnpm uses hardlinks instead of copying files — far less memory than npm
+RUN npm install -g pnpm@9 --prefer-online
+
 COPY package*.json ./
-
-# Pass 1: production deps only — needed for Vite to bundle the frontend
-RUN npm ci --omit=dev
-
-# Pass 2: just the 5 build tools missing from prod deps
-RUN npm install --no-save vite esbuild @vitejs/plugin-react tailwindcss autoprefixer
+RUN pnpm install
 
 COPY . .
 RUN npm run build
