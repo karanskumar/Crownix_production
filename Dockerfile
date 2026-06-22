@@ -3,8 +3,10 @@ WORKDIR /app
 
 COPY package*.json ./
 
-# Unset NODE_ENV so npm installs devDependencies (vite, esbuild, etc.)
-RUN env -u NODE_ENV npm install
+RUN echo "NODE_ENV at build time: ${NODE_ENV:-<unset>}" && \
+    env -u NODE_ENV npm install && \
+    echo "--- vite check after install ---" && \
+    ls node_modules/.bin/vite 2>/dev/null && echo "vite IS present" || echo "vite NOT present"
 
 COPY . .
 RUN npm run build
