@@ -4,5 +4,7 @@ dist
 .env
 uploads
 data
-attached_assets
+attached_assets/*
+!attached_assets/crownix_logo_1762957456049.png
+!attached_assets/expertise/
 *.log
