@@ -1,26 +1,15 @@
 FROM node:20
 WORKDIR /app
 
-# Show what npm config says about omit/production before we touch anything
-RUN npm config get omit; npm config get production; echo "NODE_ENV=[${NODE_ENV}]"
-
 COPY package*.json ./
 
-# Unset every possible source of "production mode" in npm, then install
-RUN env \
-    -u NODE_ENV \
-    -u NPM_CONFIG_PRODUCTION \
-    -u NPM_CONFIG_OMIT \
-    -u npm_config_production \
-    -u npm_config_omit \
-    npm install --include=dev
+# Pass 1: production deps only — needed for Vite to bundle the frontend
+RUN npm ci --omit=dev
 
-RUN ls node_modules/.bin/vite && echo "vite FOUND" || echo "vite MISSING"
+# Pass 2: just the 5 build tools missing from prod deps
+RUN npm install --no-save vite esbuild @vitejs/plugin-react tailwindcss autoprefixer
 
 COPY . .
-
-RUN ls node_modules/.bin/vite && echo "vite still FOUND after COPY" || echo "vite GONE after COPY"
-
 RUN npm run build
 
 ENV NODE_ENV=production
