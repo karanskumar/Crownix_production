@@ -1,0 +1,80 @@
+scheduling build on Metal builder "production-builderv3-asia-southeast1-kzrb"
+unpacking archive
+49.9 MB
+283ms
+
+internal
+load build definition from Dockerfile
+0ms
+
+internal
+load metadata for docker.io/library/node:20
+783ms
+
+internal
+load .dockerignore
+0ms
+
+internal
+load build context
+0ms
+
+1
+FROM docker.io/library/node:20@sha256:8f693eaa7e0a8e71560c9a82b55fd54c2ae920a2ba5d2cde28bac7d1c01c9ba5
+39ms
+
+2
+WORKDIR /app cached
+0ms
+
+3
+RUN npm config get omit; npm config get production; echo "NODE_ENV=[${NODE_ENV}]"
+1s
+��e
+NODE_ENV=[]
+uploading snapshot
+48.5 MB
+1.9s
+
+4
+COPY package*.json ./
+560ms
+
+5
+RUN env     -u NODE_ENV     -u NPM_CONFIG_PRODUCTION     -u NPM_CONFIG_OMIT     -u npm_config_production     -u npm_config_omit     npm install --include=dev
+1m 12s
+npm warn deprecated @esbuild-kit/esm-loader@2.6.5: Merged into tsx: https://tsx.is
+npm warn deprecated @esbuild-kit/core-utils@3.3.2: Merged into tsx: https://tsx.is
+npm notice
+npm notice New major version of npm available! 10.8.2 -> 11.17.0
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v11.17.0
+npm notice To update run: npm install -g npm@11.17.0
+npm notice
+npm error Exit handler never called!
+npm error This is an error with npm itself. Please report this error at:
+npm error   <https://github.com/npm/cli/issues>
+npm error A complete log of this run can be found in: /root/.npm/_logs/2026-06-22T06_49_10_000Z-debug-0.log
+
+6
+RUN ls node_modules/.bin/vite && echo "vite FOUND" || echo "vite MISSING"
+407ms
+ls: cannot access 'node_modules/.bin/vite': No such file or directory
+vite MISSING
+
+7
+COPY . .
+180ms
+
+8
+RUN ls node_modules/.bin/vite && echo "vite still FOUND after COPY" || echo "vite GONE after COPY"
+197ms
+ls: cannot access 'node_modules/.bin/vite': No such file or directory
+vite GONE after COPY
+
+9
+RUN npm run build
+649ms
+> rest-express@1.0.0 build
+> vite build && esbuild server/index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist
+sh: 1: vite: not found
+Build Failed: build daemon returned an error < failed to solve: process "/bin/sh -c npm run build" did not complete successfully: exit code: 127 >
