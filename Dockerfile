@@ -13,4 +13,4 @@ RUN npm run build
 ENV NODE_ENV=production
 EXPOSE 5000
 
-CMD ["sh", "-c", "npm run db:push && node dist/index.js"]
+CMD ["node", "dist/index.js"]
