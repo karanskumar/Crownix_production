@@ -3,8 +3,9 @@ WORKDIR /app
 
 COPY package*.json ./
 
-ENV NODE_ENV=development
-RUN npm ci
+# env -u NODE_ENV unsets it completely so npm installs devDependencies regardless
+# of anything Railway injects at build time
+RUN env -u NODE_ENV npm ci
 
 COPY . .
 RUN npm run build
