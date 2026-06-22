@@ -8,6 +8,8 @@ COPY package*.json ./
 RUN pnpm install
 
 COPY . .
+# Vite reads VITE_* env vars at build time, so they must be set on the
+# Railway service (Variables tab). Required: VITE_RECAPTCHA_SITE_KEY.
 RUN npm run build
 
 ENV NODE_ENV=production
