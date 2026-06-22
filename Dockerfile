@@ -1,11 +1,10 @@
-FROM node:20-slim
+FROM node:20
 WORKDIR /app
 
 COPY package*.json ./
 
-# env -u NODE_ENV unsets it completely so npm installs devDependencies regardless
-# of anything Railway injects at build time
-RUN env -u NODE_ENV npm ci
+# Unset NODE_ENV so npm installs devDependencies (vite, esbuild, etc.)
+RUN env -u NODE_ENV npm install
 
 COPY . .
 RUN npm run build
