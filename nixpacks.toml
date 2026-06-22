@@ -1,5 +1,11 @@
+[phases.setup]
+nixPkgs = ["nodejs_20"]
+
+[phases.install]
+cmds = ["pnpm install --frozen-lockfile"]
+
 [phases.build]
-cmds = ["npm ci", "npm run build"]
+cmds = ["pnpm run build"]
 
 [start]
-cmd = "node dist/index.js"
+cmd = "pnpm run db:push && node dist/index.js"
