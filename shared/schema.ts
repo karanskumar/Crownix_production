@@ -64,6 +64,8 @@ export const additionalCostsSchema = z.object({
   independentInspection: z.string().default("1200"),
   duplexComms: z.string().default("11000"),
   additionalMarketing: z.string().optional(),
+  additionalChannelCommissions: z.string().optional(),
+  additionalAcquisitionFees: z.string().optional(),
 });
 
 export type AdditionalCosts = z.infer<typeof additionalCostsSchema>;

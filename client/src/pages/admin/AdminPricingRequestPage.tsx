@@ -39,6 +39,8 @@ interface FormValues {
     independentInspection: string;
     duplexComms: string;
     additionalMarketing: string;
+    additionalChannelCommissions: string;
+    additionalAcquisitionFees: string;
   };
   landLinks: { value: string }[];
 }
@@ -260,6 +262,8 @@ export function AdminPricingRequestPage() {
         independentInspection: '1200',
         duplexComms: '11000',
         additionalMarketing: '',
+        additionalChannelCommissions: '',
+        additionalAcquisitionFees: '',
       },
       landLinks: [],
     },
@@ -338,6 +342,8 @@ export function AdminPricingRequestPage() {
           independentInspection: values.additionalCosts.independentInspection,
           duplexComms: values.additionalCosts.duplexComms,
           additionalMarketing: values.additionalCosts.additionalMarketing || undefined,
+          additionalChannelCommissions: values.additionalCosts.additionalChannelCommissions || undefined,
+          additionalAcquisitionFees: values.additionalCosts.additionalAcquisitionFees || undefined,
         },
         landLinks: values.landLinks.map(l => l.value).filter(Boolean),
         attachments: attachmentMeta,
@@ -491,6 +497,22 @@ export function AdminPricingRequestPage() {
                     {...register('additionalCosts.additionalMarketing')}
                     placeholder="e.g. 500"
                     data-testid="input-marketing"
+                  />
+                </div>
+                <div className="grid gap-2">
+                  <Label>Additional Channel Commissions ($ inc GST)</Label>
+                  <Input
+                    {...register('additionalCosts.additionalChannelCommissions')}
+                    placeholder="e.g. 500"
+                    data-testid="input-channel-commissions"
+                  />
+                </div>
+                <div className="grid gap-2">
+                  <Label>Additional Acquisition Fees ($ inc GST)</Label>
+                  <Input
+                    {...register('additionalCosts.additionalAcquisitionFees')}
+                    placeholder="e.g. 500"
+                    data-testid="input-acquisition-fees"
                   />
                 </div>
               </div>

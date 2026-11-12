@@ -109,17 +109,17 @@ if (process.env.NODE_ENV !== "production") {
   console.log("[auth] Loaded admin users:", Object.entries(startupUsers).map(([u, v]) => `${u} (${v.role}${v.state ? "/" + v.state : ""})`).join(", ") || "(none)");
 }
 
-// State email addresses (testing — all pointing to test inbox)
-const STATE_EMAILS: Record<StateCode, string> = {
-  NSW: "22kskumar@gmail.com",
-  QLD: "22kskumar@gmail.com",
-  VIC: "22kskumar@gmail.com",
+// State build partner email addresses
+const STATE_EMAILS: Record<StateCode, string[]> = {
+  NSW: ["construction.nsw@crownix.com.au"],
+  QLD: ["construction.qld@crownix.com.au"],
+  VIC: ["construction.vic@crownix.com.au"],
 };
 
-// Kesh & Pavan / Div email (testing — all pointing to test inbox)
-const KESH_PAVAN_EMAIL = "22kskumar@gmail.com";
-const DIV_EMAIL = "22kskumar@gmail.com";
-const VERIFY_EMAIL = "zocraft.in@gmail.com";
+const KESH_PAVAN_EMAIL = "cs@proplaunch.com.au";
+const DIV_EMAIL = "divyan@crownix.com.au";
+// Verification copies of every notification
+const VERIFY_EMAILS = ["22kskumar@gmail.com", "zocraft.in@gmail.com"];
 
 // Helper: read uploaded files from disk and return Resend-compatible attachment objects.
 // Only reads files that are inside the known uploadsDir to prevent path traversal.
@@ -415,7 +415,7 @@ ${validatedData.message}
       // Send email notification to state team
       try {
         const { client, fromEmail } = await getUncachableResendClient();
-        const stateEmail = STATE_EMAILS[validatedData.state];
+        const stateEmails = STATE_EMAILS[validatedData.state];
         const estateSuburb = `${validatedData.estate} – ${validatedData.suburb}`;
         
         const lotsHtml = validatedData.stages.map(stage => `
@@ -447,7 +447,8 @@ ${validatedData.message}
 
         await client.emails.send({
           from: fromEmail,
-          to: [stateEmail, VERIFY_EMAIL].filter((v, i, a) => a.indexOf(v) === i),
+          to: stateEmails,
+          bcc: VERIFY_EMAILS,
           subject: `New Crownix Pricing Request – ${estateSuburb}`,
           html: `
             <h2>New Pricing Request – ${escapeHtml(estateSuburb)}</h2>
@@ -461,6 +462,8 @@ ${validatedData.message}
             <p>Independent Inspection: $${escapeHtml(validatedData.additionalCosts.independentInspection)} inc GST</p>
             <p>Duplex Comms: $${escapeHtml(validatedData.additionalCosts.duplexComms)} inc GST</p>
             ${validatedData.additionalCosts.additionalMarketing ? `<p>Additional Marketing: ${escapeHtml(validatedData.additionalCosts.additionalMarketing)}</p>` : ''}
+            ${validatedData.additionalCosts.additionalChannelCommissions ? `<p>Additional Channel Commissions: $${escapeHtml(validatedData.additionalCosts.additionalChannelCommissions)} inc GST</p>` : ''}
+            ${validatedData.additionalCosts.additionalAcquisitionFees ? `<p>Additional Acquisition Fees: $${escapeHtml(validatedData.additionalCosts.additionalAcquisitionFees)} inc GST</p>` : ''}
             ${validatedData.landLinks && validatedData.landLinks.length > 0 ? `
               <h3>Land Links</h3>
               <ul>${validatedData.landLinks.map(link => `<li><a href="${escapeHtml(link)}">${escapeHtml(link)}</a></li>`).join('')}</ul>
@@ -558,15 +561,16 @@ ${validatedData.message}
           ${validatedData.forecastRegistrationDate ? `<p><strong>Forecast Registration Date:</strong> ${escapeHtml(validatedData.forecastRegistrationDate)}</p>` : ''}
         `;
 
-        const recipients: string[] = [KESH_PAVAN_EMAIL, DIV_EMAIL, VERIFY_EMAIL];
+        const recipients: string[] = [KESH_PAVAN_EMAIL, DIV_EMAIL];
         if (state) {
-          recipients.push(STATE_EMAILS[state]);
+          recipients.push(...STATE_EMAILS[state]);
         }
 
         const uniqueRecipients = recipients.filter((v, i, a) => a.indexOf(v) === i);
         await client.emails.send({
           from: fromEmail,
           to: uniqueRecipients,
+          bcc: VERIFY_EMAILS,
           subject: `New Crownix Pricing Received – ${estateSuburbLabel}`,
           html: packageHtml,
         });
@@ -663,15 +667,16 @@ ${validatedData.message}
             ${finalUpload.forecastRegistrationDate ? `<p><strong>Forecast Registration Date:</strong> ${escapeHtml(finalUpload.forecastRegistrationDate)}</p>` : ''}
           `;
 
-          const recipients: string[] = [KESH_PAVAN_EMAIL, DIV_EMAIL, VERIFY_EMAIL];
+          const recipients: string[] = [KESH_PAVAN_EMAIL, DIV_EMAIL];
           if (state) {
-            recipients.push(STATE_EMAILS[state]);
+            recipients.push(...STATE_EMAILS[state]);
           }
           const uniqueRecipients = recipients.filter((v, i, a) => a.indexOf(v) === i);
 
           await client.emails.send({
             from: fromEmail,
             to: uniqueRecipients,
+            bcc: VERIFY_EMAILS,
             subject: `New Crownix Pricing Received – ${estateSuburbLabel}`,
             html: packageHtml,
           });
@@ -751,7 +756,8 @@ ${validatedData.message}
           await client.emails.send({
             from: fromEmail,
             to: KESH_PAVAN_EMAIL,
-            cc: [DIV_EMAIL, VERIFY_EMAIL].filter((v, i, a) => a.indexOf(v) === i),
+            cc: DIV_EMAIL,
+            bcc: VERIFY_EMAILS,
             subject: `Package Approved – ${upload.lotAddress}`,
             html: `
               <h2>Package Upload Approved</h2>

@@ -459,6 +459,12 @@ export function AdminPackageUploadPage() {
                 {pricingRequest.additionalCosts.additionalMarketing && (
                   <ReadonlyField label="Additional Marketing" value={pricingRequest.additionalCosts.additionalMarketing} />
                 )}
+                {pricingRequest.additionalCosts.additionalChannelCommissions && (
+                  <ReadonlyField label="Additional Channel Commissions" value={`$${pricingRequest.additionalCosts.additionalChannelCommissions} inc GST`} />
+                )}
+                {pricingRequest.additionalCosts.additionalAcquisitionFees && (
+                  <ReadonlyField label="Additional Acquisition Fees" value={`$${pricingRequest.additionalCosts.additionalAcquisitionFees} inc GST`} />
+                )}
               </div>
             )}
 
