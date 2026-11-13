@@ -72,7 +72,7 @@ async function verifyRecaptcha(token: string): Promise<{ success: boolean; score
 
 // Admin credentials — configured via environment variables only. No hardcoded fallbacks.
 // Required env vars: ADMIN_USERNAME, ADMIN_PASSWORD
-// Optional state user env vars: NSW_USERNAME, NSW_PASSWORD, QLD_USERNAME, QLD_PASSWORD, VIC_USERNAME, VIC_PASSWORD
+// Optional state user env vars: NSW_USERNAME, NSW_PASSWORD, NSW2_USERNAME, NSW2_PASSWORD, QLD_USERNAME, QLD_PASSWORD, VIC_USERNAME, VIC_PASSWORD
 // State users are also identified by their email address (set in STATE_USER_EMAILS below).
 function buildAdminUsers(): Record<string, { password: string; role: "admin" | "state"; state?: StateCode; email?: string }> {
   const users: Record<string, { password: string; role: "admin" | "state"; state?: StateCode; email?: string }> = {};
@@ -87,6 +87,7 @@ function buildAdminUsers(): Record<string, { password: string; role: "admin" | "
 
   const stateConfigs: Array<{ usernameVar: string; passwordVar: string; emailVar: string; state: StateCode }> = [
     { usernameVar: "NSW_USERNAME", passwordVar: "NSW_PASSWORD", emailVar: "NSW_USER_EMAIL", state: "NSW" },
+    { usernameVar: "NSW2_USERNAME", passwordVar: "NSW2_PASSWORD", emailVar: "NSW2_USER_EMAIL", state: "NSW" },
     { usernameVar: "QLD_USERNAME", passwordVar: "QLD_PASSWORD", emailVar: "QLD_USER_EMAIL", state: "QLD" },
     { usernameVar: "VIC_USERNAME", passwordVar: "VIC_PASSWORD", emailVar: "VIC_USER_EMAIL", state: "VIC" },
   ];
