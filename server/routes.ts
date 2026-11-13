@@ -111,7 +111,7 @@ if (process.env.NODE_ENV !== "production") {
 
 // State build partner email addresses
 const STATE_EMAILS: Record<StateCode, string[]> = {
-  NSW: ["construction.nsw@crownix.com.au"],
+  NSW: ["construction.nsw@crownix.com.au", "Dave.jones@crownix.com.au"],
   QLD: ["construction.qld@crownix.com.au"],
   VIC: ["construction.vic@crownix.com.au"],
 };
